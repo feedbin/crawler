@@ -1,0 +1,5 @@
+*.gem
+*.rbc
+.bundle
+vendor/bundle
+tmp
