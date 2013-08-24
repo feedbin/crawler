@@ -18,18 +18,18 @@ Dependencies
 Installation
 ------------
 
-1. Install Redis
- 
+**Install Redis**
+
     brew install redis
 
-2. Clone the repository
- 
+**Clone the repository**
+
     git clone https://github.com/feedbin/refresher.git && cd refresher
 		
-3. Bundle
- 
+**Bundle**
+
      bundle
 
-4. Run
- 
+**Run**
+
      bundle exec foreman start     
