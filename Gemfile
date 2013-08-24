@@ -9,8 +9,4 @@ gem 'feedzirra', github: 'feedbin/feedzirra', ref: 'c782e93'
 
 gem 'foreman'
 gem 'rake'
-
-# Sidekiq
 gem 'sidekiq'
-gem 'slim'
-gem 'sinatra', require: nil
