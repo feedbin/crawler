@@ -5,7 +5,7 @@ group :development do
   gem 'capistrano'
 end
 
-gem 'feedzirra', github: 'feedbin/feedzirra', ref: 'c782e93'
+gem 'feedzirra', github: 'feedbin/feedzirra', ref: 'c9a2188'
 
 gem 'foreman'
 gem 'rake'
