@@ -45,7 +45,7 @@ class FeedRefresherFetcher
           end
         end
       }
-      feedzirra.entries.each do |entry|
+      feedzirra.entries.first(500).each do |entry|
         # if it's not already in the database
         if results[entry._public_id_].value == false
           entry = create_entry(entry)
