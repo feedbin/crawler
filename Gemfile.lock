@@ -57,7 +57,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  capistrano
+  capistrano (~> 2.15.5)
   feedzirra!
   foreman
   rake
