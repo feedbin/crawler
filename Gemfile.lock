@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/feedbin/feedzirra.git
-  revision: c9a21883e3069e986d0e1d2401fcd63f2d9995d5
-  ref: c9a2188
+  revision: bb5376c2b3c77061b0d75546fc231115676d0b03
+  ref: bb5376c
   specs:
     feedzirra (0.2.0.rc2)
       curb (~> 0.8.1)
@@ -21,7 +21,7 @@ GEM
     celluloid (0.15.2)
       timers (~> 1.1.0)
     connection_pool (1.1.0)
-    curb (0.8.4)
+    curb (0.8.5)
     dotenv (0.8.0)
     foreman (0.63.0)
       dotenv (>= 0.7)
@@ -60,5 +60,6 @@ DEPENDENCIES
   capistrano (~> 2.15.5)
   feedzirra!
   foreman
+  nokogiri (= 1.5.10)
   rake
   sidekiq
