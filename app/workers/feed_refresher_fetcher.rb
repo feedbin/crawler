@@ -3,38 +3,20 @@ class FeedRefresherFetcher
   sidekiq_options queue: :feed_refresher_fetcher
 
   def perform(feed_id, feed_url, etag, last_modified, subscribers = nil)
-    options = {}
-    unless last_modified.blank?
-      begin
-        options[:if_modified_since] = DateTime.parse(last_modified)
-      rescue Exception => e
-      end
-    end
-    unless etag.blank?
-      options[:if_none_match] = etag
-    end
-
-    options[:user_agent] = "Feedbin"
-    unless subscribers.nil?
-      options[:user_agent] = "Feedbin - #{subscribers} subscribers"
-    end
-
     feed_fetcher = FeedFetcher.new(feed_url)
+    options = get_options(etag, last_modified, subscribers)
     feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
     if feedzirra.respond_to?(:entries) && feedzirra.entries.length > 0
       update = {feed: {id: feed_id, etag: feedzirra.etag, last_modified: feedzirra.last_modified}, entries: []}
-      results = {}
-      Sidekiq.redis { |conn|
-        conn.pipelined do
-          feedzirra.entries.each do |entry|
-            results[entry._public_id_] = conn.hexists("entry:public_ids:#{entry._public_id_[0..4]}", entry._public_id_)
-          end
-        end
-      }
+      public_ids = feedzirra.entries.map {|entry| entry._public_id_}
+      updated_dates = get_updated_dates(public_ids)
       feedzirra.entries.first(500).each do |entry|
-        # if it's not already in the database
-        if results[entry._public_id_].value == false
+        entry_updated = updated_dates[entry._public_id_]
+        if entry_updated == nil
           entry = create_entry(entry)
+          update[:entries].push(entry)
+        elsif entry_updated && entry.try(:updated) && entry.updated > entry_updated
+          entry = create_entry(entry, true)
           update[:entries].push(entry)
         end
       end
@@ -48,7 +30,56 @@ class FeedRefresherFetcher
     end
   end
 
-  def create_entry(entry)
+  def get_options(etag, last_modified, subscribers)
+    options = {}
+
+    unless last_modified.blank?
+      begin
+        options[:if_modified_since] = DateTime.parse(last_modified)
+      rescue Exception => e
+      end
+    end
+
+    unless etag.blank?
+      options[:if_none_match] = etag
+    end
+
+    options[:user_agent] = "Feedbin"
+    unless subscribers.nil?
+      options[:user_agent] = "Feedbin - #{subscribers} subscribers"
+    end
+
+    options
+  end
+
+  def get_updated_dates(public_ids)
+    updated_dates = {}
+    Sidekiq.redis { |conn|
+      conn.pipelined do
+        public_ids.each do |public_id|
+          updated_dates[public_id] = conn.hget("entry:public_ids:#{public_id[0..4]}", public_id)
+        end
+      end
+    }
+    updated_dates.each do |public_id, future|
+      value = future.value
+      if value == nil
+        date = nil
+      elsif value == '1'
+        date = false
+      else
+        begin
+          date = Time.parse(future.value)
+        rescue Exception
+          date = false
+        end
+      end
+      updated_dates[public_id] = date
+    end
+    updated_dates
+  end
+
+  def create_entry(entry, update = false)
     new_entry = {}
     new_entry['author']        = entry.author
     new_entry['content']       = entry.content
@@ -60,6 +91,9 @@ class FeedRefresherFetcher
     new_entry['public_id']     = entry._public_id_
     new_entry['old_public_id'] = entry._old_public_id_
     new_entry['data']          = entry._data_
+    if update
+      new_entry['update'] = update
+    end
     new_entry
   end
 
