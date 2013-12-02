@@ -92,13 +92,14 @@ class FeedFetcher
     unless @feed
       @feed = Feed.create_from_feedzirra(@parsed_feed, @site_url)
       if @parsed_feed.respond_to?(:hubs) && !@parsed_feed.hubs.blank?
-        push_subscribe(@parsed_feed, @feed.id, Push::callback_url(feed))
+        hub_secret = Digest::SHA1.hexdigest([feed_id, Digest::SHA1.hexdigest([feed_id, Feedbin::Application.config.secret_key_base].join('-'))
+        push_subscribe(@parsed_feed, @feed.id, Push::callback_url(feed), hub_secret)
       end
     end
 
   end
 
-  def push_subscribe(feedzirra, feed_id, push_callback)
+  def push_subscribe(feedzirra, feed_id, push_callback, hub_secret)
     begin
       feedzirra.hubs.each do |hub|
         uri = URI(hub)
@@ -106,7 +107,7 @@ class FeedFetcher
         result = Net::HTTP.post_form(uri,
           'hub.mode' => 'subscribe',
           'hub.topic' => feedzirra.feed_url,
-          'hub.secret' => Digest::SHA1.hexdigest([feed_id, Feedbin::Application.config.secret_key_base].join('-')),
+          'hub.secret' => hub_secret,
           'hub.callback' => push_callback,
           'hub.verify' => 'async'
         )
@@ -156,7 +157,7 @@ class FeedFetcher
       feedzirra = Feedzirra::Feed.fetch_and_parse(@url, options)
     end
     if feedzirra.respond_to?(:hubs) && !feedzirra.hubs.blank? && options[:push_callback] && options[:feed_id]
-      push_subscribe(feedzirra, options[:feed_id], options[:push_callback])
+      push_subscribe(feedzirra, options[:feed_id], options[:push_callback], options[:hub_secret])
     end
     normalize(feedzirra, options, saved_feed_url)
   end
