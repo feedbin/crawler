@@ -106,7 +106,7 @@ class FeedFetcher
         result = Net::HTTP.post_form(uri,
           'hub.mode' => 'subscribe',
           'hub.topic' => feedzirra.feed_url,
-          'hub.secret' => Digest::SHA1.hexdigest([feed_id, ENV["SECRET_KEY_BASE"]].join('-')),
+          'hub.secret' => Digest::SHA1.hexdigest([feed_id, Feedbin::Application.config.secret_key_base].join('-')),
           'hub.callback' => push_callback,
           'hub.verify' => 'async'
         )

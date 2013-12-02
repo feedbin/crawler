@@ -2,9 +2,9 @@ class FeedRefresherFetcher
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 
-  def perform(feed_id, feed_url, etag, last_modified, subscribers = nil, body = nil, push_callback = nil)
+  def perform(feed_id, feed_url, etag, last_modified, subscribers = nil, body = nil, push_callback = nil, hub_secret = nil)
     feed_fetcher = FeedFetcher.new(feed_url)
-    options = get_options(feed_id, etag, last_modified, subscribers, push_callback)
+    options = get_options(feed_id, etag, last_modified, subscribers, push_callback, hub_secret)
     if body
       feedzirra = feed_fetcher.parse(body)
     else
@@ -35,10 +35,11 @@ class FeedRefresherFetcher
     end
   end
 
-  def get_options(feed_id, etag, last_modified, subscribers, push_callback)
+  def get_options(feed_id, etag, last_modified, subscribers, push_callback, hub_secret)
     options = {}
 
     options[:feed_id] = feed_id
+    options[:hub_secret] = hub_secret
 
     unless last_modified.blank?
       begin
