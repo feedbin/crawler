@@ -1,4 +1,5 @@
 require 'timeout'
+require 'net/http'
 
 class FeedFetcher
 
@@ -97,6 +98,21 @@ class FeedFetcher
 
   end
 
+  def push_subscribe(feed_id, parsed_feed, push_callback)
+    parsed_feed.hubs.each do |hub|
+      uri = URI(hub)
+      # We want to make sure we use the https URL if available. TODO
+      secret = Digest::SHA1.hexdigest([feed_id, ENV["SECRET_KEY_BASE"]].join('-'))
+      result = Net::HTTP.post_form(uri,
+                                   'hub.mode' => 'subscribe',
+                                   'hub.topic' => parsed_feed.feed_url,
+                                   'hub.secret' => secret,
+                                   'hub.callback' => push_callback,
+                                   'hub.verify' => 'async'
+                                   )
+    end
+  end
+
   def get_site_url
     if @site_url
       @site_url = @site_url
@@ -119,7 +135,7 @@ class FeedFetcher
   end
 
   def is_feed?(feed)
-    feed.respond_to?(:entries) && feed.entries.length > 0
+    feed.class.name.starts_with?('Feedzirra')
   end
 
   # Fetch and normalize feed
@@ -130,6 +146,18 @@ class FeedFetcher
     Timeout::timeout(20) do
       feedzirra = Feedzirra::Feed.fetch_and_parse(@url, options)
     end
+    if !feedzirra.hubs.blank? && options[:push_callback]
+      push_subscribe(options[:feed_id], feedzirra, options[:push_callback])
+    end
+    normalize(feedzirra, options, saved_feed_url)
+  end
+
+  def parse(xml_string)
+    feedzirra = Feedzirra::Feed.parse(xml_string)
+    normalize(feedzirra)
+  end
+
+  def normalize(feedzirra, options = {}, saved_feed_url = nil)
     if feedzirra && feedzirra.respond_to?(:feed_url)
       feedzirra.etag          = feedzirra.etag ? feedzirra.etag.strip.gsub(/^"/, '').gsub(/"$/, '') : nil
       feedzirra.last_modified = feedzirra.last_modified

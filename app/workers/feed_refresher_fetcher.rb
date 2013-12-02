@@ -2,10 +2,15 @@ class FeedRefresherFetcher
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 
-  def perform(feed_id, feed_url, etag, last_modified, subscribers = nil)
+  def perform(feed_id, feed_url, etag, last_modified, subscribers = nil, body = nil, push_callback = nil)
     feed_fetcher = FeedFetcher.new(feed_url)
-    options = get_options(etag, last_modified, subscribers)
-    feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
+    options = get_options(feed_id, etag, last_modified, subscribers, push_callback)
+    if body
+      feedzirra = feed_fetcher.parse(body)
+    else
+      feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
+    end
+
     if feedzirra.respond_to?(:entries) && feedzirra.entries.length > 0
       update = {feed: {id: feed_id, etag: feedzirra.etag, last_modified: feedzirra.last_modified}, entries: []}
       public_ids = feedzirra.entries.map {|entry| entry._public_id_}
@@ -30,8 +35,10 @@ class FeedRefresherFetcher
     end
   end
 
-  def get_options(etag, last_modified, subscribers)
+  def get_options(feed_id, etag, last_modified, subscribers, push_callback)
     options = {}
+
+    options[:feed_id] = feed_id
 
     unless last_modified.blank?
       begin
@@ -47,6 +54,10 @@ class FeedRefresherFetcher
     options[:user_agent] = "Feedbin"
     unless subscribers.nil?
       options[:user_agent] = "Feedbin - #{subscribers} subscribers"
+    end
+
+    if push_callback
+      options[:push_callback] = push_callback
     end
 
     options
