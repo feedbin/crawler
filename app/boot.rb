@@ -4,6 +4,8 @@ $stdout.sync = true
 
 require 'digest/sha1'
 require 'date'
+require 'timeout'
+require 'net/http'
 
 require 'sidekiq'
 require 'feedzirra'
