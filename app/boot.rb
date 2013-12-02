@@ -16,4 +16,5 @@ require 'lib/feedzirra_extension'
 require 'lib/sidekiq'
 require 'app/models/feed_fetcher'
 require 'app/workers/feed_refresher_fetcher'
+require 'app/workers/feed_refresher_fetcher_critical'
 
