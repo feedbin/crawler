@@ -7,7 +7,7 @@ end
 
 gem 'nokogiri', '1.5.10'
 
-gem 'feedzirra', github: 'feedbin/feedzirra', ref: 'bb5376c'
+gem 'feedzirra', github: 'feedbin/feedzirra', ref: '601864e'
 
 gem 'foreman'
 gem 'rake'
