@@ -6,7 +6,7 @@ class FeedRefresherFetcher
     feed_fetcher = FeedFetcher.new(feed_url)
     options = get_options(feed_id, etag, last_modified, subscribers, push_callback, hub_secret)
     if body
-      feedzirra = feed_fetcher.parse(body)
+      feedzirra = feed_fetcher.parse(body, feed_url)
     else
       feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
     end
