@@ -15,7 +15,7 @@ class FeedRefresherFetcher
       update = {feed: {id: feed_id, etag: feedzirra.etag, last_modified: feedzirra.last_modified}, entries: []}
       public_ids = feedzirra.entries.map {|entry| entry._public_id_}
       updated_dates = get_updated_dates(public_ids)
-      feedzirra.entries.first(500).each do |entry|
+      feedzirra.entries.first(300).each do |entry|
         entry_updated = updated_dates[entry._public_id_]
         if entry_updated == nil
           entry = create_entry(entry)
