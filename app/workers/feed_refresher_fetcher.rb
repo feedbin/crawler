@@ -33,7 +33,7 @@ class FeedRefresherFetcher
         )
       end
     end
-    $librato_queue.add(refresher_performance: {type: :counter, value: 1, source: Socket.gethostname}) if $librato_queue
+    $librato_queue.add(refresher_performance: {type: :gauge, value: 1, source: Socket.gethostname}) if $librato_queue
   end
 
   def get_options(feed_id, etag, last_modified, subscribers, push_callback, hub_secret)
