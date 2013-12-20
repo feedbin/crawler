@@ -3,3 +3,4 @@
 .bundle
 vendor/bundle
 tmp
+.env
