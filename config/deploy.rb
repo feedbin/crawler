@@ -1,4 +1,4 @@
-require "bundler/capistrano" 
+require "bundler/capistrano"
 
 set :user,        'app'
 set :application, "refresher"
@@ -20,8 +20,9 @@ set :worker_count, 8
 # Gets rid of trying to link public/* directories
 set :normalize_asset_timestamps, false
 
-role :app, "refresher1.feedbin.me", "refresher2.feedbin.me", "refresher3.feedbin.me", "refresher4.feedbin.me", "refresher5.feedbin.me", 
-           "refresher6.feedbin.me", "refresher7.feedbin.me", "refresher8.feedbin.me", "refresher9.feedbin.me", "refresher10.feedbin.me"
+role :app, "refresher1.feedbin.me", "refresher2.feedbin.me", "refresher3.feedbin.me", "refresher4.feedbin.me", "refresher5.feedbin.me",
+           "refresher6.feedbin.me", "refresher7.feedbin.me", "refresher8.feedbin.me", "refresher9.feedbin.me", "refresher10.feedbin.me",
+           "refresher11.feedbin.me", "refresher12.feedbin.me"
 
 default_run_options[:pty] = true
 default_run_options[:shell] = '/bin/bash --login'
