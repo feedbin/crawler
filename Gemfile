@@ -5,9 +5,7 @@ group :development do
   gem 'capistrano', '~> 2.15.5'
 end
 
-gem 'nokogiri', '1.5.10'
-
-gem 'feedzirra', github: 'feedbin/feedzirra', ref: '601864e'
+gem 'feedzirra', github: 'feedbin/feedzirra', ref: '6d57e27'
 
 gem 'bundler'
 gem 'foreman'
