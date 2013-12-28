@@ -10,6 +10,7 @@ require 'digest/sha1'
 require 'date'
 require 'timeout'
 require 'net/http'
+require 'socket'
 
 require 'sidekiq'
 require 'feedzirra'

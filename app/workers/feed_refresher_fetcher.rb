@@ -5,7 +5,10 @@ class FeedRefresherFetcher
   def perform(feed_id, feed_url, etag, last_modified, subscribers = nil, body = nil, push_callback = nil, hub_secret = nil)
     feed_fetcher = FeedFetcher.new(feed_url)
     options = get_options(feed_id, etag, last_modified, subscribers, push_callback, hub_secret)
+
+    source = Socket.gethostname
     if body
+      source += '-push'
       feedzirra = feed_fetcher.parse(body, feed_url)
     else
       feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
@@ -18,7 +21,7 @@ class FeedRefresherFetcher
       feedzirra.entries.first(300).each do |entry|
         entry_updated = updated_dates[entry._public_id_]
         if entry_updated == nil
-          entry = create_entry(entry)
+          entry = create_entry(entry, false, source)
           update[:entries].push(entry)
         elsif entry_updated && entry.try(:updated) && entry.updated > entry_updated
           entry = create_entry(entry, true)
@@ -91,7 +94,7 @@ class FeedRefresherFetcher
     updated_dates
   end
 
-  def create_entry(entry, update = false)
+  def create_entry(entry, update = false, source = nil)
     new_entry = {}
     new_entry['author']        = entry.author
     new_entry['content']       = entry.content
@@ -105,6 +108,9 @@ class FeedRefresherFetcher
     new_entry['data']          = entry._data_
     if update
       new_entry['update'] = update
+    end
+    if source
+      new_entry['source'] = source
     end
     new_entry
   end
