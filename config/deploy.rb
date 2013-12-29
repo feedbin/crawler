@@ -15,12 +15,12 @@ set :deploy_to,   "/srv/apps/#{application}"
 
 # TODO see if this can be removed if `sudo bundle` stops failing
 set :bundle_cmd, "/usr/local/rbenv/shims/bundle"
-set :worker_count, 8
+set :worker_count, 7
 
 # Gets rid of trying to link public/* directories
 set :normalize_asset_timestamps, false
 
-role :app, "refresher_new.feedbin.me"
+role :app, "refresher1.feedbin.me"
 
 default_run_options[:pty] = true
 default_run_options[:shell] = '/bin/bash --login'
