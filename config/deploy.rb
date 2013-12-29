@@ -15,7 +15,7 @@ set :deploy_to,   "/srv/apps/#{application}"
 
 # TODO see if this can be removed if `sudo bundle` stops failing
 set :bundle_cmd, "/usr/local/rbenv/shims/bundle"
-set :worker_count, 12
+set :worker_count, 8
 
 # Gets rid of trying to link public/* directories
 set :normalize_asset_timestamps, false
