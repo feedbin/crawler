@@ -45,7 +45,7 @@ GEM
       redis (~> 3.0.4)
     sax-machine (0.2.1)
       nokogiri (~> 1.6.0)
-    sidekiq (2.17.4)
+    sidekiq (2.17.6)
       celluloid (>= 0.15.2)
       connection_pool (>= 1.0.0)
       json
