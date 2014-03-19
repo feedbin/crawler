@@ -20,8 +20,8 @@ set :worker_count, 8
 # Gets rid of trying to link public/* directories
 set :normalize_asset_timestamps, false
 
-role :app, "refresher1.feedbin.me", "refresher2.feedbin.me", "refresher3.feedbin.me", "refresher4.feedbin.me", "refresher5.feedbin.me",
-           "refresher6.feedbin.me", "refresher7.feedbin.me", "refresher8.feedbin.me", "refresher9.feedbin.me", "refresher10.feedbin.me"
+role :app, "refresher1.feedbin.com", "refresher2.feedbin.com", "refresher3.feedbin.com", "refresher4.feedbin.com", "refresher5.feedbin.com",
+           "refresher6.feedbin.com", "refresher7.feedbin.com", "refresher8.feedbin.com", "refresher9.feedbin.com", "refresher10.feedbin.com"
 
 default_run_options[:pty] = true
 default_run_options[:shell] = '/bin/bash --login'
