@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/feedbin/feedzirra.git
-  revision: 6d57e27f38d544c9e6d94c5b331ff9d23295075e
-  ref: 6d57e27
+  revision: c7a1f101353401bfb7a3383325e3ff50227de5ac
+  ref: c7a1f10
   specs:
     feedzirra (0.6.0)
       curb (~> 0.8.1)
@@ -29,7 +29,7 @@ GEM
     json (1.8.1)
     loofah (1.2.1)
       nokogiri (>= 1.4.4)
-    mini_portile (0.5.2)
+    mini_portile (0.5.3)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
