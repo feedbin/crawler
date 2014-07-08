@@ -8,7 +8,7 @@ end
 gem 'feedzirra', github: 'feedbin/feedzirra', ref: 'c7a1f10'
 
 gem 'bundler'
-gem 'foreman'
+gem 'foreman', '= 0.63.0'
 gem 'rake'
 gem 'sidekiq'
 gem 'dotenv'
