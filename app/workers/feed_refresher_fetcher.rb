@@ -79,10 +79,10 @@ class FeedRefresherFetcher
     end
 
     content_lengths.each do |public_id, future|
-      value = future.value
+      value = future.value.to_i
       if value == nil
         content_length = nil
-      elsif value == '1'
+      elsif value == 1
         content_length = false
       else
         begin
