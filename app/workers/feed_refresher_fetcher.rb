@@ -17,13 +17,13 @@ class FeedRefresherFetcher
     if feedzirra.respond_to?(:entries) && feedzirra.entries.length > 0
       update = {feed: {id: feed_id, etag: feedzirra.etag, last_modified: feedzirra.last_modified}, entries: []}
       public_ids = feedzirra.entries.map {|entry| entry._public_id_}
-      updated_dates = get_updated_dates(public_ids)
+      content_lengths = get_content_lengths(public_ids)
       feedzirra.entries.first(300).each do |entry|
-        entry_updated = updated_dates[entry._public_id_]
-        if entry_updated == nil
+        content_length = content_lengths[entry._public_id_]
+        if content_length == nil
           entry = create_entry(entry, false, source)
           update[:entries].push(entry)
-        elsif entry_updated && entry.try(:updated) && entry.updated > entry_updated
+        elsif content_length && entry.content && entry.content.length != content_length
           entry = create_entry(entry, true)
           update[:entries].push(entry)
         end
@@ -47,7 +47,7 @@ class FeedRefresherFetcher
     unless last_modified.blank?
       begin
         options[:if_modified_since] = DateTime.parse(last_modified)
-      rescue Exception => e
+      rescue Exception
       end
     end
 
@@ -67,31 +67,32 @@ class FeedRefresherFetcher
     options
   end
 
-  def get_updated_dates(public_ids)
-    updated_dates = {}
-    Sidekiq.redis { |conn|
+  def get_content_lengths(public_ids)
+    content_lengths = {}
+
+    Sidekiq.redis do |conn|
       conn.pipelined do
         public_ids.each do |public_id|
-          updated_dates[public_id] = conn.hget("entry:public_ids:#{public_id[0..4]}", public_id)
+          content_lengths[public_id] = conn.hget("entry:public_ids:#{public_id[0..4]}", public_id)
         end
       end
-    }
-    updated_dates.each do |public_id, future|
+    end
+
+    content_lengths.each do |public_id, future|
       value = future.value
       if value == nil
-        date = nil
+        content_length = nil
       elsif value == '1'
-        date = false
+        content_length = false
       else
         begin
-          date = Time.parse(future.value)
-        rescue Exception
-          date = false
+          content_length = future.value
         end
       end
-      updated_dates[public_id] = date
+      content_lengths[public_id] = content_length
     end
-    updated_dates
+
+    content_lengths
   end
 
   def create_entry(entry, update = false, source = nil)
