@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/feedbin/feedzirra.git
-  revision: c7a1f101353401bfb7a3383325e3ff50227de5ac
-  ref: c7a1f10
+  revision: 91f9a1755e18a386a3e52aadc8dbaa04fa389479
+  ref: 91f9a17
   specs:
     feedzirra (0.6.0)
       curb (~> 0.8.1)
@@ -20,7 +20,7 @@ GEM
     celluloid (0.15.2)
       timers (~> 1.1.0)
     connection_pool (2.0.0)
-    curb (0.8.5)
+    curb (0.8.6)
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
@@ -31,7 +31,7 @@ GEM
     json (1.8.1)
     loofah (1.2.1)
       nokogiri (>= 1.4.4)
-    mini_portile (0.6.0)
+    mini_portile (0.6.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -39,8 +39,8 @@ GEM
     net-ssh (2.9.1)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    nokogiri (1.6.2.1)
-      mini_portile (= 0.6.0)
+    nokogiri (1.6.4.1)
+      mini_portile (~> 0.6.0)
     rake (10.3.2)
     redis (3.1.0)
     redis-namespace (1.5.0)
