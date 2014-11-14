@@ -85,9 +85,7 @@ class FeedRefresherFetcher
       elsif value == 1
         content_length = false
       else
-        begin
-          content_length = future.value
-        end
+        content_length = value
       end
       content_lengths[public_id] = content_length
     end
