@@ -23,9 +23,6 @@ class FeedRefresherFetcher
         if content_length == nil
           entry = create_entry(entry, false, source)
           update[:entries].push(entry)
-        elsif content_length && entry.content && entry.content.length != content_length
-          entry = create_entry(entry, true)
-          update[:entries].push(entry)
         end
       end
       if update[:entries].any?
