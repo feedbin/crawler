@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.0.0'
+ruby '2.1.5'
 
 group :development do
   gem 'capistrano', '~> 2.15.5'
