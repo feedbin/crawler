@@ -9,16 +9,16 @@ class FeedRefresherFetcher
     source = Socket.gethostname
     if body
       source += '-push'
-      feedzirra = feed_fetcher.parse(body, feed_url)
+      feedjira = feed_fetcher.parse(body, feed_url)
     else
-      feedzirra = feed_fetcher.fetch_and_parse(options, feed_url)
+      feedjira = feed_fetcher.fetch_and_parse(options, feed_url)
     end
 
-    if feedzirra.respond_to?(:entries) && feedzirra.entries.length > 0
-      update = {feed: {id: feed_id, etag: feedzirra.etag, last_modified: feedzirra.last_modified}, entries: []}
-      public_ids = feedzirra.entries.map {|entry| entry._public_id_}
+    if feedjira.respond_to?(:entries) && feedjira.entries.length > 0
+      update = {feed: {id: feed_id, etag: feedjira.etag, last_modified: feedjira.last_modified}, entries: []}
+      public_ids = feedjira.entries.map {|entry| entry._public_id_}
       content_lengths = get_content_lengths(public_ids)
-      feedzirra.entries.first(300).each do |entry|
+      feedjira.entries.first(300).each do |entry|
         content_length = content_lengths[entry._public_id_]
         if content_length == nil
           entry = create_entry(entry, false, source)

@@ -1,12 +1,12 @@
 GIT
-  remote: git://github.com/feedbin/feedzirra.git
-  revision: 91f9a1755e18a386a3e52aadc8dbaa04fa389479
-  ref: 91f9a17
+  remote: git://github.com/feedbin/feedjira.git
+  revision: 154c523217b4e0316623582d17169178748e49d6
+  ref: 154c523
   specs:
-    feedzirra (0.6.0)
-      curb (~> 0.8.1)
-      loofah (~> 1.2.1)
-      sax-machine (~> 0.2.1)
+    feedjira (1.5.0)
+      curb (~> 0.8)
+      loofah (~> 2.0)
+      sax-machine (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -28,8 +28,8 @@ GEM
     highline (1.6.21)
     hitimes (1.2.2)
     json (1.8.1)
-    loofah (1.2.1)
-      nokogiri (>= 1.4.4)
+    loofah (2.0.1)
+      nokogiri (>= 1.5.9)
     mini_portile (0.6.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -44,8 +44,7 @@ GEM
     redis (3.2.0)
     redis-namespace (1.5.1)
       redis (~> 3.0, >= 3.0.4)
-    sax-machine (0.2.1)
-      nokogiri (~> 1.6.0)
+    sax-machine (1.1.1)
     sidekiq (3.3.0)
       celluloid (>= 0.16.0)
       connection_pool (>= 2.0.0)
@@ -63,7 +62,7 @@ DEPENDENCIES
   bundler
   capistrano (~> 2.15.5)
   dotenv
-  feedzirra!
+  feedjira!
   foreman (= 0.63.0)
   rake
   sidekiq

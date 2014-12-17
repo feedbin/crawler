@@ -13,11 +13,11 @@ require 'net/http'
 require 'socket'
 
 require 'sidekiq'
-require 'feedzirra'
+require 'feedjira'
 
 require 'lib/core_ext/blank'
 require 'lib/core_ext/try'
-require 'lib/feedzirra_extension'
+require 'lib/feedjira_extension'
 require 'lib/sidekiq'
 require 'app/models/feed_fetcher'
 require 'app/workers/feed_refresher_fetcher'
