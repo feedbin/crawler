@@ -21,7 +21,7 @@ set :worker_count, 8
 set :normalize_asset_timestamps, false
 
 role :app, "refresher1.feedbin.com", "refresher2.feedbin.com", "refresher3.feedbin.com", "refresher4.feedbin.com", "refresher5.feedbin.com",
-           "refresher6.feedbin.com", "refresher7.feedbin.com", "refresher8.feedbin.com", "refresher9.feedbin.com", "refresher10.feedbin.com"
+           "refresher6.feedbin.com", "refresher8.feedbin.com", "refresher9.feedbin.com", "refresher10.feedbin.com"
 
 default_run_options[:pty] = true
 default_run_options[:shell] = '/bin/bash --login'
