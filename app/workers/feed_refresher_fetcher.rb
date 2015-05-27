@@ -55,9 +55,9 @@ class FeedRefresherFetcher
       options[:if_none_match] = etag
     end
 
-    options[:user_agent] = "Feedbin"
+    options[:user_agent] = "Feedbin feed-id:#{feed_id}"
     unless subscribers.nil?
-      options[:user_agent] = "Feedbin - #{subscribers} subscribers"
+      options[:user_agent] = "Feedbin feed-id:#{feed_id} - #{subscribers} subscribers"
     end
 
     if push_callback
