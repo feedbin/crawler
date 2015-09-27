@@ -153,9 +153,7 @@ class FeedFetcher
     defaults = {user_agent: 'Feedbin', ssl_verify_peer: false, timeout: 20, connect_timeout: 10, max_redirects: 5}
     options = defaults.merge(options)
     feedjira = nil
-    Timeout::timeout(35) do
-      feedjira = Feedjira::Feed.fetch_and_parse(@url, options)
-    end
+    feedjira = Feedjira::Feed.fetch_and_parse(@url, options)
     if feedjira.respond_to?(:hubs) && !feedjira.hubs.blank? && options[:push_callback] && options[:feed_id]
       if @url == feedjira.feed_url
         push_subscribe(feedjira, options[:feed_id], options[:push_callback], options[:hub_secret])
@@ -174,7 +172,7 @@ class FeedFetcher
       feedjira.etag          = feedjira.etag ? feedjira.etag.strip.gsub(/^"/, '').gsub(/"$/, '') : nil
       feedjira.last_modified = feedjira.last_modified
       feedjira.title         = feedjira.title ? feedjira.title.strip : '(No title)'
-      feedjira.feed_url      = feedjira.feed_url.strip
+      feedjira.feed_url      = feedjira.feed_url ? feedjira.feed_url.strip : nil
       feedjira.url           = feedjira.url ? feedjira.url.strip : nil
       feedjira.entries.map do |entry|
         if entry.try(:content)
