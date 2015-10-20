@@ -49,8 +49,8 @@ class FeedFetcher
       content = Nokogiri::HTML(content)
 
       # Case insensitive rss link search
-      links = content.search("//link[translate(@type, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') = 'application/rss+xml'] |" +
-                             "//link[translate(@type, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') = 'application/atom+xml']")
+      links = content.search("//link[@rel='alternate' and translate(@type, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') = 'application/rss+xml'] |" +
+                             "//link[@rel='alternate' and translate(@type, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') = 'application/atom+xml']")
 
       links.map do |link|
         href = link.get_attribute('href')
@@ -65,6 +65,12 @@ class FeedFetcher
         end
       end
     end
+
+    @feed_options = @feed_options.map do |option|
+      option[:title] = option[:title].gsub(/(RSS[\s0-9\.]*|Atom)/i, "") if option[:title].present?
+      option
+    end
+    @feed_options = @feed_options.uniq { |option| option[:title] }
 
     if @feed_options.length == 1
       @site_url = @url
@@ -172,7 +178,7 @@ class FeedFetcher
       feedjira.etag          = feedjira.etag ? feedjira.etag.strip.gsub(/^"/, '').gsub(/"$/, '') : nil
       feedjira.last_modified = feedjira.last_modified
       feedjira.title         = feedjira.title ? feedjira.title.strip : '(No title)'
-      feedjira.feed_url      = feedjira.feed_url ? feedjira.feed_url.strip : nil
+      feedjira.feed_url      = feedjira.feed_url.strip
       feedjira.url           = feedjira.url ? feedjira.url.strip : nil
       feedjira.entries.map do |entry|
         if entry.try(:content)
@@ -199,14 +205,21 @@ class FeedFetcher
         entry.entry_id        = entry.entry_id ? entry.entry_id.strip : nil
         entry._public_id_     = build_public_id(entry, feedjira, saved_feed_url)
         entry._old_public_id_ = build_public_id(entry, feedjira)
+
+        data = {}
         if entry.try(:enclosure_type) && entry.try(:enclosure_url)
-          data = {}
-          data[:enclosure_type] = entry.enclosure_type ? entry.enclosure_type : nil
-          data[:enclosure_url] = entry.enclosure_url ? entry.enclosure_url : nil
-          data[:enclosure_length] = entry.enclosure_length ? entry.enclosure_length : nil
-          data[:itunes_duration] = entry.itunes_duration ? entry.itunes_duration : nil
-          entry._data_ = data
+          data[:enclosure_type] = entry.try(:enclosure_type)
+          data[:enclosure_url] = entry.try(:enclosure_url)
+          data[:enclosure_length] = entry.try(:enclosure_length)
+          data[:itunes_duration] = entry.try(:itunes_duration)
         end
+        if entry.try(:youtube_video_id)
+          entry.content = entry.try(:media_description)
+          data[:youtube_video_id] = entry.try(:youtube_video_id)
+          data[:media_width] = entry.try(:media_width)
+          data[:media_height] = entry.try(:media_height)
+        end
+        entry._data_ = data
       end
       if feedjira.entries.any?
         feedjira.entries = feedjira.entries.uniq { |entry| entry._public_id_ }
