@@ -1,1 +1,1 @@
-worker: bundle exec sidekiq -c 20 -q feed_refresher_fetcher_critical,2 -q feed_refresher_fetcher -r ./app/boot.rb
+worker: bundle exec sidekiq -c 50 -q feed_refresher_fetcher_critical,2 -q feed_refresher_fetcher -r ./app/boot.rb
