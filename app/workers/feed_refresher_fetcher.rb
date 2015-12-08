@@ -15,7 +15,15 @@ class FeedRefresherFetcher
     end
 
     if feedjira.respond_to?(:entries) && feedjira.entries.length > 0
-      update = {feed: {id: feed_id, etag: feedjira.etag, last_modified: feedjira.last_modified}, entries: []}
+      update = {
+        feed: {
+          id: feed_id,
+          etag: feedjira.etag,
+          last_modified: feedjira.last_modified,
+          self_url: feedjira.self_url,
+          title: feedjira.title,
+        }, entries: []
+      }
       public_ids = feedjira.entries.map {|entry| entry._public_id_}
       content_lengths = get_content_lengths(public_ids)
       feedjira.entries.first(300).each do |entry|
