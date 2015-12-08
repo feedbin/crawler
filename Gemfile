@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'capistrano', '~> 2.15.5'
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
 end
 
 gem 'feedjira', github: 'feedbin/feedjira', ref: '1e60a39'
