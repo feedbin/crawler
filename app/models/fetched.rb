@@ -24,6 +24,9 @@ class Fetched
     @parsed_feed ||= begin
       result = nil
       request = FeedRequest.new(url: @feed_url, options: request_options)
+      puts "------------------------"
+      puts request.status
+      puts "------------------------"
       if request.body
         result = ParsedFeed.new(request.body, request, @feed_url)
       end
@@ -57,8 +60,8 @@ class Fetched
 
   def user_agent
     agent = "Feedbin feed-id:#{@feed_id}"
-    if @options[:subscribers]
-      agent += " - #{@options[:subscribers]} subscribers"
+    if @options[:subscriptions_count]
+      agent += " - #{@options[:subscriptions_count]} subscribers"
     end
     agent
   end

@@ -23,10 +23,7 @@ class PubSubHubbub
     body['hub.topic'] = @self_url
     body['hub.secret'] = @hub_secret
     body['hub.callback'] = @push_callback
-    if include_subscribers
-      body['feedbin.subscribers'] = @subscribers
-    end
-
+    body['feedbin.subscribers'] = @subscribers if include_subscribers
     Curl.post(url, body) do |http|
       if username && password
         http.http_auth_types = :basic

@@ -2,7 +2,7 @@ class FeedRefresherFetcher
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 
-  # Options: etag, last_modified, subscribers, xml, push_callback, hub_secret
+  # Options: etag, last_modified, subscriptions_count, xml, push_callback, hub_secret
   def perform(feed_id, feed_url, options = {})
     result = nil
     feed = { id: feed_id }
@@ -14,7 +14,7 @@ class FeedRefresherFetcher
       feed = feed.merge(fetched.feed)
       if options[:push_callback] && options[:hub_secret]
         feed = fetched.parsed_feed
-        push = PubSubHubbub.new(feed.hubs, feed.self_url, options[:push_callback], options[:hub_secret], options[:subscribers])
+        push = PubSubHubbub.new(feed.hubs, feed.self_url, options[:push_callback], options[:hub_secret], options[:subscriptions_count])
         push.subscribe
       end
     end
@@ -25,12 +25,11 @@ class FeedRefresherFetcher
         feed: feed,
         entries: entries.entries,
       }
-      # puts update.inspect
-      # Sidekiq::Client.push(
-      #   'args'  => [update],
-      #   'class' => 'FeedRefresherReceiver',
-      #   'queue' => 'feed_refresher_receiver'
-      # )
+      Sidekiq::Client.push(
+        'args'  => [update],
+        'class' => 'FeedRefresherReceiver',
+        'queue' => 'feed_refresher_receiver'
+      )
     end
   end
 
