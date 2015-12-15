@@ -9,7 +9,7 @@ class PubSubHubbub
 
   def subscribe
     @hubs.each do |hub|
-      request(url)
+      request(hub)
     end
     if @hubs.empty? && ENV["PUSH_SERVICE_URL"]
       request(ENV["PUSH_SERVICE_URL"], ENV["PUSH_SERVICE_USERNAME"], ENV["PUSH_SERVICE_PASSWORD"], true)

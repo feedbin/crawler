@@ -10,8 +10,6 @@ class Fetched
     data = {}
     if parsed_feed
       data = parsed_feed.to_feed
-      data.delete(:feed_url)
-      data.delete(:hubs)
     end
     data
   end

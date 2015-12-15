@@ -4,7 +4,6 @@ class FeedRefresherFetcher
 
   # Options: etag, last_modified, subscriptions_count, xml, push_callback, hub_secret
   def perform(feed_id, feed_url, options = {})
-    result = nil
     feed = { id: feed_id }
     if options["xml"]
       entries = Pushed.new(options["xml"], feed_url).entries
@@ -12,10 +11,8 @@ class FeedRefresherFetcher
       fetched = Fetched.new(feed_id, feed_url, options)
       entries = fetched.entries
       feed = feed.merge(fetched.feed)
-      if options["push_callback"] && options["hub_secret"]
-        feed = fetched.parsed_feed
-        push = PubSubHubbub.new(feed.hubs, feed.self_url, options["push_callback"], options["hub_secret"], options["subscriptions_count"])
-        push.subscribe
+      if fetched.parsed_feed && options["push_callback"] && options["hub_secret"]
+        push_subscribe(fetched.parsed_feed, options)
       end
     end
 
@@ -31,6 +28,18 @@ class FeedRefresherFetcher
         'queue' => 'feed_refresher_receiver'
       )
     end
+  end
+
+  def push_subscribe(feed, opts)
+    PubSubHubbub.new(
+      feed.hubs,
+      feed.self_url,
+      opts["push_callback"],
+      opts["hub_secret"],
+      opts["subscriptions_count"]
+    ).subscribe
+  rescue Exception => e
+    puts "PuSH Exception #{e.inspect}: #{e.backtrace.inspect}"
   end
 
 end
