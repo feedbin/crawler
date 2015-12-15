@@ -2,9 +2,9 @@ class FeedRefresherFetcherCritical
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher_critical
 
-  def perform(feed_id, feed_url, etag, last_modified, subscribers = nil, body = nil, push_callback = nil, hub_secret = nil)
+  def perform(feed_id, feed_url, options = {})
     f = FeedRefresherFetcher.new
-    f.perform(feed_id, feed_url, etag, last_modified, subscribers, body, push_callback, hub_secret)
+    f.perform(feed_id, feed_url, options = {})
   end
 
 end
