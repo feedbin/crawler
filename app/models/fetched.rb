@@ -24,9 +24,6 @@ class Fetched
     @parsed_feed ||= begin
       result = nil
       request = FeedRequest.new(url: @feed_url, options: request_options)
-      puts "------------------------"
-      puts request.status
-      puts "------------------------"
       if request.body
         result = ParsedFeed.new(request.body, request, @feed_url)
       end
