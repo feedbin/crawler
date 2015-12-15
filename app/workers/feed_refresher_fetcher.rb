@@ -6,15 +6,15 @@ class FeedRefresherFetcher
   def perform(feed_id, feed_url, options = {})
     result = nil
     feed = { id: feed_id }
-    if options[:xml]
-      entries = Pushed.new(options[:xml], feed_url).entries
+    if options["xml"]
+      entries = Pushed.new(options["xml"], feed_url).entries
     else
       fetched = Fetched.new(feed_id, feed_url, options)
       entries = fetched.entries
       feed = feed.merge(fetched.feed)
-      if options[:push_callback] && options[:hub_secret]
+      if options["push_callback"] && options["hub_secret"]
         feed = fetched.parsed_feed
-        push = PubSubHubbub.new(feed.hubs, feed.self_url, options[:push_callback], options[:hub_secret], options[:subscriptions_count])
+        push = PubSubHubbub.new(feed.hubs, feed.self_url, options["push_callback"], options["hub_secret"], options["subscriptions_count"])
         push.subscribe
       end
     end

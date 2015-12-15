@@ -48,20 +48,20 @@ class Fetched
 
   def last_modified
     @last_modified ||= begin
-      DateTime.parse(@options[:last_modified])
+      DateTime.parse(@options["last_modified"])
     rescue
       nil
     end
   end
 
   def etag
-    @options[:etag]
+    @options["etag"]
   end
 
   def user_agent
     agent = "Feedbin feed-id:#{@feed_id}"
-    if @options[:subscriptions_count]
-      agent += " - #{@options[:subscriptions_count]} subscribers"
+    if @options["subscriptions_count"]
+      agent += " - #{@options["subscriptions_count"]} subscribers"
     end
     agent
   end
