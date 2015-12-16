@@ -14,7 +14,7 @@ class Pushed
       entries = []
       if feed.entries.respond_to?(:any?) && feed.entries.any?
         entries = feed.entries.map do |entry|
-          ParsedEntry.new(entry, feed_url)
+          ParsedEntry.new(entry, @feed_url)
         end
         entries = entries.uniq { |entry| entry.public_id }
       end
