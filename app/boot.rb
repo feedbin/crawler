@@ -14,6 +14,7 @@ require 'socket'
 
 require 'sidekiq'
 require 'feedjira'
+require 'http'
 
 require 'lib/core_ext/blank'
 require 'lib/core_ext/try'

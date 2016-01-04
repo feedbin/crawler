@@ -12,7 +12,7 @@ class FeedRequest
 
   def body
     @body ||= begin
-      result = response.body_str
+      result = response.body
       if gzipped?
         result = gunzip(result)
       end
@@ -35,7 +35,7 @@ class FeedRequest
   end
 
   def last_effective_url
-    @last_effective_url ||= response.last_effective_url
+    @last_effective_url ||= response.uri.to_s
   end
 
   def last_modified
@@ -57,16 +57,12 @@ class FeedRequest
   end
 
   def status
-    @status ||= response.response_code
+    @status ||= response.status.code
   end
 
   def headers
     @headers ||= begin
-      http_headers = response.header_str.split(/[\r\n]+/).map(&:strip)
-      http_headers = http_headers.flat_map do |string|
-        string.scan(/^(\S+):\s*(.+)/)
-      end
-      http_headers.each_with_object({}) do |(header, value), hash|
+      response.headers.each_with_object({}) do |(header, value), hash|
         header = header.downcase.gsub("-", "_").to_sym
         hash[header] = value
       end
@@ -90,20 +86,13 @@ class FeedRequest
   end
 
   def response
-    @response ||= Curl::Easy.perform(@url) do |curl|
-      if @options.has_key?(:if_modified_since)
-        curl.headers["If-Modified-Since"] = @options[:if_modified_since].httpdate
-      end
-      if @options.has_key?(:if_none_match)
-        curl.headers["If-None-Match"] = @options[:if_none_match]
-      end
-      curl.headers["User-Agent"] = @options[:user_agent] || "Feedbin"
-      curl.headers["Accept-Encoding"] = "gzip"
-      curl.connect_timeout = 10
-      curl.follow_location = true
-      curl.max_redirects = 5
-      curl.ssl_verify_peer = false
-      curl.timeout = 20
+    @response ||= begin
+      request_headers = {}
+      request_headers[:user_agent] = @options[:user_agent] || "Feedbin"
+      request_headers[:accept_encoding] = "gzip"
+      request_headers[:if_modified_since] = @options[:if_modified_since].httpdate if @options.has_key?(:if_modified_since)
+      request_headers[:if_none_match] = @options[:if_none_match] if @options.has_key?(:if_none_match)
+      HTTP.follow.headers(request_headers).timeout(write: 10, connect: 10, read: 20).get(@url)
     end
   end
 

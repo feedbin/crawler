@@ -7,9 +7,10 @@ group :development do
   gem 'foreman', '= 0.63.0'
 end
 
-gem 'feedjira', github: 'feedbin/feedjira', ref: '43ba9b4'
+gem 'feedjira'
 
 gem 'bundler'
 gem 'rake'
 gem 'sidekiq'
 gem 'dotenv'
+gem "http"
