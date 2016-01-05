@@ -12,7 +12,7 @@ class FeedRequest
 
   def body
     @body ||= begin
-      result = response.body
+      result = response.body.to_s
       if gzipped?
         result = gunzip(result)
       end
@@ -92,7 +92,12 @@ class FeedRequest
       request_headers[:accept_encoding] = "gzip"
       request_headers[:if_modified_since] = @options[:if_modified_since].httpdate if @options.has_key?(:if_modified_since)
       request_headers[:if_none_match] = @options[:if_none_match] if @options.has_key?(:if_none_match)
-      HTTP.follow.headers(request_headers).timeout(write: 10, connect: 10, read: 20).get(@url)
+
+      ssl_context = OpenSSL::SSL::SSLContext.new
+      ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      options = { ssl_context: ssl_context}
+
+      HTTP.follow.headers(request_headers).timeout(write: 10, connect: 10, read: 20).get(@url, options)
     end
   end
 
