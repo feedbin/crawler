@@ -41,7 +41,7 @@ class FeedRefresherFetcher
     end
   rescue ArgumentError => e
     logger.info { "\n--------------------------------" }
-    logger.info { "ArgumentError: #{[feed_id, feed_url, options]} #{e.inspect}" }
+    logger.info { "ArgumentError: #{[feed_id, feed_url, options]} #{e.inspect} #{e.backtrace}" }
     logger.info { "--------------------------------\n" }
   end
 
