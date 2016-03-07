@@ -21,14 +21,18 @@ class Fetched
   def parsed_feed
     @parsed_feed ||= begin
       result = nil
-      request = FeedRequest.new(url: @feed_url, options: request_options)
-      if request.body
-        result = ParsedFeed.new(request.body, request, @feed_url)
+      body = request.body
+      if body
+        result = ParsedFeed.new(body, request, @feed_url)
       end
       result
     rescue
       nil
     end
+  end
+
+  def request
+    @request ||= FeedRequest.new(url: @feed_url, options: request_options)
   end
 
   private
