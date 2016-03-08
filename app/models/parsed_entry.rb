@@ -56,17 +56,17 @@ class ParsedEntry
   def public_id
     @public_id ||= begin
       id_string = @feed_url.dup
-      if @entry.entry_id
-        id_string << @entry.entry_id.dup
+      if entry_id
+        id_string << entry_id
       else
-        if @entry.url
-          id_string << @entry.url.dup
+        if url
+          id_string << url
         end
-        if @entry.published
-          id_string << @entry.published.iso8601
+        if published
+          id_string << published.iso8601
         end
-        if @entry.title
-          id_string << @entry.title.dup
+        if title
+          id_string << title.dup
         end
       end
       Digest::SHA1.hexdigest(id_string)
@@ -74,7 +74,7 @@ class ParsedEntry
   end
 
   def published
-    @entry.published || Time.now
+    @entry.published
   end
 
   def source
