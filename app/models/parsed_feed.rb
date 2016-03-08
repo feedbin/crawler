@@ -11,7 +11,13 @@ class ParsedFeed
   end
 
   def feed
+    puts "========================================="
     @feed ||= Feedjira::Feed.parse(@xml)
+  rescue ArgumentError => e
+    puts "========================================="
+    puts "ArgumentError: #{[@xml]} #{e.inspect} #{e.backtrace}"
+    puts "========================================="
+    raise e
   end
 
   def title
