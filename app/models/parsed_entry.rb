@@ -1,3 +1,5 @@
+require 'socket'
+
 class ParsedEntry
 
   ENTRY_ATTRIBUTES = %i(author content data entry_id public_id published source title url).freeze
@@ -76,7 +78,7 @@ class ParsedEntry
   end
 
   def source
-    "Feedbin"
+    Socket.gethostname
   end
 
   def title
