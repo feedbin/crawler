@@ -13,10 +13,7 @@ class ParsedFeed
   def feed
     @feed ||= Feedjira::Feed.parse(@xml)
   rescue ArgumentError => e
-    puts "========================================="
-    puts "ArgumentError: #{[@xml.encoding]}"
-    puts "========================================="
-    raise e
+    @feed ||= Feedjira::Feed.parse(@xml.force_encoding("UTF-8"))
   end
 
   def title
