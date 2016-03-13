@@ -17,22 +17,22 @@ class Fetched
 
   def entries
     parsed_feed ? parsed_feed.entries : []
-  rescue Feedjira::NoParserAvailable
-    @status = 415
-    []
   end
 
   def parsed_feed
-    @parsed_feed ||= begin
-      result = nil
+    if @parsed_feed.nil?
+      result = false
       body = request.body
       if body
         result = ParsedFeed.new(body, request, @feed_url)
+        result.feed
       end
-      result
-    rescue
-      nil
+      @parsed_feed = result
+    else
+      @parsed_feed
     end
+  rescue Feedjira::NoParserAvailable
+    @parsed_feed = false
   end
 
   def request
