@@ -4,6 +4,7 @@ class Fetched
     @feed_id = feed_id
     @feed_url= feed_url
     @options = options
+    @status = nil
   end
 
   def feed
@@ -16,6 +17,9 @@ class Fetched
 
   def entries
     parsed_feed ? parsed_feed.entries : []
+  rescue Feedjira::NoParserAvailable
+    @status = 415
+    []
   end
 
   def parsed_feed
@@ -33,6 +37,10 @@ class Fetched
 
   def request
     @request ||= FeedRequest.new(url: @feed_url, options: request_options)
+  end
+
+  def status
+    @status || request.status
   end
 
   private
