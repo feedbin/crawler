@@ -58,6 +58,24 @@ class FeedRequest
     @status ||= response.response_code
   end
 
+  def charset
+    @charset ||= begin
+      if headers[:content_type]
+        charset = nil
+        headers[:content_type].split(";").each do |item|
+          item = item.strip
+          if item.start_with?("charset=")
+            charset = item.gsub("charset=", "")
+            charset = charset.strip.upcase
+          end
+        end
+        charset
+      else
+        nil
+      end
+    end
+  end
+
   def headers
     @headers ||= begin
       http_headers = response.header_str.split(/[\r\n]+/).map(&:strip)
