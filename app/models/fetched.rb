@@ -32,6 +32,7 @@ class Fetched
       @parsed_feed
     end
   rescue Feedjira::NoParserAvailable
+    mark_dead
     @parsed_feed = false
   end
 
@@ -73,4 +74,11 @@ class Fetched
     agent
   end
 
+  def mark_dead
+    Sidekiq::Client.push(
+      'args'  => [@feed_id],
+      'class' => 'FeedSeemsDead',
+      'queue' => 'feed_seems_to_be_dead'
+    )
+  end
 end

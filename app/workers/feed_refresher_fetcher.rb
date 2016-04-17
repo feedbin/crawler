@@ -29,6 +29,7 @@ class FeedRefresherFetcher
 
     entries = FormattedEntries.new(entries)
     if entries.entries.any?
+      feed[:alive] = true
       update = {
         feed: feed,
         entries: entries.entries,

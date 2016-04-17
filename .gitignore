@@ -4,3 +4,4 @@
 vendor/bundle
 tmp
 .env
+/spec/cassettes/**/*.yml
