@@ -14,10 +14,12 @@ require 'socket'
 
 require 'sidekiq'
 require 'feedjira'
+require 'librato-rack'
 
 require 'lib/core_ext/blank'
 require 'lib/core_ext/try'
 require 'lib/feedjira_extension'
+require 'lib/librato'
 require 'app/models/feed_request'
 require 'app/models/fetched'
 require 'app/models/formatted_entries'

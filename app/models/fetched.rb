@@ -27,6 +27,7 @@ class Fetched
         result = ParsedFeed.new(body, request, @feed_url)
         result.feed
       end
+      Librato.increment 'refresher.status', source: status.to_i
       @parsed_feed = result
     else
       @parsed_feed
