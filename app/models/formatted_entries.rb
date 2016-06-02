@@ -1,6 +1,7 @@
 class FormattedEntries
   def initialize(entries)
     @entries = entries
+    set_ids
   end
 
   def entries
@@ -19,6 +20,19 @@ class FormattedEntries
   end
 
   private
+
+  def set_ids
+    @set_ids ||= begin
+      $redis.with do |connection|
+        connection.pipelined do
+          @entries.each do |entry|
+            content_length = (entry.content) ? entry.content.length : 1
+            connection.set(entry.public_id, content_length)
+          end
+        end
+      end
+    end
+  end
 
   def new?(public_id)
     content_lengths[public_id].nil?

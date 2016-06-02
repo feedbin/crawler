@@ -70,11 +70,13 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-rbenv
+  connection_pool
   dotenv
   feedjira!
   foreman (= 0.63.0)
   librato-rack
   rake
+  redis
   sidekiq
 
 BUNDLED WITH
