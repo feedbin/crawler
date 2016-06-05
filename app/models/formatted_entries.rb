@@ -1,7 +1,6 @@
 class FormattedEntries
   def initialize(entries)
     @entries = entries
-    set_ids
   end
 
   def entries
@@ -21,19 +20,6 @@ class FormattedEntries
 
   private
 
-  def set_ids
-    @set_ids ||= begin
-      $redis.with do |connection|
-        connection.pipelined do
-          @entries.each do |entry|
-            content_length = (entry.content) ? entry.content.length : 1
-            connection.set(entry.public_id, content_length)
-          end
-        end
-      end
-    end
-  end
-
   def new?(public_id)
     content_lengths[public_id].nil?
   end
@@ -48,10 +34,10 @@ class FormattedEntries
       lengths = {}
       public_ids = @entries.map { |entry| entry.public_id }
 
-      Sidekiq.redis do |conn|
-        conn.pipelined do
+      $redis.with do |connection|
+        connection.pipelined do
           public_ids.each do |public_id|
-            lengths[public_id] = conn.hget("entry:public_ids:#{public_id[0..4]}", public_id)
+            lengths[public_id] = connection.get(public_id)
           end
         end
       end
