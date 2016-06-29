@@ -1,1 +1,1 @@
-worker: bundle exec sidekiq -c 10 -q image -r ./app/boot.rb
+worker: bundle exec sidekiq -c 10 -q images -r ./app/boot.rb
