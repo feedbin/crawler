@@ -10,6 +10,7 @@ end
 gem 'bundler'
 gem 'rake'
 
+gem 'addressable'
 gem 'dotenv'
 gem 'librato-rack'
 gem 'nokogumbo'

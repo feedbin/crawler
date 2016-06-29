@@ -72,7 +72,10 @@ class ImageCandidate
   def vimeo_uri(id)
     lambda do
       uri = nil
-      query = {url: "https://vimeo.com/#{id}"}.to_query
+      query = Addressable::URI.new.tap do |addressable|
+        addressable.query_values = {url: "https://vimeo.com/#{id}"}
+      end.query
+
       options = {
         scheme: "https",
         host: "vimeo.com",

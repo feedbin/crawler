@@ -51,7 +51,7 @@ class PageCandidates < Candidates
 
   def find_meta_image_candidates(meta_tags)
     meta_tags.each_with_object([]) do |element, array|
-      if ["twitter:image", "og:image"].include?(element["property"]) && element["content"].present?
+      if ["twitter:image", "og:image"].include?(element["property"]) && !element["content"].nil?
         src = element["content"].strip
         candidate = ImageCandidate.new(src, "img")
         array.push(candidate)
@@ -69,15 +69,15 @@ class PageCandidates < Candidates
 
   def tags_found(found)
     if found
-      $redis.set(feed_key, "true", ex: 24.hours.to_i, nx: true)
+      $redis.set(feed_key, "true", ex: 86400, nx: true)
     else
-      $redis.set(feed_key, "", ex: 24.hours.to_i, nx: true)
+      $redis.set(feed_key, "", ex: 86400, nx: true)
     end
   end
 
   def check_page?
     result = $redis.get(feed_key)
-    result.nil? || result.present?
+    result.nil? || result != ""
   end
 
   def cached_value
@@ -89,7 +89,7 @@ class PageCandidates < Candidates
   end
 
   def cached_image
-    if cached_value.present?
+    if !cached_value.nil? && cached_value != ""
       JSON.parse(cached_value)
     else
       false
@@ -97,7 +97,7 @@ class PageCandidates < Candidates
   end
 
   def cache_image(value)
-    $redis.set(image_cache_key, value, ex: 24.hours.to_i, nx: true)
+    $redis.set(image_cache_key, value)
   end
 
   def feed_key

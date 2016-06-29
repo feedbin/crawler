@@ -26,8 +26,6 @@ class Candidates
         break if download = download_candidate(candidate)
       rescue *NETWORK_EXCEPTIONS
         Librato.increment 'entry_image.exception'
-      rescue Exception => exception
-        Librato.increment 'entry_image.exception'
       end
     end
     download

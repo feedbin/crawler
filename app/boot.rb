@@ -15,6 +15,7 @@ require 'securerandom'
 require 'time'
 require 'uri'
 
+require 'addressable'
 require 'dotenv'
 require 'fog/aws'
 require 'httparty'
