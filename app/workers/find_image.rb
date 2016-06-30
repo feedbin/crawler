@@ -1,6 +1,6 @@
 class FindImage
   include Sidekiq::Worker
-  sidekiq_options queue: :image
+  sidekiq_options queue: :images
 
   def perform(entry_id, feed_id, url, full_url, site_url, content)
     image = nil
