@@ -7,6 +7,10 @@ group :development do
   gem 'foreman', '= 0.63.0'
 end
 
+group :test do
+  gem 'minitest'
+end
+
 gem 'feedjira', github: 'feedbin/feedjira', ref: '43ba9b4'
 
 gem 'bundler'
@@ -16,3 +20,4 @@ gem 'dotenv'
 gem 'librato-rack'
 gem 'connection_pool'
 gem 'redis'
+gem 'coveralls', require: false
