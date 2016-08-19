@@ -122,6 +122,22 @@ class TestFeedRequest < Minitest::Test
     assert_equal charset.upcase, feed_request.charset
   end
 
+
+  def test_should_clean_url
+    samples = {
+      "www.example.com"          => "http://www.example.com",
+      "feed://www.example.com"   => "http://www.example.com",
+      "htp://www.example.com"    => "http://www.example.com",
+      "htttp://www.example.com"  => "http://www.example.com",
+      "htps://www.example.com"   => "https://www.example.com",
+      "htttps://www.example.com" => "https://www.example.com",
+    }
+    samples.each do |typo, clean|
+      feed_request = FeedRequest.new(url: typo, clean: true)
+      assert_equal clean, feed_request.url
+    end
+  end
+
   private
 
   def gzip(string)
