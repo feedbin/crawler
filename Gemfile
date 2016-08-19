@@ -9,6 +9,7 @@ end
 
 group :test do
   gem 'minitest'
+  gem 'webmock'
 end
 
 gem 'feedjira', github: 'feedbin/feedjira', ref: '43ba9b4'
