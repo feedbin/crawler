@@ -108,6 +108,20 @@ class TestFeedRequest < Minitest::Test
     assert_equal status, feed_request.status
   end
 
+  def test_should_get_charset
+    url = "http://www.example.com"
+    charset = "utf-8"
+    response = {
+      headers: {
+        "Content-Type" => "text/html; charset=#{charset}",
+      }
+    }
+    stub_request(:get, url).to_return(response)
+    feed_request = FeedRequest.new(url: url)
+
+    assert_equal charset.upcase, feed_request.charset
+  end
+
   private
 
   def gzip(string)
