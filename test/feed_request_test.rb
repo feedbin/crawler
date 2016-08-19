@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-class TestFeedRequest < Minitest::Test
+class FeedRequestTest < Minitest::Test
 
   def test_get_body
     url = "http://www.example.com/atom.xml"
