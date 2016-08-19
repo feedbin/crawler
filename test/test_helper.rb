@@ -4,6 +4,8 @@ Coveralls.wear!
 require 'minitest/autorun'
 require 'webmock/minitest'
 
+require_relative '../app/boot'
+
 def stub_request_file(file, url, options={})
   file = File.join('test/support/www', file)
   defaults = {body: File.new(file), status: 200}

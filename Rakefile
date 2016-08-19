@@ -4,7 +4,6 @@ path = File.expand_path(File.dirname(__FILE__))
 
 Rake::TestTask.new(:test) do |test|
   test.libs = []
-  test.ruby_opts = ['-I', path, '-r', './app/boot.rb']
   test.pattern = 'test/**/*_test.rb'
 end
 
