@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/feedbin/feedjira.git
-  revision: 43ba9b453cad27461d05e4db7a5b8da93e327d44
-  ref: 43ba9b4
+  revision: f2293659c66c9b7689364c1b0a0eb8a391453b3f
+  ref: f229365
   specs:
     feedjira (1.6.1)
       curb (~> 0.8)
@@ -61,10 +61,8 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
-    nokogiri (1.6.8)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-      pkg-config (~> 1.1.7)
-    pkg-config (1.1.7)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
