@@ -3,17 +3,19 @@ class FormattedEntries
     @entries = entries
   end
 
-  def entries
-    @entries.first(300).each_with_object([]) do |entry, array|
-      result = nil
-      if new?(entry.public_id)
-        result = entry.to_entry
-      elsif updated?(entry.public_id, entry.content)
-        result = entry.to_entry
-        result[:update] = true
-      end
-      if result
-        array.push(result)
+  def new_or_changed
+    @new_or_changed ||= begin
+      @entries.first(300).each_with_object([]) do |entry, array|
+        result = nil
+        if new?(entry.public_id)
+          result = entry.to_entry
+        elsif updated?(entry.public_id, entry.content)
+          result = entry.to_entry
+          result[:update] = true
+        end
+        if result
+          array.push(result)
+        end
       end
     end
   end

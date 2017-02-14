@@ -27,11 +27,11 @@ class FeedRefresherFetcher
       end
     end
 
-    entries = FormattedEntries.new(entries)
-    if entries.entries.any?
+    formatted_entries = FormattedEntries.new(entries)
+    if formatted_entries.new_or_changed.any?
       update = {
         feed: feed,
-        entries: entries.entries,
+        entries: formatted_entries.new_or_changed,
       }
       Sidekiq::Client.push(
         'args'  => [update],
