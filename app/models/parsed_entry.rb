@@ -49,8 +49,7 @@ class ParsedEntry
     @entry_id_alt ||= begin
       if entry_id
         begin
-          uri = URI(entry_id)
-          [uri.userinfo, uri.path, uri.query, uri.fragment].join
+          parsed_uri(entry_id)
         rescue Exception
           if entry_id.include?("http:")
             entry_id.sub("http:", "https:")
@@ -60,6 +59,12 @@ class ParsedEntry
         end
       end
     end
+  end
+
+  def parsed_uri(entry_id)
+    uri = URI(entry_id)
+    result = [uri.userinfo, uri.path, uri.query, uri.fragment].join
+    result == "" ? nil : result
   end
 
   def author
