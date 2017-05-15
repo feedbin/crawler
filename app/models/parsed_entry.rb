@@ -48,10 +48,15 @@ class ParsedEntry
   def entry_id_alt
     @entry_id_alt ||= begin
       if entry_id
-        if entry_id.include?("http:")
-          entry_id.sub("http:", "https:")
-        elsif entry_id.include?("https:")
-          entry_id.sub("https:", "http:")
+        begin
+          uri = URI(entry_id)
+          [uri.userinfo, uri.path, uri.query, uri.fragment].join
+        rescue Exception
+          if entry_id.include?("http:")
+            entry_id.sub("http:", "https:")
+          elsif entry_id.include?("https:")
+            entry_id.sub("https:", "http:")
+          end
         end
       end
     end
