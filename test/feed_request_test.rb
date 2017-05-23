@@ -36,6 +36,13 @@ class FeedRequestTest < Minitest::Test
     assert_equal :xml, feed_request.format
   end
 
+  def test_should_be_json_feed
+    url = "http://www.example.com/feed.json"
+    stub_request_file("feed.json", url, {headers: {"Content-Type" => "application/json"}})
+    feed_request = FeedRequest.new(url: url)
+    assert_equal :json_feed, feed_request.format
+  end
+
   def test_should_be_html
     url = "http://www.example.com/atom.xml"
     body = random_string

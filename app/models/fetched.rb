@@ -24,7 +24,11 @@ class Fetched
       result = false
       body = request.body
       if body
-        result = ParsedFeed.new(body, request, @feed_url)
+        if request.format == :json_feed
+          result = ParsedJSONFeed.new(body, request, @feed_url)
+        else
+          result = ParsedXMLFeed.new(body, request, @feed_url)
+        end
         result.feed
       end
       Librato.increment 'refresher.status', source: status.to_i
