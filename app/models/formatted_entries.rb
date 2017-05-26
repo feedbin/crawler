@@ -7,7 +7,7 @@ class FormattedEntries
     @new_or_changed ||= begin
       @entries.first(300).each_with_object([]) do |entry, array|
         result = nil
-        if new?(entry.public_id)
+        if new?(entry.public_id, entry.public_id_alt)
           result = entry.to_entry
         elsif updated?(entry.public_id, entry.content)
           result = entry.to_entry
@@ -22,8 +22,12 @@ class FormattedEntries
 
   private
 
-  def new?(public_id)
-    content_lengths[public_id].nil?
+  def new?(public_id, public_id_alt)
+    if public_id_alt
+      content_lengths[public_id].nil? && content_lengths[public_id_alt].nil?
+    else
+      content_lengths[public_id].nil?
+    end
   end
 
   def updated?(public_id, content)
@@ -34,7 +38,9 @@ class FormattedEntries
   def content_lengths
     @content_lengths ||= begin
       lengths = {}
-      public_ids = @entries.map { |entry| entry.public_id }
+      public_ids = @entries.map do |entry|
+        [entry.public_id, entry.public_id_alt]
+      end.flatten.uniq
 
       $redis.with do |connection|
         connection.pipelined do

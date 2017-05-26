@@ -38,13 +38,26 @@ class FormattedEntriesTest < Minitest::Test
     assert_equal 0, results.length
   end
 
+  def test_should_ignore_alternate_ids
+    entries = sample_entries
+    $redis.with do |connection|
+      entries.each do |entry|
+        connection.set(entry.public_id_alt, entry.content.length)
+      end
+    end
+
+    results = FormattedEntries.new(entries).new_or_changed
+    assert_equal 0, results.length
+  end
+
   private
 
   def sample_entries
     entry = OpenStruct.new(
       public_id: random_string,
+      public_id_alt: random_string,
       content: random_string,
-      to_entry: {data: random_string},
+      to_entry: {data: random_string}
     )
     [entry]
   end
