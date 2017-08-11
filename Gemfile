@@ -12,7 +12,7 @@ group :test do
   gem 'webmock'
 end
 
-gem 'feedjira', github: 'feedbin/feedjira', ref: 'f229365'
+gem 'feedjira', github: 'feedbin/feedjira', ref: 'eeb7e81'
 
 gem 'bundler'
 gem 'rake'
@@ -22,3 +22,4 @@ gem 'librato-rack'
 gem 'connection_pool'
 gem 'redis'
 gem 'coveralls', require: false
+gem 'curb'

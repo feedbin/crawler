@@ -17,6 +17,7 @@ require 'feedjira'
 require 'librato-rack'
 require 'connection_pool'
 require 'redis'
+require 'curb'
 
 require 'lib/redis'
 require 'lib/librato'
