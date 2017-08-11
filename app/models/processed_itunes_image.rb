@@ -14,7 +14,7 @@ class ProcessedItunesImage
     image = Magick::Image.read(@file).first
     final_image = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.jpg"))
     puts final_image.inspect
-    image = image.resize_to_fill(400, 400)
+    image = image.resize_to_fill(200, 200)
     image = image.unsharp_mask(1.5)
     image.write(final_image.to_s)
     @url = upload(final_image)
