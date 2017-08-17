@@ -39,6 +39,18 @@ class FeedRefresherFetcher
         'queue' => 'feed_refresher_receiver'
       )
     end
+
+    if options["itunes_image"]
+      entries.each do |entry|
+        if entry.data && entry.data[:itunes_image]
+          Sidekiq::Client.push(
+            'args'  => [entry.public_id, entry.data[:itunes_image]],
+            'class' => 'FeedRefresherReceiverImage',
+            'queue' => 'feed_refresher_receiver'
+          )
+        end
+      end
+    end
   end
 
 end
