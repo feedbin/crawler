@@ -1,8 +1,7 @@
 class DownloadImage
 
-  def initialize(url, validate = true)
+  def initialize(url)
     @url = url
-    @validate = validate
   end
 
   def file
@@ -11,9 +10,7 @@ class DownloadImage
       options = {use_ssl: @url.scheme == "https", open_timeout: 5, read_timeout: 30}
       Net::HTTP.start(@url.host, @url.port, options) do |http|
         http.request_get(@url.request_uri) do |response|
-          if @validate && headers_valid?(response.to_hash)
-            file = download_image(response)
-          else
+          if headers_valid?(response.to_hash)
             file = download_image(response)
           end
         end
