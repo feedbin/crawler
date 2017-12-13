@@ -2,7 +2,7 @@ class FindImage
   include Sidekiq::Worker
   sidekiq_options queue: :images, retry: false
 
-  def perform(entry_id, feed_id, url, full_url, site_url, content)
+  def perform(entry_id, feed_id, url, full_url, site_url, content, options = {})
     image = nil
     if attempt = EntryCandidates.new(feed_id, url, full_url, site_url, content).find_image
       image = attempt
