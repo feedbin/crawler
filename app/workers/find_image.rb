@@ -4,14 +4,23 @@ class FindImage
 
   def perform(entry_id, feed_id, url, full_url, site_url, content, options = {})
     image = nil
-    if attempt = EntryCandidates.new(feed_id, url, full_url, site_url, content).find_image
-      image = attempt
-      Librato.increment 'entry_image.create.from_entry'
-    end
-    if image.nil?
-      if attempt = PageCandidates.new(feed_id, url, full_url, site_url, content).find_image
+
+    if options["link"]
+      if attempt = LinkCandidates.new(options["link"]).download
         image = attempt
-        Librato.increment 'entry_image.create.from_page'
+        Librato.increment 'entry_image.create.from_links'
+      end
+    else
+      if attempt = EntryCandidates.new(feed_id, url, full_url, site_url, content).find_image
+        image = attempt
+        Librato.increment 'entry_image.create.from_entry'
+      end
+
+      if image.nil?
+        if attempt = PageCandidates.new(feed_id, url, full_url, site_url, content).find_image
+          image = attempt
+          Librato.increment 'entry_image.create.from_page'
+        end
       end
     end
 
