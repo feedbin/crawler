@@ -1,6 +1,8 @@
 class ImageCandidate
   YOUTUBE_URLS = [%r(https?://youtu\.be/(.+)), %r(https?://www\.youtube\.com/watch\?v=(.*?)(&|#|$)), %r(https?://www\.youtube\.com/embed/(.*?)(\?|$)), %r(https?://www\.youtube\.com/v/(.*?)(#|\?|$)), %r(https?://www\.youtube\.com/user/.*?#\w/\w/\w/\w/(.+)\b)]
   VIMEO_URL = %r(https?://player\.vimeo\.com/video/(.*?)(#|\?|$))
+  INSTAGRAM_URL = %r(https?://www\.instagram\.com/p/(.*?)(/|#|\?|$))
+
   IGNORE_EXTENSIONS = [".gif", ".png", ".webp"]
 
   def initialize(src, type)
@@ -65,6 +67,9 @@ class ImageCandidate
     elsif @src =~ VIMEO_URL && $1
       uri = vimeo_uri($1)
       @valid = true
+    elsif @src =~ INSTAGRAM_URL && $1
+      uri = instagram_uri($1)
+      @valid = true
     end
     uri
   end
@@ -90,6 +95,27 @@ class ImageCandidate
       end
 
       uri
+    end
+  end
+
+  def instagram_uri(id)
+    lambda do
+      query = Addressable::URI.new.tap do |addressable|
+        addressable.query_values = {size: "l"}
+      end.query
+
+
+      "https://instagram.com/p/#{id}/media/?size=l"
+
+      options = {
+        scheme: "https",
+        host: "instagram.com",
+        path: "/p/#{id}/media/",
+        query: query
+      }
+
+      response = HTTParty.get(URI::HTTP.build(options), timeout: 4, follow_redirects: true)
+      response.request.last_uri.to_s
     end
   end
 

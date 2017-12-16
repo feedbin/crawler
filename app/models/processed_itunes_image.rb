@@ -13,7 +13,6 @@ class ProcessedItunesImage
     success = false
     image = Magick::Image.read(@file).first
     final_image = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.jpg"))
-    puts final_image.inspect
     image = image.resize_to_fill(200, 200)
     image = image.unsharp_mask(1.5)
     image.write(final_image.to_s)

@@ -11,26 +11,44 @@ class LinkCandidates
                         Zlib::DataError]
 
 
-  def initialize(url)
-    @url = URI.parse(url)
+  def initialize(urls)
+    @urls = urls
   end
 
   def download
-    download = nil
+    @urls.each do |url|
+      url = URI.parse(url)
+      if data = perform(url)
+        return data
+      end
+    end
+    return nil
+  end
+
+  def perform(url)
+
+    image_data = nil
     attempt = nil
-    attempt = DownloadImage.new(@url)
+
+    candidate = ImageCandidate.new(url.to_s, "iframe")
+    if candidate.valid?
+      attempt = DownloadImage.new(candidate.original_url)
+    else
+      attempt = DownloadImage.new(url)
+    end
+
     if attempt.file
       processed_image = ProcessedImage.new(attempt.file)
       if processed_image.process
-        download = {
-          original_url: @url.to_s,
+        image_data = {
+          original_url: url.to_s,
           processed_url: processed_image.url.to_s,
           width: processed_image.width,
           height: processed_image.height,
         }
       end
     end
-    download
+    image_data
   rescue *NETWORK_EXCEPTIONS
     Librato.increment 'entry_image.exception'
     nil

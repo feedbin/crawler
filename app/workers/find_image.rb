@@ -5,8 +5,8 @@ class FindImage
   def perform(entry_id, feed_id, url, full_url, site_url, content, options = {})
     image = nil
 
-    if options["link"]
-      if attempt = LinkCandidates.new(options["link"]).download
+    if options["urls"]
+      if attempt = LinkCandidates.new(options["urls"]).download
         image = attempt
         Librato.increment 'entry_image.create.from_links'
       end
