@@ -132,6 +132,16 @@ class ProcessedImage
         center += region.center.send(dimension)
       end
       center = center / objects.count.to_f
+    else
+      image = image.BGR2GRAY
+      objects = image.good_features_to_track(0.04, 1.0, max: 20, use_harris: false)
+      if objects.count > 0
+        center = 0
+        objects.each do |point|
+          center += point.send(dimension)
+        end
+        center = center / objects.count.to_f
+      end
     end
     center
   end
