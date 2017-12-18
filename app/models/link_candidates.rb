@@ -32,13 +32,13 @@ class LinkCandidates
 
     candidate = ImageCandidate.new(url.to_s, "iframe")
     if candidate.valid?
-      attempt = DownloadImage.new(candidate.original_url)
+      attempt = DownloadImage.new(candidate.original_url, false)
     else
-      attempt = DownloadImage.new(url)
+      attempt = DownloadImage.new(url, false)
     end
 
     if attempt.file
-      processed_image = ProcessedImage.new(attempt.file)
+      processed_image = ProcessedImage.new(attempt.file, false)
       if processed_image.process
         image_data = {
           original_url: url.to_s,

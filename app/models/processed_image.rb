@@ -7,9 +7,10 @@ class ProcessedImage
 
   attr_reader :url, :width, :height
 
-  def initialize(file)
+  def initialize(file, validate = true)
     @file = file
     @url = nil
+    @validate = validate
   end
 
   def process
@@ -81,7 +82,11 @@ class ProcessedImage
   end
 
   def valid?
-    original_width >= TARGET_WIDTH && original_height >= target_height
+    if @validate
+      original_width >= TARGET_WIDTH && original_height >= target_height
+    else
+      true
+    end
   end
 
   def upload(file)

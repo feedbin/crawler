@@ -1,7 +1,8 @@
 class DownloadImage
 
-  def initialize(url)
+  def initialize(url, validate = true)
     @url = url
+    @validate = validate
   end
 
   def file
@@ -34,7 +35,11 @@ class DownloadImage
   end
 
   def headers_valid?(headers)
-    headers["content-type"].first == "image/jpeg" && headers["content-length"].first.to_i > 20_000
+    if @validate
+      headers["content-type"].first == "image/jpeg" && headers["content-length"].first.to_i > 20_000
+    else
+      headers["content-type"].first == "image/jpeg"
+    end
   rescue
     false
   end
