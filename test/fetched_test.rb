@@ -28,16 +28,16 @@ class FetchedTest < Minitest::Test
     assert @fetched.entries.length > 0
     assert @fetched_json.entries.length > 0
     @fetched.entries.each do |entry|
-      assert_kind_of ParsedXMLEntry, entry
+      assert_kind_of Feedkit::Parser::XMLEntry, entry
     end
     @fetched_json.entries.each do |entry|
-      assert_kind_of ParsedJSONEntry, entry
+      assert_kind_of Feedkit::Parser::JSONEntry, entry
     end
   end
 
   def test_should_parsed_feed
-    assert_kind_of ParsedXMLFeed, @fetched.parsed_feed
-    assert_kind_of ParsedJSONFeed, @fetched_json.parsed_feed
+    assert_kind_of Feedkit::Parser::XMLFeed, @fetched.parsed_feed
+    assert_kind_of Feedkit::Parser::JSONFeed, @fetched_json.parsed_feed
   end
 
   def test_should_get_status

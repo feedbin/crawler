@@ -13,6 +13,10 @@ def stub_request_file(file, url, options={})
     to_return(defaults.merge(options))
 end
 
+def load_xml
+  File.read('test/support/www/atom.xml')
+end
+
 def random_string
   (0...50).map { ('a'..'z').to_a[rand(26)] }.join
 end

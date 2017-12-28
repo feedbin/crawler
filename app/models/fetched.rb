@@ -24,12 +24,7 @@ class Fetched
       result = false
       body = request.body
       if body
-        if request.format == :json_feed
-          result = ParsedJSONFeed.new(body, request, @feed_url)
-        else
-          result = ParsedXMLFeed.new(body, request, @feed_url)
-        end
-        result.feed
+        result = Feedkit.fetch_and_parse(@feed_url, request: request, base_url: @feed_url)
       end
       Librato.increment 'refresher.status', source: status.to_i
       @parsed_feed = result
@@ -41,7 +36,7 @@ class Fetched
   end
 
   def request
-    @request ||= FeedRequest.new(url: @feed_url, options: request_options)
+    @request ||= Feedkit::Request.new(url: @feed_url, options: request_options)
   end
 
   def status

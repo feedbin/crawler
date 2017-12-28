@@ -13,6 +13,7 @@ group :test do
 end
 
 gem 'feedjira', github: 'feedbin/feedjira', ref: 'eeb7e81'
+gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
 gem 'bundler'
 gem 'rake'
@@ -22,4 +23,3 @@ gem 'librato-rack'
 gem 'connection_pool'
 gem 'redis'
 gem 'coveralls', require: false
-gem 'curb'
