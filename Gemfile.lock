@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: 8e4ef2fbbbe97fceec959d01ae5c1ffe899f4752
+  revision: 32adabb4474c753aa3d8ccd5512c3900650b9dec
   branch: master
   specs:
     feedkit (0.1.0)
@@ -23,8 +23,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.1)
-      public_suffix (~> 2.0, >= 2.0.2)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     aggregate (0.2.2)
     buftok (0.2.0)
     capistrano (3.4.0)
@@ -47,13 +47,14 @@ GEM
       tins (~> 1.6)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    crass (1.0.3)
     curb (0.9.4)
     docile (1.1.5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.2.1)
     equalizer (0.0.11)
-    faraday (0.13.0)
+    faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.12.2)
       faraday (>= 0.7.4, < 1.0)
@@ -80,20 +81,21 @@ GEM
     librato-rack (2.0.3)
       hetchy (~> 1.0)
       librato-metrics (~> 2.1.0)
-    loofah (2.0.3)
+    loofah (2.1.1)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
-    mini_portile2 (2.2.0)
+    mini_portile2 (2.3.0)
     minitest (5.10.3)
     multipart-post (2.0.0)
     naught (1.1.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
-    public_suffix (2.0.5)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
+    public_suffix (3.0.1)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
