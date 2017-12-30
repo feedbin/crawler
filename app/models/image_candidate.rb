@@ -1,7 +1,7 @@
 class ImageCandidate
   YOUTUBE_URLS = [%r(https?://youtu\.be/(.+)), %r(https?://www\.youtube\.com/watch\?v=(.*?)(&|#|$)), %r(https?://www\.youtube\.com/embed/(.*?)(\?|$)), %r(https?://www\.youtube\.com/v/(.*?)(#|\?|$)), %r(https?://www\.youtube\.com/user/.*?#\w/\w/\w/\w/(.+)\b)]
   VIMEO_URL = %r(https?://player\.vimeo\.com/video/(.*?)(#|\?|$))
-  INSTAGRAM_URL = %r(https?://www\.instagram\.com/p/(.*?)(/|#|\?|$))
+  INSTAGRAM_URLS = [%r(https?://www\.instagram\.com/p/(.*?)(/|#|\?|$)), %r(https?://instagram\.com/p/(.*?)(/|#|\?|$))]
 
   IGNORE_EXTENSIONS = [".gif", ".png", ".webp"]
 
@@ -67,7 +67,7 @@ class ImageCandidate
     elsif @src =~ VIMEO_URL && $1
       uri = vimeo_uri($1)
       @valid = true
-    elsif @src =~ INSTAGRAM_URL && $1
+    elsif INSTAGRAM_URLS.find { |format| @src =~ format } && $1
       uri = instagram_uri($1)
       @valid = true
     end
@@ -103,9 +103,6 @@ class ImageCandidate
       query = Addressable::URI.new.tap do |addressable|
         addressable.query_values = {size: "l"}
       end.query
-
-
-      "https://instagram.com/p/#{id}/media/?size=l"
 
       options = {
         scheme: "https",
