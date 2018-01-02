@@ -1,6 +1,6 @@
 class ImageCandidate
   YOUTUBE_URLS = [%r(https?://youtu\.be/(.+)), %r(https?://www\.youtube\.com/watch\?v=(.*?)(&|#|$)), %r(https?://www\.youtube\.com/embed/(.*?)(\?|$)), %r(https?://www\.youtube\.com/v/(.*?)(#|\?|$)), %r(https?://www\.youtube\.com/user/.*?#\w/\w/\w/\w/(.+)\b)]
-  VIMEO_URL = %r(https?://player\.vimeo\.com/video/(.*?)(#|\?|$))
+  VIMEO_URLS = [%r(https?://vimeo\.com/video/(.*?)(#|\?|$)), %r(https?://vimeo\.com/([0-9]+)(#|\?|$))]
   INSTAGRAM_URLS = [%r(https?://www\.instagram\.com/p/(.*?)(/|#|\?|$)), %r(https?://instagram\.com/p/(.*?)(/|#|\?|$))]
 
   IGNORE_EXTENSIONS = [".gif", ".png", ".webp"]
@@ -64,7 +64,7 @@ class ImageCandidate
     if YOUTUBE_URLS.find { |format| @src =~ format } && $1
       uri = youtube_uri($1)
       @valid = true
-    elsif @src =~ VIMEO_URL && $1
+    elsif VIMEO_URLS.find { |format| @src =~ format } && $1
       uri = vimeo_uri($1)
       @valid = true
     elsif INSTAGRAM_URLS.find { |format| @src =~ format } && $1
