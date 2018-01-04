@@ -3,8 +3,6 @@ class TwitterFeedRefresher
   sidekiq_options queue: :feed_refresher_fetcher
 
   def perform(feed_id, feed_url, keys)
-    feed = { id: feed_id }
-
     parsed_feed = keys.each do |key|
       options = {
         twitter_screen_name: nil,
@@ -19,6 +17,10 @@ class TwitterFeedRefresher
     end
 
     if parsed_feed.respond_to?(:to_feed)
+      feed = {
+        id: feed_id,
+        options: parsed_feed.options
+      }
       entries = parsed_feed.entries
       formatted_entries = FormattedEntries.new(entries)
       if formatted_entries.new_or_changed.any?
