@@ -28,7 +28,7 @@ class FeedRefresherFetcher
     end
 
     formatted_entries = FormattedEntries.new(entries)
-    if formatted_entries.new_or_changed.any?
+    if !formatted_entries.new_or_changed.empty?
       update = {
         feed: feed,
         entries: formatted_entries.new_or_changed,
