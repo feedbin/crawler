@@ -33,6 +33,9 @@ class Fetched
     end
   rescue Feedjira::NoParserAvailable
     @parsed_feed = false
+    @message = "ParseError"
+  rescue Curl => e
+    @message = e.class.to_s
   end
 
   def request
@@ -41,6 +44,10 @@ class Fetched
 
   def status
     @status || request.status
+  end
+
+  def status_message
+    @message || status
   end
 
   private

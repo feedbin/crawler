@@ -22,6 +22,7 @@ require 'lib/redis'
 require 'lib/librato'
 require 'lib/worker_stat'
 require 'lib/sidekiq'
+require 'lib/record_status'
 
 require 'app/models/fetched'
 require 'app/models/formatted_entries'

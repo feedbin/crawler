@@ -1,8 +1,9 @@
 class FeedRefresherFetcher
   include Sidekiq::Worker
+  include RecordStatus
   sidekiq_options queue: :feed_refresher_fetcher
 
-  # Options: etag, last_modified, subscriptions_count, xml, push_callback, hub_secret, push_mode
+  # Options: etag, last_modified, subscriptions_count, xml, push_callback, hub_secret, push_mode, record_status
   def perform(feed_id, feed_url, options = {})
     feed = { id: feed_id }
     if options["xml"]
@@ -11,6 +12,9 @@ class FeedRefresherFetcher
       fetched = Fetched.new(feed_id, feed_url, options)
       entries = fetched.entries
       feed = feed.merge(fetched.feed)
+      if options["record_status"]
+        record_status(feed_id, fetched.status_message)
+      end
       if fetched.parsed_feed && options["push_callback"] && options["hub_secret"]
         push = PubSubHubbub.new(
           fetched.parsed_feed.hubs,

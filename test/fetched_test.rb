@@ -45,4 +45,9 @@ class FetchedTest < Minitest::Test
     assert_equal 200, @fetched_json.status
   end
 
+  def test_should_get_status_message
+    assert_equal 200, @fetched.status_message
+    assert_equal 200, @fetched_json.status_message
+  end
+
 end
