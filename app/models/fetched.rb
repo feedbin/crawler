@@ -24,7 +24,7 @@ class Fetched
       result = false
       body = request.body
       if body
-        result = Feedkit.fetch_and_parse(@feed_url, request: request, base_url: @feed_url)
+        result = Feedkit.fetch_and_parse(@feed_url, request: request, base_url: @feed_url) || false
       end
       Librato.increment 'refresher.status', source: status.to_i
       @parsed_feed = result
@@ -35,6 +35,7 @@ class Fetched
     @parsed_feed = false
     @message = "ParseError"
   rescue Curl => e
+    @parsed_feed = false
     @message = e.class.to_s
   end
 
@@ -47,7 +48,11 @@ class Fetched
   end
 
   def status_message
-    @message || status
+    if parsed_feed == false
+      "ParseError"
+    else
+      @message || status
+    end
   end
 
   private
