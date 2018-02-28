@@ -10,6 +10,7 @@ end
 gem 'bundler'
 gem 'rake'
 
+gem 'librato-metrics', '= 1.6.1'
 gem 'addressable'
 gem 'dotenv'
 gem 'librato-rack'
