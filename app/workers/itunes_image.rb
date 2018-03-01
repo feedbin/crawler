@@ -4,11 +4,13 @@ class ItunesImage
   sidekiq_options queue: :images, retry: false
 
   def perform(entry_id, image_url, public_id)
+    @public_id = public_id
 
     processed_url = cached_value(image_url)
-    processed_url = copy_image(processed_url)
 
-    if !processed_url
+    if processed_url
+      processed_url = copy_image(processed_url)
+    else
       response = HTTP.timeout(:global, write: 8, connect: 8, read: 8).follow(max_hops: 4).get(image_url)
       path = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.bin")).tap do |path|
         File.open path, "wb" do |io|
@@ -17,7 +19,7 @@ class ItunesImage
           end
         end
       end
-      processed_image = ProcessedItunesImage.new(path)
+      processed_image = ProcessedItunesImage.new(path, public_id)
       processed_image.process
       processed_url = processed_image.url
       if processed_url

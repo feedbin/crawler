@@ -36,9 +36,9 @@ class DownloadImage
 
   def headers_valid?(headers)
     if @validate
-      headers["content-type"].first == "image/jpeg" && headers["content-length"].first.to_i > 20_000
+      headers["content-type"].first =~ /image\/jpeg/ && headers["content-length"].first.to_i > 20_000
     else
-      headers["content-type"].first == "image/jpeg"
+      headers["content-type"].first =~ /image\/jpeg/
     end
   rescue
     false

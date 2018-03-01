@@ -14,7 +14,7 @@ class PageCandidates < Candidates
     image = nil
     if page_checked?
       if cached = cached_image
-        new_url = copy_image(cached)
+        new_url = copy_image(cached["processed_url"])
         cached["processed_url"] = new_url
         image = cached
         Librato.increment 'entry_image.page_request.cache_hit'
