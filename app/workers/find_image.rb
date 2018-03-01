@@ -6,18 +6,18 @@ class FindImage
     image = nil
 
     if options["urls"]
-      if attempt = LinkCandidates.new(options["urls"]).download
+      if attempt = LinkCandidates.new(options["urls"], options["public_id"]).download
         image = attempt
         Librato.increment 'entry_image.create.from_links'
       end
     else
-      if attempt = EntryCandidates.new(feed_id, url, full_url, site_url, content).find_image
+      if attempt = EntryCandidates.new(feed_id, url, full_url, site_url, content, options["public_id"]).find_image
         image = attempt
         Librato.increment 'entry_image.create.from_entry'
       end
 
       if image.nil?
-        if attempt = PageCandidates.new(feed_id, url, full_url, site_url, content).find_image
+        if attempt = PageCandidates.new(feed_id, url, full_url, site_url, content, options["public_id"]).find_image
           image = attempt
           Librato.increment 'entry_image.create.from_page'
         end

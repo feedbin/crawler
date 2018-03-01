@@ -1,5 +1,7 @@
 class PageCandidates < Candidates
 
+  include Helpers
+
   def find_image
     image = nil
     if domains_match?
@@ -11,7 +13,10 @@ class PageCandidates < Candidates
   def check_for_meta_images
     image = nil
     if page_checked?
-      if image = cached_image
+      if cached = cached_image
+        new_url = copy_image(cached)
+        cached["processed_url"] = new_url
+        image = cached
         Librato.increment 'entry_image.page_request.cache_hit'
       end
       Librato.increment 'entry_image.page_request.cached'

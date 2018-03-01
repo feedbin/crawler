@@ -11,12 +11,13 @@ class Candidates
                         Zlib::DataError]
 
 
-  def initialize(feed_id, url, full_url, site_url, content)
+  def initialize(feed_id, url, full_url, site_url, content, public_id)
     @feed_id = feed_id
     @url = url
     @full_url = full_url
     @site_url = site_url
     @content = content
+    @public_id = public_id
   end
 
   def try_candidates(candidates)
@@ -37,7 +38,7 @@ class Candidates
     if candidate.valid? && candidate.original_url
       attempt = DownloadImage.new(candidate.original_url)
       if attempt.file
-        processed_image = ProcessedImage.new(attempt.file)
+        processed_image = ProcessedImage.new(attempt.file, @public_id)
         if processed_image.process
           download = {
             original_url: candidate.original_url.to_s,

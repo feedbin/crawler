@@ -1,10 +1,12 @@
 class ItunesImage
   include Sidekiq::Worker
+  include Helpers
   sidekiq_options queue: :images, retry: false
 
-  def perform(entry_id, image_url)
+  def perform(entry_id, image_url, public_id)
 
     processed_url = cached_value(image_url)
+    processed_url = copy_image(processed_url)
 
     if !processed_url
       response = HTTP.timeout(:global, write: 8, connect: 8, read: 8).follow(max_hops: 4).get(image_url)

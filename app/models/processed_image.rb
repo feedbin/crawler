@@ -7,17 +7,18 @@ class ProcessedImage
 
   attr_reader :url, :width, :height
 
-  def initialize(file, validate = true)
+  def initialize(file, public_id, validate = true)
     @file = file
     @url = nil
     @validate = validate
+    @public_id = public_id
   end
 
   def process
     success = false
     image = Magick::Image.read(@file).first
-    image_file = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.jpg"))
     resized_file = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.jpg"))
+    image_file = Pathname.new(File.join(Dir.tmpdir, "#{@public_id}.jpg"))
     if valid?
       geometry = Magick::Geometry.new(TARGET_WIDTH, target_height, 0, 0, Magick::MinimumGeometry)
       image.change_geometry!(geometry) do |new_width, new_height|

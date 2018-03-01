@@ -11,8 +11,9 @@ class LinkCandidates
                         Zlib::DataError]
 
 
-  def initialize(urls)
+  def initialize(urls, public_id)
     @urls = urls
+    @public_id = public_id
   end
 
   def download
@@ -38,7 +39,7 @@ class LinkCandidates
     end
 
     if attempt.file
-      processed_image = ProcessedImage.new(attempt.file, false)
+      processed_image = ProcessedImage.new(attempt.file, @public_id, false)
       if processed_image.process
         image_data = {
           original_url: url.to_s,

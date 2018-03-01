@@ -1,13 +1,4 @@
 class Upload
-  S3_POOL = ConnectionPool.new(size: 10, timeout: 5) do
-    Fog::Storage.new(
-      provider: "AWS",
-      aws_access_key_id: ENV["AWS_ACCESS_KEY_ID"],
-      aws_secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-      persistent: true
-    )
-  end
-
   def initialize(file_path)
     @file_path = file_path
   end
@@ -15,26 +6,27 @@ class Upload
   def upload
     S3_POOL.with do |connection|
       File.open(@file_path) do |file|
-        @response = connection.put_object(ENV['AWS_S3_BUCKET'], path, file, options)
+        connection.put_object(ENV['AWS_S3_BUCKET_NEW'], path, file, options)
+        response = connection.put_object(ENV['AWS_S3_BUCKET'], path, file, options)
+        build_url(response)
       end
     end
-    url
   end
 
   private
 
-  def url
-    if @response
-      URI::HTTP.build(
-        scheme: 'https',
-        host: @response.data[:host],
-        path: @response.data[:path]
-      ).to_s
-    end
+  def build_url(response)
+    URI::HTTPS.build(
+      host: response.data[:host],
+      path: response.data[:path]
+    ).to_s
   end
 
   def path
-    @path ||= File.join("public-images", "#{SecureRandom.hex(1)}-#{Time.now.utc.strftime("%F")}", File.basename(@file_path))
+    @path ||= begin
+      basename = File.basename(@file_path)
+      File.join(basename[0..6], basename)
+    end
   end
 
   def options
