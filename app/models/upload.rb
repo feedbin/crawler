@@ -6,7 +6,7 @@ class Upload
   def upload
     S3_POOL.with do |connection|
       File.open(@file_path) do |file|
-        connection.put_object(ENV['AWS_S3_BUCKET_NEW'], path, file, options)
+        connection.put_object(ENV['AWS_S3_BUCKET_NEW'], new_path, file, options)
         response = connection.put_object(ENV['AWS_S3_BUCKET'], path, file, options)
         build_url(response)
       end
@@ -23,7 +23,11 @@ class Upload
   end
 
   def path
-    @path ||= begin
+    @path ||= File.join("public-images", new_path)
+  end
+
+  def new_path
+    @new_path ||= begin
       basename = File.basename(@file_path)
       File.join(basename[0..6], basename)
     end

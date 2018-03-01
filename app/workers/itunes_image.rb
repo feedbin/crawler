@@ -4,7 +4,7 @@ class ItunesImage
   sidekiq_options queue: :images, retry: false
 
   def perform(entry_id, image_url, public_id)
-    @public_id = public_id
+    @public_id = "#{public_id}-itunes"
 
     processed_url = cached_value(image_url)
 
@@ -19,7 +19,7 @@ class ItunesImage
           end
         end
       end
-      processed_image = ProcessedItunesImage.new(path, public_id)
+      processed_image = ProcessedItunesImage.new(path, @public_id)
       processed_image.process
       processed_url = processed_image.url
       if processed_url
