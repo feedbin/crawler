@@ -94,11 +94,16 @@ class PageCandidates < Candidates
   end
 
   def cached_image
+    cached = false
     if !cached_value.nil? && cached_value != ""
-      JSON.parse(cached_value)
-    else
-      false
+      data = JSON.parse(cached_value)
+      if data["processed_url"].include?(".jpg/.jpg")
+        $redis.del(image_cache_key)
+      else
+        cached = data
+      end
     end
+    cached
   end
 
   def cache_image(value)

@@ -12,6 +12,9 @@ class ProcessedImage
     @url = nil
     @validate = validate
     @public_id = public_id
+    if !@public_id || @public_id == ""
+      raise "public_id missing"
+    end
   end
 
   def process
