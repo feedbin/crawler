@@ -6,7 +6,7 @@ class Upload
   def upload
     S3_POOL.with do |connection|
       File.open(@file_path) do |file|
-        response = connection.put_object(ENV['AWS_S3_BUCKET_NEW'], path, file, options)
+        response = connection.put_object(ENV['AWS_S3_BUCKET'], path, file, options)
         build_url(response)
       end
     end
