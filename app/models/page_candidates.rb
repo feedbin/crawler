@@ -115,7 +115,7 @@ class PageCandidates < Candidates
   end
 
   def image_cache_key
-    "entry_image:#{Digest::SHA1.hexdigest(@full_url)}"
+    "entry_image:#{Digest::SHA1.hexdigest(@full_url)}:v2"
   end
 
 end
