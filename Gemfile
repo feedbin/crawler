@@ -12,7 +12,7 @@ group :test do
   gem 'webmock'
 end
 
-gem 'feedjira', github: 'feedbin/feedjira', ref: 'eeb7e81'
+gem 'feedjira', github: 'feedbin/feedjira', ref: '84d919d'
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
 gem 'bundler'
