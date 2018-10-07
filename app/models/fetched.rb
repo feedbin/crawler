@@ -24,7 +24,7 @@ class Fetched
       result = false
       body = request.body
       if body
-        result = Feedkit.fetch_and_parse(@feed_url, request: request, base_url: @feed_url) || false
+        result = Feedkit::Feedkit.new().fetch_and_parse(@feed_url, request: request, base_url: @feed_url) || false
       end
       Librato.increment 'refresher.status', source: status.to_i
       @parsed_feed = result

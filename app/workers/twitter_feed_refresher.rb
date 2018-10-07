@@ -14,7 +14,7 @@ class TwitterFeedRefresher
         twitter_access_secret: key["twitter_access_secret"]
       }
       begin
-        parsed_feed = Feedkit.fetch_and_parse(feed_url, options)
+        parsed_feed = Feedkit::Feedkit.new().fetch_and_parse(feed_url, options)
       rescue Twitter::Error::Unauthorized
       end
     end
