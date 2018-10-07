@@ -12,6 +12,8 @@ group :test do
   gem 'webmock'
 end
 
+gem 'twitter', github: "feedbin/twitter", branch: "feedbin"
+
 gem 'feedjira', github: 'feedbin/feedjira', ref: 'a8a90bb'
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
