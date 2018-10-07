@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/twitter.git
-  revision: fedba4b3c2d17a5f74afa691cd9182de3e3a38ad
+  revision: e53d12d7b7f2bd0c45b01b3a1fd493a60ef47740
   branch: feedbin
   specs:
     twitter (6.2.0)
@@ -113,7 +113,7 @@ GEM
     net-ssh (5.0.2)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
-    public_suffix (3.0.2)
+    public_suffix (3.0.3)
     rack (2.0.5)
     rack-protection (2.0.3)
       rack
