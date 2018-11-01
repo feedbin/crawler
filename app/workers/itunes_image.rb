@@ -11,7 +11,7 @@ class ItunesImage
     if processed_url
       processed_url = copy_image(processed_url)
     else
-      response = HTTP.timeout(:global, write: 8, connect: 8, read: 8).follow(max_hops: 4).get(image_url)
+      response = HTTP.timeout(20).follow(max_hops: 4).get(image_url)
       path = Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.bin")).tap do |path|
         File.open path, "wb" do |io|
           while (chunk = response.readpartial)
