@@ -46,17 +46,8 @@ class ImageCandidate
   end
 
   def image_candidate
-    if !IGNORE_EXTENSIONS.find { |extension| @src.include?(extension) }
-      @valid = true
-      lambda do
-        begin
-          response = HTTParty.head(@src, verify: false, timeout: 4)
-          response.request.last_uri.to_s
-        rescue
-          nil
-        end
-      end
-    end
+    @valid = true
+    @src
   end
 
   def iframe_candidate

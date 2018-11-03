@@ -7,16 +7,9 @@ class DownloadImage
 
   def file
     @file ||= begin
-      file = nil
-      options = {use_ssl: @url.scheme == "https", open_timeout: 5, read_timeout: 30}
-      Net::HTTP.start(@url.host, @url.port, options) do |http|
-        request = Net::HTTP::Get.new(@url.request_uri)
-        request['Referer'] = "https://feedbin.com/"
-        http.request(request) do |response|
-          if headers_valid?(response.to_hash)
-            file = download_image(response)
-          end
-        end
+      response = HTTP.timeout(20).follow(max_hops: 5).get(@url)
+      if headers_valid?(response)
+        file = download_image(response)
       end
       file
     end
@@ -27,18 +20,16 @@ class DownloadImage
   def download_image(response)
     Pathname.new(File.join(Dir.tmpdir, "#{SecureRandom.hex}.jpg")).tap do |path|
       File.open(path, "wb") do |file|
-        response.read_body do |chunk|
-          file.write(chunk)
-        end
+        response.body.each { |chunk| file.write(chunk) }
       end
     end
   end
 
-  def headers_valid?(headers)
+  def headers_valid?(response)
     if @validate
-      headers["content-type"].first =~ /image\/jpeg/ && headers["content-length"].first.to_i > 20_000
+      response.content_type.mime_type =~ /image\/jp/ && response.content_length > 20_000
     else
-      headers["content-type"].first =~ /image\/jpeg/
+      response.content_type.mime_type =~ /image\/jp/
     end
   rescue
     false
