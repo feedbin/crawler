@@ -12,8 +12,9 @@ Refresher consists of a single Sidekiq job that
 Dependencies
 ------------
 
-- Ruby 2.0
-- Redis
+- Ruby 2.5
+- Redis shared with main Feedbin instance
+- You may need to install the development headers for libidn (`libidn11-dev` on Debian)
 
 Installation
 ------------
@@ -25,7 +26,11 @@ Installation
 **Clone the repository**
 
     git clone https://github.com/feedbin/refresher.git && cd refresher
-		
+
+**Configure**
+
+Refresher needs access to the same Redis instance as the main Feedbin instance (`REDIS_URL` environment variable). If using Feedbin to subscribe to twitter feeds, the `TWITTER_KEY` and `TWITTER_SECRET` environment variables also need to be available.
+
 **Bundle**
 
      bundle
@@ -33,3 +38,4 @@ Installation
 **Run**
 
      bundle exec foreman start     
+     
