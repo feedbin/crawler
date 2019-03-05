@@ -1,0 +1,15 @@
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: ruby
+  commands:
+  - bundle install --jobs=3 --retry=3
+  - rake
+
+services:
+- name: redis
+  image: redis
+  ports:
+  - 6379
