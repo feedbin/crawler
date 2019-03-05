@@ -2,6 +2,10 @@ kind: pipeline
 name: default
 
 steps:
+- name: redis
+  image: redis
+  detach: true
+
 - name: test
   image: ubuntu:16.04
   commands:
@@ -13,9 +17,3 @@ steps:
   - gem install bundler -v "1.16.5"
   - bundle install --jobs=8 --retry=2
   - rake
-
-services:
-- name: redis
-  image: redis
-  ports:
-  - 6379
