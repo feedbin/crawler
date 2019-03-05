@@ -3,8 +3,12 @@ name: default
 
 steps:
 - name: test
-  image: ruby
+  image: xenial
   commands:
+  - grep -c ^processor /proc/cpuinfo
+  - apt-add-repository ppa:brightbox/ruby-ng
+  - apt update
+  - apt install ruby2.5 ruby2.5-dev
   - apt install libidn11-dev
   - bundle install --jobs=3 --retry=3
   - rake
