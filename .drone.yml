@@ -11,7 +11,7 @@ steps:
   - apt update
   - apt-get install -y ruby2.5 ruby2.5-dev
   - apt-get install -y libidn11-dev
-  - gem install bundler
+  - gem install bundler -v "1.16.5"
   - bundle install --jobs=8 --retry=2
   - rake
 
