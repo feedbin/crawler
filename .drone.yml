@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: test
-  image: xenial
+  image: ubuntu:16.04
   commands:
   - grep -c ^processor /proc/cpuinfo
   - apt-add-repository ppa:brightbox/ruby-ng
