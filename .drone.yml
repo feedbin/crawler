@@ -5,12 +5,12 @@ steps:
 - name: test
   image: ubuntu:16.04
   commands:
-  - apt update
-  - apt install software-properties-common
+  - apt-get update
+  - apt-get install -y software-properties-common
   - apt-add-repository ppa:brightbox/ruby-ng
   - apt update
-  - apt install ruby2.5 ruby2.5-dev
-  - apt install libidn11-dev
+  - apt-get install -y ruby2.5 ruby2.5-dev
+  - apt-get install -y libidn11-dev
   - bundle install --jobs=8 --retry=2
   - rake
 
