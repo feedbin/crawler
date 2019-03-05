@@ -2,10 +2,6 @@ kind: pipeline
 name: default
 
 steps:
-- name: redis
-  image: redis
-  detach: true
-
 - name: test
   image: ubuntu:16.04
   commands:
@@ -13,7 +9,7 @@ steps:
   - apt-get install -y software-properties-common
   - apt-add-repository ppa:brightbox/ruby-ng
   - apt update
-  - apt-get install -y ruby2.5 ruby2.5-dev build-essential curl git libidn11-dev libpq-dev libreadline-dev libxml2-dev libxslt1-dev libcurl4-openssl-dev libssl-dev zlib1g-dev libffi-dev
+  - apt-get install -y ruby2.5 ruby2.5-dev build-essential curl git libidn11-dev libpq-dev libreadline-dev libxml2-dev libxslt1-dev libcurl4-openssl-dev libssl-dev zlib1g-dev libffi-dev redis-server
   - gem install bundler -v "1.16.5"
   - bundle install --jobs=8 --retry=2
   - rake
