@@ -4,7 +4,11 @@ $stdout.sync = true
 
 require 'bundler/setup'
 require 'dotenv'
-Dotenv.load
+if ENV["ENV_PATH"]
+  Dotenv.load ENV["ENV_PATH"]
+else
+  Dotenv.load
+end
 
 require 'digest/sha1'
 require 'date'
