@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: af9150a1a7542c97d51e33198816ac6ba7ccb602
+  revision: 97d1dc6cdceaf6f612be4320147c52b8e186818c
   branch: master
   specs:
     feedkit (0.1.0)
@@ -49,7 +49,7 @@ GEM
     crass (1.0.4)
     curb (0.9.10)
     docile (1.3.1)
-    domain_name (0.5.20180417)
+    domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.2)
     equalizer (0.0.11)
@@ -95,7 +95,7 @@ GEM
     net-ssh (5.2.0)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
-    public_suffix (3.0.3)
+    public_suffix (3.1.1)
     rack (2.0.7)
     rack-protection (2.0.5)
       rack
