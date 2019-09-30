@@ -10,6 +10,7 @@ else
   Dotenv.load
 end
 
+require 'rbtrace'
 require 'digest/sha1'
 require 'date'
 require 'timeout'
