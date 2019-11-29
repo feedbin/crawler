@@ -1,6 +1,7 @@
 class FormattedEntries
-  def initialize(entries)
+  def initialize(entries, check_for_updates = true)
     @entries = entries
+    @check_for_updates = check_for_updates
   end
 
   def new_or_changed
@@ -9,7 +10,7 @@ class FormattedEntries
         result = nil
         if new?(entry.public_id)
           result = entry.to_entry
-        elsif updated?(entry.public_id, entry.content)
+        elsif @check_for_updates && updated?(entry.public_id, entry.content)
           result = entry.to_entry
           result[:update] = true
         end

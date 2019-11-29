@@ -26,6 +26,18 @@ class FormattedEntriesTest < Minitest::Test
     end
   end
 
+  def test_should_ignore_updated_entries
+    entries = sample_entries
+    $redis.with do |connection|
+      entries.each do |entry|
+        connection.set(entry.public_id, 1000)
+      end
+    end
+
+    results = FormattedEntries.new(entries, false).new_or_changed
+    assert_equal 0, results.length
+  end
+
   def test_should_ignore_existing_entries
     entries = sample_entries
     $redis.with do |connection|

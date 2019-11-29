@@ -21,7 +21,7 @@ class TwitterFeedRefresher
 
     if parsed_feed.respond_to?(:to_feed)
       entries = parsed_feed.entries
-      formatted_entries = FormattedEntries.new(entries)
+      formatted_entries = FormattedEntries.new(entries, false)
       if !formatted_entries.new_or_changed.empty?
         feed[:options] = parsed_feed.options
         update = {
