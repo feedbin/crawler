@@ -15,7 +15,7 @@ end
 gem 'feedjira', github: 'feedbin/feedjira', ref: 'a8a90bb'
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
-gem 'nokogiri', '= 1.10.5'
+gem 'nokogiri', '1.10.8'
 gem 'bundler'
 gem 'rake'
 gem 'sidekiq'
