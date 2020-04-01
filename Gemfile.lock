@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: 95207bfe0a09c9b7267c5a800be4b04adca341e2
+  revision: 72869799777d418de5ed31b4ac23c5b7114670c5
   branch: master
   specs:
     feedkit (0.1.0)
@@ -53,10 +53,10 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.5)
     equalizer (0.0.11)
-    faraday (0.17.3)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.14.0)
-      faraday (>= 0.7.4, < 1.0)
+    faraday_middleware (1.0.0)
+      faraday (~> 1.0)
     ffi (1.11.3)
     foreman (0.63.0)
       dotenv (>= 0.7)
@@ -70,12 +70,12 @@ GEM
       http_parser.rb (~> 0.6.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    http-form_data (2.2.0)
+    http-form_data (2.3.0)
     http_parser.rb (0.6.0)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
-    json (2.2.0)
+    json (2.3.0)
     librato-metrics (2.1.2)
       aggregate (~> 0.2.2)
       faraday
@@ -145,7 +145,7 @@ GEM
       unf (~> 0.1.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.6)
+    unf_ext (0.0.7.7)
     webmock (3.7.6)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
