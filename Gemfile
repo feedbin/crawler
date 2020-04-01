@@ -12,6 +12,8 @@ group :test do
   gem 'webmock'
 end
 
+gem 'unf_ext', '= 0.0.7.6'
+
 gem 'feedjira', github: 'feedbin/feedjira', ref: 'a8a90bb'
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
