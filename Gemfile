@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'capistrano', '= 3.4.0'
+  gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
-  gem 'foreman', '= 0.63.0'
+  gem 'foreman'
 end
 
 group :test do
@@ -12,12 +12,12 @@ group :test do
   gem 'webmock'
 end
 
-gem 'unf_ext', '= 0.0.7.6'
+gem 'unf_ext'
 
 gem 'feedjira', github: 'feedbin/feedjira', ref: 'a8a90bb'
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
-gem 'nokogiri', '= 1.10.5'
+gem 'nokogiri'
 gem 'bundler'
 gem 'rake'
 gem 'sidekiq'
