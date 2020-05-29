@@ -10,12 +10,12 @@ class ParseFeed
     unless entries.new_or_changed.empty?
       update = {
         feed: feed.to_feed.merge({id: feed_id}),
-        entries: formatted_entries.new_or_changed,
+        entries: formatted_entries.new_or_changed
       }
       Sidekiq::Client.push(
-        'args'  => [update],
-        'class' => 'FeedRefresherReceiver',
-        'queue' => 'feed_refresher_receiver'
+        "args" => [update],
+        "class" => "FeedRefresherReceiver",
+        "queue" => "feed_refresher_receiver"
       )
     end
   ensure

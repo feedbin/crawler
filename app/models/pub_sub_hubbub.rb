@@ -28,13 +28,13 @@ class PubSubHubbub
 
   def request(url, mode, username = nil, password = nil, include_subscribers = false)
     body = {}
-    body['hub.mode'] = mode
-    body['hub.verify'] = 'async'
-    body['hub.topic'] = @self_url
-    body['hub.secret'] = @hub_secret
-    body['hub.callback'] = @push_callback
-    body['hub.verify_token'] = @hub_secret
-    body['feedbin.subscribers'] = @subscribers if include_subscribers
+    body["hub.mode"] = mode
+    body["hub.verify"] = "async"
+    body["hub.topic"] = @self_url
+    body["hub.secret"] = @hub_secret
+    body["hub.callback"] = @push_callback
+    body["hub.verify_token"] = @hub_secret
+    body["feedbin.subscribers"] = @subscribers if include_subscribers
     Curl.post(url, body) do |http|
       if username && password
         http.http_auth_types = :basic
@@ -43,5 +43,4 @@ class PubSubHubbub
       end
     end
   end
-
 end

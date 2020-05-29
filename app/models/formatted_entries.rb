@@ -47,12 +47,12 @@ class FormattedEntries
 
       lengths.each do |public_id, future|
         value = future.value.to_i
-        if value == 0
-          content_length = nil
+        content_length = if value == 0
+          nil
         elsif value == 1
-          content_length = false
+          false
         else
-          content_length = value
+          value
         end
         lengths[public_id] = content_length
       end
@@ -60,6 +60,4 @@ class FormattedEntries
       lengths
     end
   end
-
-
 end

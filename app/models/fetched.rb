@@ -1,8 +1,7 @@
 class Fetched
-
   def initialize(feed_id, feed_url, options = {})
     @feed_id = feed_id
-    @feed_url= feed_url
+    @feed_url = feed_url
     @options = options
     @status = nil
   end
@@ -24,9 +23,9 @@ class Fetched
       result = false
       body = request.body
       if body
-        result = Feedkit::Feedkit.new().fetch_and_parse(@feed_url, request: request, base_url: @feed_url) || false
+        result = Feedkit::Feedkit.new.fetch_and_parse(@feed_url, request: request, base_url: @feed_url) || false
       end
-      Librato.increment 'refresher.status', source: status.to_i
+      Librato.increment "refresher.status", source: status.to_i
       @parsed_feed = result
     else
       @parsed_feed
@@ -67,8 +66,8 @@ class Fetched
   def last_modified
     @last_modified ||= begin
       DateTime.parse(@options["last_modified"])
-    rescue
-      nil
+                       rescue
+                         nil
     end
   end
 
@@ -83,5 +82,4 @@ class Fetched
     end
     agent
   end
-
 end

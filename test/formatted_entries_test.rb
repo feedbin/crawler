@@ -1,7 +1,6 @@
-require_relative 'test_helper'
+require_relative "test_helper"
 
 class FormattedEntriesTest < Minitest::Test
-
   def test_should_get_new_entries
     entries = sample_entries
     results = FormattedEntries.new(entries).new_or_changed
@@ -56,9 +55,8 @@ class FormattedEntriesTest < Minitest::Test
     entry = OpenStruct.new(
       public_id: random_string,
       content: random_string,
-      to_entry: {data: random_string},
+      to_entry: {data: random_string}
     )
     [entry]
   end
-
 end

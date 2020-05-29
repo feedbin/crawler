@@ -1,5 +1,4 @@
 class Pushed
-
   def initialize(xml, feed_url)
     @xml = xml
     @feed_url = feed_url
@@ -16,13 +15,12 @@ class Pushed
     @entries ||= begin
       entries = []
       if feed.entries.respond_to?(:any?) && feed.entries.any?
-        entries = feed.entries.map do |entry|
+        entries = feed.entries.map { |entry|
           Feedkit::Parser::XMLEntry.new(entry, @feed_url)
-        end
+        }
         entries = entries.uniq { |entry| entry.public_id }
       end
       entries
     end
   end
-
 end

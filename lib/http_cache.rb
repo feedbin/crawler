@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class HTTPCache
-
   ETAG = "etag"
   LAST_MODIFIED = "last_modified"
   CHECKSUM = "checksum"
@@ -33,9 +32,9 @@ class HTTPCache
   def update!(etag, last_modified, checksum)
     $redis.with do |redis|
       redis.mapped_hmset(feed_cache_key, {
-        ETAG          => etag,
+        ETAG => etag,
         LAST_MODIFIED => last_modified,
-        CHECKSUM      => checksum
+        CHECKSUM => checksum
       })
     end
   end
@@ -43,5 +42,4 @@ class HTTPCache
   def cache_key
     "feed:#{@feed_id}:cache"
   end
-
 end

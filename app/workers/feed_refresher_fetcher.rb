@@ -5,12 +5,12 @@ class FeedRefresherFetcher
   sidekiq_options queue: :feed_refresher_fetcher
 
   def perform(feed_id, feed_url, username, password, subscribers)
-    @feed_id     = feed_id
-    @feed_url    = feed_url
-    @username    = username
-    @password    = password
+    @feed_id = feed_id
+    @feed_url = feed_url
+    @username = username
+    @password = password
     @subscribers = subscribers
-    @http_cache  = HTTPCache.new(feed_id)
+    @http_cache = HTTPCache.new(feed_id)
 
     download
   end

@@ -1,7 +1,6 @@
-require_relative 'test_helper'
+require_relative "test_helper"
 
 class FetchedTest < Minitest::Test
-
   def setup
     options = {
       "last_modified" => Time.now.httpdate,
@@ -49,5 +48,4 @@ class FetchedTest < Minitest::Test
     assert_equal 200, @fetched.status_message
     assert_equal 200, @fetched_json.status_message
   end
-
 end

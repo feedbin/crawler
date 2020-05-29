@@ -1,5 +1,4 @@
 module RecordStatus
-
   def record_status(feed_id, status)
     $redis.with do |connection|
       connection.multi do
@@ -13,5 +12,4 @@ module RecordStatus
   def list_name(feed_id)
     "feed:#{feed_id}:status"
   end
-
 end
