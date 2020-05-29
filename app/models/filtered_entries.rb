@@ -1,4 +1,6 @@
-class FormattedEntries
+# frozen_string_literal: true
+
+class FilteredEntries
   def initialize(entries, check_for_updates = true)
     @entries = entries
     @check_for_updates = check_for_updates

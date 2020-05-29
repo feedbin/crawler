@@ -1,4 +1,6 @@
-class TwitterFeedRefresherCritical
+# frozen_string_literal: true
+
+class TwitterRefresherCritical
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher_critical
   def perform(*args)

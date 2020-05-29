@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FeedRefresherFetcher
+class FeedDownloader
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 
@@ -46,3 +46,4 @@ class FeedRefresherFetcher
     @http_cache.checksum != @response.checksum
   end
 end
+

@@ -1,4 +1,6 @@
-class TwitterFeedRefresher
+# frozen_string_literal: true
+
+class TwitterRefresher
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 

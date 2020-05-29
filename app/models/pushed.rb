@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Pushed
   def initialize(xml, feed_url)
     @xml = xml

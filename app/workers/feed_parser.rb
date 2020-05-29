@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParseFeed
+class FeedParser
   include Sidekiq::Worker
   sidekiq_options queue: "feed_parser_#{Socket.gethostname}"
 

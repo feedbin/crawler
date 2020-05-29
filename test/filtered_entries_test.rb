@@ -1,6 +1,6 @@
 require_relative "test_helper"
 
-class FormattedEntriesTest < Minitest::Test
+class FilteredEntriesTest < Minitest::Test
   def test_should_get_new_entries
     entries = sample_entries
     results = FormattedEntries.new(entries).new_or_changed

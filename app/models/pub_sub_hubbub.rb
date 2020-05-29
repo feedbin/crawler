@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PubSubHubbub
   def initialize(hubs, self_url, push_callback, hub_secret, subscribers)
     @hubs = hubs
