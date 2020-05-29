@@ -39,3 +39,11 @@ class TwitterRefresher
     end
   end
 end
+
+class TwitterRefresherCritical
+  include Sidekiq::Worker
+  sidekiq_options queue: :feed_refresher_fetcher_critical
+  def perform(*args)
+    TwitterRefresher.new.perform(*args)
+  end
+end

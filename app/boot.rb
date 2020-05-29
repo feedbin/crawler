@@ -34,6 +34,4 @@ require "app/models/pushed"
 
 require "app/workers/feed_parser"
 require "app/workers/feed_downloader"
-require "app/workers/feed_downloader_critical"
 require "app/workers/twitter_refresher"
-require "app/workers/twitter_refresher_critical"

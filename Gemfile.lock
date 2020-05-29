@@ -9,6 +9,17 @@ GIT
       loofah (>= 2.0)
       sax-machine (>= 1.0)
 
+GIT
+  remote: git://github.com/feedbin/http.git
+  revision: e9e80336355f54efc756b5a20ef7eeee7718b7e7
+  branch: feedbin
+  specs:
+    http (4.4.1)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 2.2)
+      http-parser (~> 1.2.0)
+
 PATH
   remote: /Users/ben/Sites/feedkit
   specs:
@@ -17,15 +28,6 @@ PATH
       feedjira (~> 2.0)
       twitter (~> 7.0)
       twitter-text (~> 3.1.0)
-
-PATH
-  remote: /Users/ben/Sites/http
-  specs:
-    http (4.4.1)
-      addressable (~> 2.3)
-      http-cookie (~> 1.0)
-      http-form_data (~> 2.2)
-      http-parser (~> 1.2.0)
 
 GEM
   remote: https://rubygems.org/
