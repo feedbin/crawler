@@ -1,61 +1,48 @@
+# frozen_string_literal: true
+
 class FeedRefresherFetcher
   include Sidekiq::Worker
-  include RecordStatus
   sidekiq_options queue: :feed_refresher_fetcher
 
-  # Options: etag, last_modified, subscriptions_count, xml, push_callback, hub_secret, push_mode, record_status
-  def perform(feed_id, feed_url, options = {})
-    feed = { id: feed_id }
-    if options["xml"]
-      entries = Pushed.new(options["xml"], feed_url).entries
-    else
-      fetched = Fetched.new(feed_id, feed_url, options)
-      entries = fetched.entries
-      feed = feed.merge(fetched.feed)
-      if options["record_status"]
-        record_status(feed_id, fetched.status_message)
-      end
-      if fetched.parsed_feed && options["push_callback"] && options["hub_secret"]
-        push = PubSubHubbub.new(
-          fetched.parsed_feed.hubs,
-          fetched.parsed_feed.self_url,
-          options["push_callback"],
-          options["hub_secret"],
-          options["subscriptions_count"]
-        )
-        if options["push_mode"] == "subscribe"
-          push.subscribe
-        elsif options["push_mode"] == "unsubscribe"
-          push.unsubscribe
-        end
-      end
-    end
+  def perform(feed_id, feed_url, username, password, subscribers)
+    @feed_id     = feed_id
+    @feed_url    = feed_url
+    @username    = username
+    @password    = password
+    @subscribers = subscribers
+    @http_cache  = HTTPCache.new(feed_id)
 
-    formatted_entries = FormattedEntries.new(entries)
-    if !formatted_entries.new_or_changed.empty?
-      update = {
-        feed: feed,
-        entries: formatted_entries.new_or_changed,
-      }
-      Sidekiq::Client.push(
-        'args'  => [update],
-        'class' => 'FeedRefresherReceiver',
-        'queue' => 'feed_refresher_receiver'
-      )
-    end
+    download
+  end
 
-    if options["itunes_image"]
-      entries.each do |entry|
-        if entry.data && entry.data[:itunes_image]
-          Sidekiq::Client.push(
-            'args'  => [entry.public_id, entry.data[:itunes_image]],
-            'class' => 'FeedRefresherReceiverImage',
-            'queue' => 'feed_refresher_receiver'
-          )
-        end
-      end
+  def download
+    options = Feedkit::RequestOptions.new(
+      etag: @http_cache.etag,
+      last_modified: @http_cache.last_modified,
+      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers",
+      username: @username,
+      password: @password
+    )
+    @response = Feedkit::Request.download(@feed_url, options: options, on_redirect: on_redirect)
+    parse_feed if feed_changed?
+  end
+
+  def parse_feed
+    @response.persist!
+
+    ParseFeed.perform_async(@feed_id, @feed_url, @response.path, @response.file_format)
+
+    @http_cache.update!(@response.etag, @response.last_modified, @response.checksum)
+  end
+
+  def on_redirect
+    proc do |result, location|
+      puts "result: #{result.inspect}"
+      puts "location: #{location}"
     end
   end
 
+  def feed_changed?
+    @http_cache.checksum != @response.checksum
+  end
 end
-
