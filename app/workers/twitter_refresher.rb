@@ -22,17 +22,18 @@ class TwitterRefresher
     end
 
     if parsed_feed.respond_to?(:to_feed)
-      entries = FilteredEntries.new(parsed_feed.entries, false)
-      unless entries.new_or_changed.empty?
-        feed[:options] = parsed_feed.options
-        update = {
-          feed: feed,
-          entries: entries.new_or_changed
-        }
+      entries = EntryFilter.filter!(parsed_feed.entries, false)
+      unless entries.empty?
         Sidekiq::Client.push(
-          "args" => [update],
           "class" => "FeedRefresherReceiver",
-          "queue" => "feed_refresher_receiver"
+          "queue" => "feed_refresher_receiver",
+          "args" => [{
+            feed: {
+              id: feed_id,
+              options: parsed_feed.options
+            },
+            entries: entries
+          }],
         )
       end
     end

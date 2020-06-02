@@ -28,7 +28,7 @@ require "lib/sidekiq"
 require "lib/record_status"
 require "lib/cache"
 
-require "app/models/filtered_entries"
+require "app/models/entry_filter"
 require "app/models/pub_sub_hubbub"
 require "app/models/pushed"
 

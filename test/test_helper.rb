@@ -8,7 +8,6 @@ require "webmock/minitest"
 
 redis_test_instance = IO.popen("redis-server --port 7775")
 Minitest.after_run do
-  puts "killing it"
   Process.kill("INT", redis_test_instance.pid)
 end
 

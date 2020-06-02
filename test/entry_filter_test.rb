@@ -1,9 +1,9 @@
 require_relative "test_helper"
 
-class FilteredEntriesTest < Minitest::Test
+class EntryFilterTest < Minitest::Test
   def test_should_get_new_entries
     entries = sample_entries
-    results = FilteredEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
     assert_equal entries.length, results.length
     results.each do |entry|
       assert_nil entry[:update]
@@ -18,7 +18,7 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FilteredEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
     assert_equal entries.length, results.length
     results.each do |entry|
       assert entry[:update]
@@ -33,7 +33,7 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FilteredEntries.new(entries, false).new_or_changed
+    results = EntryFilter.filter!(entries, false)
     assert_equal 0, results.length
   end
 
@@ -45,7 +45,19 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FilteredEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
+    assert_equal 0, results.length
+  end
+
+  def test_should_ignore_content_length_one
+    entries = sample_entries
+    $redis.with do |connection|
+      entries.each do |entry|
+        connection.set(entry.public_id, 1)
+      end
+    end
+
+    results = EntryFilter.filter!(entries)
     assert_equal 0, results.length
   end
 
