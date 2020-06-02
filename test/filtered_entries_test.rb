@@ -3,7 +3,7 @@ require_relative "test_helper"
 class FilteredEntriesTest < Minitest::Test
   def test_should_get_new_entries
     entries = sample_entries
-    results = FormattedEntries.new(entries).new_or_changed
+    results = FilteredEntries.new(entries).new_or_changed
     assert_equal entries.length, results.length
     results.each do |entry|
       assert_nil entry[:update]
@@ -18,7 +18,7 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries).new_or_changed
+    results = FilteredEntries.new(entries).new_or_changed
     assert_equal entries.length, results.length
     results.each do |entry|
       assert entry[:update]
@@ -33,7 +33,7 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries, false).new_or_changed
+    results = FilteredEntries.new(entries, false).new_or_changed
     assert_equal 0, results.length
   end
 
@@ -45,7 +45,7 @@ class FilteredEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries).new_or_changed
+    results = FilteredEntries.new(entries).new_or_changed
     assert_equal 0, results.length
   end
 

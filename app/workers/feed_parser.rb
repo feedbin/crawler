@@ -25,9 +25,9 @@ class FeedParser
   def parse(path, file_format)
     body = File.read(path, binmode: true)
     if file_format == "xml"
-      Parser::XMLFeed.new(body, feed_url)
+      Feedkit::Parser::XMLFeed.new(body, feed_url)
     elsif file_format == "json"
-      Parser::JSONFeed.new(body, feed_url)
+      Feedkit::Parser::JSONFeed.new(body, feed_url)
     end
   end
 end

@@ -26,7 +26,7 @@ require "lib/librato"
 require "lib/worker_stat"
 require "lib/sidekiq"
 require "lib/record_status"
-require "lib/http_cache"
+require "lib/cache"
 
 require "app/models/filtered_entries"
 require "app/models/pub_sub_hubbub"

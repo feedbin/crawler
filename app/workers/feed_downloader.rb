@@ -10,29 +10,41 @@ class FeedDownloader
     @username = username
     @password = password
     @subscribers = subscribers
-    @http_cache = HTTPCache.new(feed_id)
 
     download
   end
 
   def download
-    options = Feedkit::RequestOptions.new(
-      etag: @http_cache.etag,
-      last_modified: @http_cache.last_modified,
+    @response = Feedkit::Request.download(@feed_url, options: options, on_redirect: on_redirect)
+    parse if changed?
+  rescue Feedkit::NotModified
+    puts "Feedkit::NotModified"
+  rescue Feedkit::Error
+    puts "Feedkit::Error"
+  end
+
+  def options
+    Feedkit::RequestOptions.new(
+      etag: http_cache[:etag],
+      last_modified: http_cache[:last_modified],
       user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers",
       username: @username,
       password: @password
     )
-    @response = Feedkit::Request.download(@feed_url, options: options, on_redirect: on_redirect)
-    parse_feed if feed_changed?
   end
 
-  def parse_feed
+  def parse
     @response.persist!
+    FeedParser.perform_async(@feed_id, @feed_url, @response.path, @response.file_format)
+    Cache.write(cache_key, {
+      etag: @response.etag,
+      last_modified: @response.last_modified,
+      checksum: @response.checksum
+    })
+  end
 
-    ParseFeed.perform_async(@feed_id, @feed_url, @response.path, @response.file_format)
-
-    @http_cache.update!(@response.etag, @response.last_modified, @response.checksum)
+  def changed?
+    http_cache[:checksum] != @response.checksum
   end
 
   def on_redirect
@@ -42,11 +54,14 @@ class FeedDownloader
     end
   end
 
-  def feed_changed?
-    @http_cache.checksum != @response.checksum
+  def http_cache
+    @http_cache ||= Cache.read(cache_key)
+  end
+
+  def cache_key
+    "feed:#{@feed_id}:http"
   end
 end
-
 
 class FeedDownloaderCritical
   include Sidekiq::Worker
