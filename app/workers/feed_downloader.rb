@@ -18,9 +18,9 @@ class FeedDownloader
     @response = Feedkit::Request.download(@feed_url, options: options, on_redirect: on_redirect)
     parse if changed?
   rescue Feedkit::NotModified
-    puts "Feedkit::NotModified"
+
   rescue Feedkit::Error
-    puts "Feedkit::Error"
+
   end
 
   def options
@@ -35,7 +35,7 @@ class FeedDownloader
 
   def parse
     @response.persist!
-    FeedParser.perform_async(@feed_id, @feed_url, @response.path, @response.file_format)
+    FeedParser.perform_async(@feed_id, @feed_url, @response.path)
     Cache.write(cache_key, {
       etag: @response.etag,
       last_modified: @response.last_modified,

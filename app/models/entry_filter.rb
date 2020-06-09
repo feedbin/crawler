@@ -6,7 +6,7 @@ class EntryFilter
     new(*args).filter
   end
 
-  def initialize(entries, check_for_updates = true)
+  def initialize(entries, check_for_updates: true)
     @entries = entries
     @check_for_updates = check_for_updates
   end

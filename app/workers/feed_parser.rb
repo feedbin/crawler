@@ -4,16 +4,17 @@ class FeedParser
   include Sidekiq::Worker
   sidekiq_options queue: "feed_parser_#{Socket.gethostname}", retry: false
 
-  def perform(feed_id, feed_url, path, file_format)
+  def perform(feed_id, feed_url, path)
     @feed_id = feed_id
     @feed_url = feed_url
     @path = path
-    @file_format = file_format
 
     entries = EntryFilter.filter!(parsed_feed.entries)
     save(parsed_feed.to_feed, entries) unless entries.empty?
+  rescue Feedkit::NotFeed
+
   ensure
-    File.delete(path)
+    cleanup
   end
 
   def save(feed, entries)
@@ -30,7 +31,12 @@ class FeedParser
   def parsed_feed
     @parsed_feed ||= begin
       body = File.read(@path, binmode: true)
-      Feedkit::Parser.parse!(@file_format, body, @feed_url)
+      Feedkit::Parser.parse!(body, url: @feed_url)
     end
+  end
+
+  def cleanup
+    File.unlink(@path)
+  rescue Errno::ENOENT
   end
 end

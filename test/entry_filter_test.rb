@@ -33,7 +33,7 @@ class EntryFilterTest < Minitest::Test
       end
     end
 
-    results = EntryFilter.filter!(entries, false)
+    results = EntryFilter.filter!(entries, check_for_updates: false)
     assert_equal 0, results.length
   end
 

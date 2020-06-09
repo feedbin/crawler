@@ -10,7 +10,7 @@ class FeedParserTest < Minitest::Test
     feed_url = "http://example.com"
     feed_id = 1
     assert_equal 0, Sidekiq::Queues['feed_refresher_receiver'].size
-    FeedParser.new.perform(feed_id, feed_url, xml_path, "xml")
+    FeedParser.new.perform(feed_id, feed_url, xml_path)
     assert_equal 1, Sidekiq::Queues['feed_refresher_receiver'].size
 
     job = Sidekiq::Queues['feed_refresher_receiver'].first
@@ -23,7 +23,7 @@ class FeedParserTest < Minitest::Test
 
   def test_should_parse_json
     assert_equal 0, Sidekiq::Queues['feed_refresher_receiver'].size
-    FeedParser.new.perform(1, "http://example.com", json_path, "json")
+    FeedParser.new.perform(1, "http://example.com", json_path)
     assert_equal 1, Sidekiq::Queues['feed_refresher_receiver'].size
   end
 
