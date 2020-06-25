@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04, macos-10.15]
+        os: [ubuntu-18.04]
         ruby: [2.6, 2.7]
 
     runs-on: ${{ matrix.os }}
