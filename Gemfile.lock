@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: 81485bb473c57d02b6bb44afccf72ab2adccd4d9
+  revision: da1c169ded3fd55e294414a1dc16a8caefd2b08d
   branch: http
   specs:
     feedkit (0.1.0)
@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/http.git
-  revision: e9e80336355f54efc756b5a20ef7eeee7718b7e7
+  revision: 9377af8b2eb3b9b2ffdef8b3be60ab28424e3a3f
   branch: feedbin
   specs:
     http (4.4.1)
@@ -40,7 +40,7 @@ GEM
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     buftok (0.2.0)
-    capistrano (3.14.0)
+    capistrano (3.14.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -51,7 +51,7 @@ GEM
       capistrano (~> 3.1)
       sshkit (~> 1.3)
     concurrent-ruby (1.1.6)
-    connection_pool (2.2.2)
+    connection_pool (2.2.3)
     coveralls (0.8.23)
       json (>= 1.8, < 3)
       simplecov (~> 0.16.1)
@@ -70,7 +70,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
-    ffi (1.13.0)
+    ffi (1.13.1)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -83,7 +83,7 @@ GEM
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
-    i18n (1.8.2)
+    i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
     json (2.3.0)
@@ -93,7 +93,7 @@ GEM
     librato-rack (2.0.5)
       hetchy (~> 1.0)
       librato-metrics (~> 2.1, >= 2.1.0)
-    loofah (2.5.0)
+    loofah (2.6.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
@@ -105,12 +105,12 @@ GEM
     naught (1.1.0)
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
-    net-ssh (6.0.2)
+    net-ssh (6.1.0)
     nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     optimist (3.0.1)
     public_suffix (4.0.5)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-protection (2.0.8.1)
       rack
     rake (13.0.1)
@@ -118,7 +118,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
-    redis (4.1.4)
+    redis (4.2.1)
     safe_yaml (1.0.5)
     sax-machine (1.3.2)
     sidekiq (6.0.7)

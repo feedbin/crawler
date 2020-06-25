@@ -15,22 +15,19 @@ class FeedDownloader
   end
 
   def download
-    @response = Feedkit::Request.download(@feed_url, options: options, on_redirect: on_redirect)
-    parse if changed?
-  rescue Feedkit::NotModified
-
-  rescue Feedkit::Error
-
-  end
-
-  def options
-    Feedkit::RequestOptions.new(
+    @response = Feedkit::Request.download(@feed_url,
+      on_redirect: on_redirect,
       etag: http_cache[:etag],
       last_modified: http_cache[:last_modified],
       user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers",
       username: @username,
       password: @password
     )
+    parse if changed?
+  rescue Feedkit::NotModified
+
+  rescue Feedkit::Error
+
   end
 
   def parse
@@ -55,7 +52,7 @@ class FeedDownloader
   end
 
   def http_cache
-    @http_cache ||= Cache.read(cache_key)
+    @http_cache = Cache.read(cache_key)
   end
 
   def cache_key

@@ -19,8 +19,11 @@ class Cache
   end
 
   def write(key, values = {})
-    $redis.with do |redis|
-      redis.mapped_hmset(key, values)
+    values = values.compact
+    unless values.empty?
+      $redis.with do |redis|
+        redis.mapped_hmset(key, values)
+      end
     end
   end
 end
