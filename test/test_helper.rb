@@ -1,14 +1,16 @@
 require "coveralls"
 Coveralls.wear!
 
-ENV["REDIS_URL"] = "redis://localhost:7775"
-
 require "minitest/autorun"
 require "webmock/minitest"
 
-redis_test_instance = IO.popen("redis-server --port 7775")
-Minitest.after_run do
-  Process.kill("INT", redis_test_instance.pid)
+unless ENV["CI"]
+  ENV["REDIS_URL"] = "redis://localhost:7775"
+  redis_test_instance = IO.popen("redis-server --port 7775")
+
+  Minitest.after_run do
+    Process.kill("INT", redis_test_instance.pid)
+  end
 end
 
 require "sidekiq/testing"
