@@ -48,7 +48,7 @@ class PageCandidates < Candidates
   def find_meta_tags
     response = HTTParty.get(@full_url, timeout: 4)
     document = Nokogiri::HTML5(response.body)
-    document.search("meta[property='og:title'], meta[property='twitter:card'], meta[property='og:image'], meta[property='twitter:image']")
+    document.search("meta[property='twitter:image'], meta[property='og:image'], meta[property='og:title'], meta[property='twitter:card']")
   rescue *NETWORK_EXCEPTIONS
     Librato.increment 'entry_image.exception'
     []
@@ -111,7 +111,8 @@ class PageCandidates < Candidates
   end
 
   def feed_key
-    "feed_meta_presence:#{@feed_id}"
+    key = URI(@full_url).host || @feed_id
+    "feed_meta_presence:#{key}:v2"
   end
 
   def image_cache_key

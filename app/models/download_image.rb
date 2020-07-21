@@ -1,8 +1,9 @@
 class DownloadImage
 
-  def initialize(url, validate = true)
+  def initialize(url, validate = true, mime_type = nil)
     @url = url
     @validate = validate
+    @mime_type = mime_type || /image\/jp/
   end
 
   def file
@@ -27,9 +28,9 @@ class DownloadImage
 
   def headers_valid?(response)
     if @validate
-      response.content_type.mime_type =~ /image\/jp/ && response.content_length > 20_000
+      response.content_type.mime_type =~ @mime_type && response.content_length > 100_000
     else
-      response.content_type.mime_type =~ /image\/jp/
+      response.content_type.mime_type =~ @mime_type
     end
   rescue
     false

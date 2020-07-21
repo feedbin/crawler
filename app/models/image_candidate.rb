@@ -3,8 +3,6 @@ class ImageCandidate
   VIMEO_URLS = [%r(https?://vimeo\.com/video/(.*?)(#|\?|$)), %r(https?://vimeo\.com/([0-9]+)(#|\?|$))]
   INSTAGRAM_URLS = [%r(https?://www\.instagram\.com/p/(.*?)(/|#|\?|$)), %r(https?://instagram\.com/p/(.*?)(/|#|\?|$))]
 
-  IGNORE_EXTENSIONS = [".gif", ".png", ".webp"]
-
   def initialize(src, type)
     @src = src
     @type = type

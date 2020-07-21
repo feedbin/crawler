@@ -11,13 +11,14 @@ class Candidates
                         Zlib::DataError]
 
 
-  def initialize(feed_id, url, full_url, site_url, content, public_id)
+  def initialize(feed_id, url, full_url, site_url, content, public_id, mime_type = nil)
     @feed_id = feed_id
     @url = url
     @full_url = full_url
     @site_url = site_url
     @content = content
     @public_id = public_id
+    @mime_type = mime_type
   end
 
   def try_candidates(candidates)
@@ -36,15 +37,15 @@ class Candidates
     download = nil
     attempt = nil
     if candidate.valid? && candidate.original_url
-      attempt = DownloadImage.new(candidate.original_url)
+      attempt = DownloadImage.new(candidate.original_url, true, @mime_type)
       if attempt.file
         processed_image = ProcessedImage.new(attempt.file, @public_id)
         if processed_image.process
           download = {
-            original_url: candidate.original_url.to_s,
-            processed_url: processed_image.url.to_s,
-            width: processed_image.width,
-            height: processed_image.height,
+            "original_url" => candidate.original_url.to_s,
+            "processed_url" => processed_image.url.to_s,
+            "width" => processed_image.width,
+            "height" => processed_image.height,
           }
         end
       end
