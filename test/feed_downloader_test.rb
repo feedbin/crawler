@@ -17,13 +17,13 @@ class FeedDownloaderTest < Minitest::Test
     assert_equal 1, FeedParser.jobs.size, "Should not parse again because checksum matches"
   end
 
-  def test_should_schedule_feed_parser_critical
+  def test_should_schedule_critical_feed_parser
     url = "http://example.com/atom.xml"
     stub_request_file("atom.xml", url)
 
-    assert_equal 0, FeedParser.jobs.size
+    assert_equal 0, FeedParserCritical.jobs.size
     FeedDownloaderCritical.new.perform(1, url, 10)
-    assert_equal 1, FeedParser.jobs.size
+    assert_equal 1, FeedParserCritical.jobs.size
   end
 
   def test_should_send_user_agent

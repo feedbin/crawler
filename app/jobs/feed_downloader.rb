@@ -2,12 +2,13 @@
 
 class FeedDownloader
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher
+  sidekiq_options queue: :feed_refresher_fetcher, retry: false
 
-  def perform(feed_id, feed_url, subscribers)
+  def perform(feed_id, feed_url, subscribers, critical = false)
     @feed_id = feed_id
     @feed_url = feed_url
     @subscribers = subscribers
+    @parser = critical ? FeedParserCritical : FeedParser
 
     download
   end
@@ -28,7 +29,7 @@ class FeedDownloader
 
   def parse
     @response.persist!
-    FeedParser.perform_async(@feed_id, @feed_url, @response.path)
+    @parser.perform_async(@feed_id, @feed_url, @response.path)
     Cache.write(cache_key, {
       etag: @response.etag,
       last_modified: @response.last_modified,
@@ -58,8 +59,8 @@ end
 
 class FeedDownloaderCritical
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher_critical
+  sidekiq_options queue: :feed_refresher_fetcher_critical, retry: false
   def perform(*args)
-    FeedDownloader.new.perform(*args)
+    FeedDownloader.new.perform(*args, true)
   end
 end

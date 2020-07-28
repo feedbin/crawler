@@ -40,3 +40,12 @@ class FeedParser
   rescue Errno::ENOENT
   end
 end
+
+class FeedParserCritical
+  include Sidekiq::Worker
+  sidekiq_options queue: "feed_parser_#{Socket.gethostname}_critical", retry: false
+  def perform(*args)
+    FeedParser.new.perform(*args)
+  end
+end
+
