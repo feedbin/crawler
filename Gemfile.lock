@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: 83d00b99b916c70883d01aa890126a0b8d9b4cfe
+  revision: 3693bb83b6125c51e270efa758333e38a2860088
   branch: http
   specs:
     feedkit (0.1.0)
@@ -45,9 +45,9 @@ GEM
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
-    capistrano-bundler (1.6.0)
+    capistrano-bundler (2.0.1)
       capistrano (~> 3.1)
-    capistrano-rbenv (2.1.6)
+    capistrano-rbenv (2.2.0)
       capistrano (~> 3.1)
       sshkit (~> 1.3)
     concurrent-ruby (1.1.6)
@@ -64,7 +64,7 @@ GEM
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.7.5)
+    dotenv (2.7.6)
     equalizer (0.0.11)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
@@ -83,10 +83,10 @@ GEM
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
-    i18n (1.8.3)
+    i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
-    json (2.3.0)
+    json (2.3.1)
     librato-metrics (2.1.2)
       aggregate (~> 0.2.2)
       faraday
@@ -106,13 +106,11 @@ GEM
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     optimist (3.0.1)
     public_suffix (4.0.5)
     rack (2.2.3)
-    rack-protection (2.0.8.1)
-      rack
     rake (13.0.1)
     rbtrace (0.4.13)
       ffi (>= 1.0.6)
@@ -121,11 +119,10 @@ GEM
     redis (4.2.1)
     safe_yaml (1.0.5)
     sax-machine (1.3.2)
-    sidekiq (6.0.7)
+    sidekiq (6.1.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      rack-protection (>= 2.0.0)
-      redis (>= 4.1.0)
+      redis (>= 4.2.0)
     simple_oauth (0.3.1)
     simplecov (0.16.1)
       docile (~> 1.1)

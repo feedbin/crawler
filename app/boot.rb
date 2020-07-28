@@ -29,9 +29,6 @@ require "lib/record_status"
 require "lib/cache"
 
 require "app/models/entry_filter"
-require "app/models/pub_sub_hubbub"
-require "app/models/pushed"
-
 require "app/workers/feed_parser"
 require "app/workers/feed_downloader"
 require "app/workers/twitter_refresher"

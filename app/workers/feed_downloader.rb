@@ -4,11 +4,9 @@ class FeedDownloader
   include Sidekiq::Worker
   sidekiq_options queue: :feed_refresher_fetcher
 
-  def perform(feed_id, feed_url, username, password, subscribers)
+  def perform(feed_id, feed_url, subscribers)
     @feed_id = feed_id
     @feed_url = feed_url
-    @username = username
-    @password = password
     @subscribers = subscribers
 
     download
@@ -19,9 +17,7 @@ class FeedDownloader
       on_redirect: on_redirect,
       etag: http_cache[:etag],
       last_modified: http_cache[:last_modified],
-      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers",
-      username: @username,
-      password: @password
+      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
     parse if changed?
   rescue Feedkit::NotModified
