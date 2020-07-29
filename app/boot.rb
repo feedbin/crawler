@@ -3,16 +3,9 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(File.dirname(__FILE__)))
 $stdout.sync = true
 
 require 'bundler/setup'
-require 'objspace'
-ObjectSpace.trace_object_allocations_start
 require 'dotenv'
-if ENV["ENV_PATH"]
-  Dotenv.load ENV["ENV_PATH"]
-else
-  Dotenv.load
-end
+Dotenv.load
 
-require 'rbtrace'
 require 'digest/sha1'
 require 'date'
 require 'timeout'

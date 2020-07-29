@@ -25,5 +25,4 @@ gem 'dotenv'
 gem 'librato-rack'
 gem 'connection_pool'
 gem 'redis'
-gem 'rbtrace'
 gem 'coveralls', require: false
