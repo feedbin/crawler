@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 group :development do
   gem 'capistrano'
   gem 'capistrano-bundler'
-  gem 'capistrano-rbenv'
   gem 'foreman'
 end
 
