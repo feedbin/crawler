@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/feedbin/feedjira.git
-  revision: a8a90bbc601f695c07e0797688e846d5d561263c
-  ref: a8a90bb
+  revision: 70ae78eea6d98b5ce7399030b90b4f0866e160fd
+  branch: f2
   specs:
     feedjira (2.1.2)
       faraday (>= 0.9)

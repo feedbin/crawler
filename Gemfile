@@ -14,7 +14,7 @@ end
 
 gem 'unf_ext'
 
-gem 'feedjira', github: 'feedbin/feedjira', ref: 'a8a90bb'
+gem 'feedjira', github: 'feedbin/feedjira', branch: "f2"
 gem 'feedkit', github: "feedbin/feedkit", branch: "master"
 
 gem 'nokogiri'
