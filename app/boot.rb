@@ -16,16 +16,11 @@ require "date"
 require "socket"
 
 require "sidekiq"
-require "librato-rack"
 require "connection_pool"
 require "redis"
 require "feedkit"
 
 require "app/redis"
-require "app/librato"
-require "app/worker_stat"
-require "app/sidekiq"
-require "app/record_status"
 require "app/cache"
 require "app/entry_filter"
 
