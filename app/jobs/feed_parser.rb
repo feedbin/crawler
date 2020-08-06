@@ -18,21 +18,14 @@ class FeedParser
   end
 
   def save(feed, entries)
-    data = {
-      "feed" => feed.merge({"id" => @feed_id}),
-      "entries" => entries
-    }
-
-    File.write("/tmp/#{@feed_id}.json", JSON.pretty_generate(data))
-
-    # Sidekiq::Client.push(
-    #   "class" => "FeedRefresherReceiver",
-    #   "queue" => "feed_refresher_receiver",
-    #   "args" => [{
-    #     "feed" => feed.merge({"id" => @feed_id}),
-    #     "entries" => entries
-    #   }]
-    # )
+    Sidekiq::Client.push(
+      "class" => "FeedRefresherReceiver",
+      "queue" => "feed_refresher_receiver",
+      "args" => [{
+        "feed" => feed.merge({"id" => @feed_id}),
+        "entries" => entries
+      }]
+    )
   end
 
   def parsed_feed

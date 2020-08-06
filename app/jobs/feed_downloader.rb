@@ -43,8 +43,6 @@ class FeedDownloader
 
   def on_redirect
     proc do |result, location|
-      puts "result: #{result.inspect}"
-      puts "location: #{location}"
     end
   end
 
