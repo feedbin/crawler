@@ -2,7 +2,7 @@
 
 class FeedDownloader
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher, retry: false
+  sidekiq_options queue: :feed_downloader, retry: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
     @feed_id = feed_id
@@ -59,7 +59,7 @@ end
 
 class FeedDownloaderCritical
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher_critical, retry: false
+  sidekiq_options queue: :feed_downloader_critical, retry: false
   def perform(*args)
     FeedDownloader.new.perform(*args, true)
   end

@@ -2,7 +2,7 @@
 
 class TwitterRefresher
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher, retry: false
+  sidekiq_options queue: :feed_downloader, retry: false
 
   def perform(feed_id, feed_url, keys)
     tweets = nil
@@ -37,7 +37,7 @@ end
 
 class TwitterRefresherCritical
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_refresher_fetcher_critical, retry: false
+  sidekiq_options queue: :feed_downloader_critical, retry: false
   def perform(*args)
     TwitterRefresher.new.perform(*args)
   end

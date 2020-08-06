@@ -18,14 +18,21 @@ class FeedParser
   end
 
   def save(feed, entries)
-    Sidekiq::Client.push(
-      "class" => "FeedRefresherReceiver",
-      "queue" => "feed_refresher_receiver",
-      "args" => [{
-        "feed" => feed.merge({"id" => @feed_id}),
-        "entries" => entries
-      }]
-    )
+    data = {
+      "feed" => feed.merge({"id" => @feed_id}),
+      "entries" => entries
+    }
+
+    File.write("/tmp/#{@feed_id}.json", JSON.pretty_generate(data))
+
+    # Sidekiq::Client.push(
+    #   "class" => "FeedRefresherReceiver",
+    #   "queue" => "feed_refresher_receiver",
+    #   "args" => [{
+    #     "feed" => feed.merge({"id" => @feed_id}),
+    #     "entries" => entries
+    #   }]
+    # )
   end
 
   def parsed_feed
@@ -36,14 +43,13 @@ class FeedParser
   end
 
   def cleanup
-    File.unlink(@path)
-  rescue Errno::ENOENT
+    File.unlink(@path) rescue Errno::ENOENT
   end
 end
 
 class FeedParserCritical
   include Sidekiq::Worker
-  sidekiq_options queue: "feed_parser_#{Socket.gethostname}_critical", retry: false
+  sidekiq_options queue: "feed_parser_critical_#{Socket.gethostname}", retry: false
   def perform(*args)
     FeedParser.new.perform(*args)
   end
