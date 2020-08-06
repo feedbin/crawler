@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/http.git
-  revision: 9377af8b2eb3b9b2ffdef8b3be60ab28424e3a3f
+  revision: dc031da97cfcb15aade491a5dfc321c61c944bde
   branch: feedbin
   specs:
     http (4.4.1)
@@ -46,9 +46,6 @@ GEM
       sshkit (>= 1.9.0)
     capistrano-bundler (2.0.1)
       capistrano (~> 3.1)
-    capistrano-rbenv (2.2.0)
-      capistrano (~> 3.1)
-      sshkit (~> 1.3)
     concurrent-ruby (1.1.6)
     connection_pool (2.2.3)
     coveralls (0.8.23)
@@ -154,7 +151,6 @@ DEPENDENCIES
   bundler
   capistrano
   capistrano-bundler
-  capistrano-rbenv
   connection_pool
   coveralls
   dotenv
