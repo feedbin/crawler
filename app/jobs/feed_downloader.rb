@@ -5,26 +5,28 @@ class FeedDownloader
   sidekiq_options queue: :feed_downloader, retry: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    @feed_id = feed_id
-    @feed_url = feed_url
+    @feed_id     = feed_id
+    @feed_url    = feed_url
     @subscribers = subscribers
-    @parser = critical ? FeedParserCritical : FeedParser
+    @parser      = critical ? FeedParserCritical : FeedParser
+    @response    = download
 
-    download
-  end
-
-  def download
-    @response = Feedkit::Request.download(@feed_url,
-      on_redirect: on_redirect,
-      etag: http_cache[:etag],
-      last_modified: http_cache[:last_modified],
-      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
-    )
-    parse if changed?
+    parse unless cached[:checksum] == @response.checksum
   rescue Feedkit::NotModified
 
   rescue Feedkit::Error
 
+  rescue
+
+  end
+
+  def download
+    Feedkit::Request.download(@feed_url,
+      on_redirect: on_redirect,
+      etag: cached[:etag],
+      last_modified: cached[:last_modified],
+      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
+    )
   end
 
   def parse
@@ -37,17 +39,13 @@ class FeedDownloader
     })
   end
 
-  def changed?
-    http_cache[:checksum] != @response.checksum
-  end
-
   def on_redirect
     proc do |result, location|
     end
   end
 
-  def http_cache
-    @http_cache = Cache.read(cache_key)
+  def cached
+    @cached ||= Cache.read(cache_key)
   end
 
   def cache_key
