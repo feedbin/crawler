@@ -11,7 +11,7 @@ class TwitterRefresher
 
     if recognized_url.valid?
       keys.find do |key|
-        tweets = Feedkit::Tweets.new(feed_url, key["twitter_access_token"], key["twitter_access_secret"])
+        tweets = Feedkit::Tweets.new(recognized_url, key["twitter_access_token"], key["twitter_access_secret"])
       rescue Twitter::Error::Unauthorized
       end
     end
@@ -25,7 +25,7 @@ class TwitterRefresher
           "args" => [{
             feed: {
               id: feed_id,
-              options: parsed_feed.options
+              options: tweets.feed.options
             },
             entries: entries
           }],
