@@ -12,6 +12,14 @@ class TwitterRefresher
     if recognized_url.valid?
       keys.find do |key|
         feed = Feedkit::Tweets.new(recognized_url, key["twitter_access_token"], key["twitter_access_secret"]).feed
+      rescue Twitter::Error::TooManyRequests => error
+        puts <<-EOD
+        key: #{key["twitter_access_token"]}
+        limit: #{error.rate_limit.limit}
+        remaining: #{error.rate_limit.remaining}
+        reset_at: #{error.rate_limit.reset_at}
+        reset_in: #{error.rate_limit.reset_in}
+        EOD
       rescue Twitter::Error::Unauthorized
       end
     end
