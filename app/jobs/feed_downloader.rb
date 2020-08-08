@@ -13,11 +13,11 @@ class FeedDownloader
 
     parse unless cached[:checksum] == @response.checksum
   rescue Feedkit::NotModified
-
-  rescue Feedkit::Error
-
-  rescue
-
+    puts "Feedkit::NotModified"
+  rescue Feedkit::Error => e
+    puts "Feedkit::Error: #{e.message}"
+  rescue => e
+    puts "Error: #{e.message}"
   end
 
   def download
