@@ -1,10 +1,9 @@
-require_relative 'test_helper'
+require_relative "test_helper"
 
-class FormattedEntriesTest < Minitest::Test
-
+class EntryFilterTest < Minitest::Test
   def test_should_get_new_entries
     entries = sample_entries
-    results = FormattedEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
     assert_equal entries.length, results.length
     results.each do |entry|
       assert_nil entry[:update]
@@ -19,7 +18,7 @@ class FormattedEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
     assert_equal entries.length, results.length
     results.each do |entry|
       assert entry[:update]
@@ -34,7 +33,7 @@ class FormattedEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries, false).new_or_changed
+    results = EntryFilter.filter!(entries, check_for_updates: false)
     assert_equal 0, results.length
   end
 
@@ -46,7 +45,19 @@ class FormattedEntriesTest < Minitest::Test
       end
     end
 
-    results = FormattedEntries.new(entries).new_or_changed
+    results = EntryFilter.filter!(entries)
+    assert_equal 0, results.length
+  end
+
+  def test_should_ignore_content_length_one
+    entries = sample_entries
+    $redis.with do |connection|
+      entries.each do |entry|
+        connection.set(entry.public_id, 1)
+      end
+    end
+
+    results = EntryFilter.filter!(entries)
     assert_equal 0, results.length
   end
 
@@ -56,9 +67,8 @@ class FormattedEntriesTest < Minitest::Test
     entry = OpenStruct.new(
       public_id: random_string,
       content: random_string,
-      to_entry: {data: random_string},
+      to_entry: {data: random_string}
     )
     [entry]
   end
-
 end

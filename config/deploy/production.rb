@@ -1,8 +1,6 @@
-server 'refresher1.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher2.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher3.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher4.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher5.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher6.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher7.feedbin.com', user: 'app', roles: %w{refresher}
-server 'refresher8.feedbin.com', user: 'app', roles: %w{refresher}
+server "157.245.189.199", user: "app", roles: %w[refresher]
+# server "refresher2.feedbin", user: "app", roles: %w[refresher]
+# server "refresher3.feedbin", user: "app", roles: %w[refresher]
+# server "refresher4.feedbin", user: "app", roles: %w[refresher]
+# server "refresher5.feedbin", user: "app", roles: %w[refresher]
+# server "refresher6.feedbin", user: "app", roles: %w[refresher]
