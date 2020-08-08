@@ -5,19 +5,19 @@ class TwitterRefresher
   sidekiq_options queue: :feed_downloader, retry: false
 
   def perform(feed_id, feed_url, keys)
-    tweets = nil
+    feed = nil
 
     recognized_url = Feedkit::TwitterURLRecognizer.new(feed_url, nil)
 
     if recognized_url.valid?
       keys.find do |key|
-        tweets = Feedkit::Tweets.new(recognized_url, key["twitter_access_token"], key["twitter_access_secret"])
+        feed = Feedkit::Tweets.new(recognized_url, key["twitter_access_token"], key["twitter_access_secret"]).feed
       rescue Twitter::Error::Unauthorized
       end
     end
 
-    if tweets&.feed&.respond_to?(:to_feed)
-      entries = EntryFilter.filter!(tweets.feed.entries, check_for_updates: false)
+    if feed
+      entries = EntryFilter.filter!(feed.entries, check_for_updates: false)
       unless entries.empty?
         Sidekiq::Client.push(
           "class" => "FeedRefresherReceiver",
@@ -25,7 +25,7 @@ class TwitterRefresher
           "args" => [{
             feed: {
               id: feed_id,
-              options: tweets.feed.options
+              options: feed.options
             },
             entries: entries
           }],
