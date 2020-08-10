@@ -15,7 +15,7 @@ gem "unf_ext"
 
 gem "feedjira", github: "feedbin/feedjira", branch: "f2"
 gem "http",     github: "feedbin/http",     branch: "feedbin"
-gem "feedkit",  github: "feedbin/feedkit",  branch: "http"
+gem "feedkit",  github: "feedbin/feedkit",  branch: "master"
 
 gem "nokogiri"
 gem "bundler"

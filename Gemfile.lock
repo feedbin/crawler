@@ -11,8 +11,8 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: 7a8a43f749983dc7d64839723a9c80abc4df5fdc
-  branch: http
+  revision: ec384a314e6be84f7b8a92408a2f9d95cea249d3
+  branch: master
   specs:
     feedkit (0.1.0)
       feedjira (~> 2.0)
@@ -46,7 +46,7 @@ GEM
       sshkit (>= 1.9.0)
     capistrano-bundler (2.0.1)
       capistrano (~> 3.1)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     coveralls (0.8.23)
       json (>= 1.8, < 3)
