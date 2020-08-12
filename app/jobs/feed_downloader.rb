@@ -11,6 +11,8 @@ class FeedDownloader
     @critical    = critical
     @response    = download
 
+    clear_error_count
+
     parse unless cached[:checksum] == @response.checksum
   rescue Feedkit::NotModified
   rescue Feedkit::Error => exception
@@ -57,9 +59,19 @@ class FeedDownloader
     "feed:#{@feed_id}:http"
   end
 
+  def error_key
+    "feed:#{@feed_id}:error_count"
+  end
+
+  def clear_error_count
+    $redis.with do |redis|
+      redis.del(error_key)
+    end
+  end
+
   def increment_error_count
     $redis.with do |redis|
-      redis.incr("feed:#{@feed_id}:error_count")
+      redis.incr(error_key)
     end
   end
 end
