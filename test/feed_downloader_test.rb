@@ -45,7 +45,7 @@ class FeedDownloaderTest < Minitest::Test
     feed_id = 1
     etag = "etag"
     last_modified = "last_modified"
-    Cache.write("feed:#{feed_id}:http", {
+    Cache.write("feed:#{feed_id}:http", values: {
       etag: etag,
       last_modified: last_modified,
       checksum: nil
@@ -55,5 +55,31 @@ class FeedDownloaderTest < Minitest::Test
     stub_request(:get, url).with(headers: {"If-None-Match" => etag, "If-Modified-Since" => last_modified}).to_return(status: 304)
     FeedDownloader.new.perform(feed_id, url, 10)
     assert_equal 0, FeedParser.jobs.size
+  end
+
+  def test_should_ignore_cache_when_critical
+    feed_id = 1
+    etag = "etag"
+    last_modified = "last_modified"
+    Cache.write("feed:#{feed_id}:http", values: {
+      etag: etag,
+      last_modified: last_modified,
+      checksum: nil
+    })
+
+    url = "http://example.com/atom.xml"
+    stub_request(:get, url).to_return do |request|
+      if request.headers["If-None-Match"] || request.headers["If-Modified-Since"]
+        {status: 304}
+      else
+        {status: 200}
+      end
+    end
+
+    FeedDownloader.new.perform(feed_id, url, 10)
+    assert_equal 0, FeedParser.jobs.size
+
+    FeedDownloaderCritical.new.perform(feed_id, url, 10)
+    assert_equal 1, FeedParserCritical.jobs.size
   end
 end

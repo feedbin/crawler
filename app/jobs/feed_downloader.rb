@@ -8,16 +8,19 @@ class FeedDownloader
     @feed_id     = feed_id
     @feed_url    = feed_url
     @subscribers = subscribers
-    @parser      = critical ? FeedParserCritical : FeedParser
+    @critical    = critical
     @response    = download
 
     parse unless cached[:checksum] == @response.checksum
   rescue Feedkit::NotModified
     puts "Feedkit::NotModified"
+    $redis.with do |redis|
+      redis.expire(cache_key, ((1..8).to_a.sample * (1..60).to_a.sample * (1..60).to_a.sample))
+    end
   rescue Feedkit::Error => e
-    puts "Feedkit::Error: #{e.message}"
+    puts "Feedkit::Error: count: #{increment_error_count} url: #{feed_url} message: #{e.message}"
   rescue => e
-    puts "Error: #{e.message}"
+    puts "Error: count: #{increment_error_count} url: #{feed_url} message: #{e.message}"
   end
 
   def download
@@ -31,8 +34,9 @@ class FeedDownloader
 
   def parse
     @response.persist!
-    @parser.perform_async(@feed_id, @feed_url, @response.path)
-    Cache.write(cache_key, {
+    parser = @critical ? FeedParserCritical : FeedParser
+    parser.perform_async(@feed_id, @feed_url, @response.path)
+    Cache.write(cache_key, options: {expires_in: 8 * 60 * 60}, values: {
       etag: @response.etag,
       last_modified: @response.last_modified,
       checksum: @response.checksum
@@ -45,11 +49,19 @@ class FeedDownloader
   end
 
   def cached
-    @cached ||= Cache.read(cache_key)
+    @cached ||= begin
+      @critical ? {} : Cache.read(cache_key)
+    end
   end
 
   def cache_key
     "feed:#{@feed_id}:http"
+  end
+
+  def increment_error_count
+    $redis.with do |redis|
+      redis.incr("feed:#{@feed_id}:error_count")
+    end
   end
 end
 

@@ -5,8 +5,8 @@ class Cache
     new.read(*args)
   end
 
-  def self.write(*args)
-    new.write(*args)
+  def self.write(key, **args)
+    new.write(key, **args)
   end
 
   def read(key)
@@ -18,11 +18,20 @@ class Cache
     end
   end
 
-  def write(key, values = {})
+  def write(key, options: {}, values: {})
     values = values.compact
     unless values.empty?
       $redis.with do |redis|
         redis.mapped_hmset(key, values)
+      end
+    end
+    write_key_expiry(key, options)
+  end
+
+  def write_key_expiry(key, options)
+    if options[:expires_in]
+      $redis.with do |redis|
+        redis.expire key, options[:expires_in]
       end
     end
   end
