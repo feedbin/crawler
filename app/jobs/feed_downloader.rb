@@ -13,14 +13,13 @@ class FeedDownloader
 
     parse unless cached[:checksum] == @response.checksum
   rescue Feedkit::NotModified
-    puts "Feedkit::NotModified"
-    $redis.with do |redis|
-      redis.expire(cache_key, ((1..8).to_a.sample * (1..60).to_a.sample * (1..60).to_a.sample))
-    end
-  rescue Feedkit::Error => e
-    puts "Feedkit::Error: count: #{increment_error_count} url: #{feed_url} message: #{e.message}"
-  rescue => e
-    puts "Error: count: #{increment_error_count} url: #{feed_url} message: #{e.message}"
+  rescue Feedkit::Error => exception
+    puts "Feedkit::Error: count: #{increment_error_count} url: #{feed_url} message: #{exception.message}"
+  rescue => exception
+    puts <<-EOD
+      Error: #{exception.message.inspect}
+      Backtrace: #{exception.backtrace.inspect}
+    EOD
   end
 
   def download
