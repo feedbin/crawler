@@ -28,4 +28,10 @@ class Retry
       redis.hexists(KEY, @feed_id)
     end
   end
+
+  def count
+    Sidekiq.redis do |redis|
+      redis.hget(KEY, @feed_id)
+    end
+  end
 end
