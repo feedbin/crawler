@@ -31,7 +31,7 @@ class Retry
 
   def count
     Sidekiq.redis do |redis|
-      redis.hget(KEY, @feed_id)
+      redis.hget(KEY, @feed_id).to_i
     end
   end
 end
