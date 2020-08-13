@@ -25,7 +25,7 @@ class FeedDownloader
     @cached = HTTPCache.new(feed_id)
 
     if retrying?
-      Sidekiq.logger.warn "Skipping #{feed_url}. Error count: #{@retry.count}"
+      Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{feed_url}"
     else
       download
     end
