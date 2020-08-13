@@ -15,6 +15,7 @@ end
 
 require "sidekiq/testing"
 Sidekiq::Testing.fake!
+Sidekiq.logger.level = Logger::ERROR
 
 require_relative "../app/boot"
 

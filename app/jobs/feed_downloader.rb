@@ -1,35 +1,60 @@
 # frozen_string_literal: true
 
 class FeedDownloader
+  attr_accessor :retry_count
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_downloader, retry: false
+
+  sidekiq_options queue: :feed_downloader, dead: false, backtrace: false
+
+  sidekiq_retry_in do |count, exception|
+    ([count, 8].max ** 4) + 15 + (rand(30) * (count + 1))
+  end
+
+  sidekiq_retries_exhausted do |message, exception|
+    feed_id = message["args"].first
+    Retry.clear!(feed_id)
+  end
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    @feed_id     = feed_id
-    @feed_url    = feed_url
-    @subscribers = subscribers
-    @critical    = critical
-    @response    = download
+    @feed_id       = feed_id
+    @feed_url      = feed_url
+    @subscribers   = subscribers
+    @critical      = critical
 
-    clear_error_count
+    @retry  = Retry.new(feed_id)
+    @cached = HTTPCache.new(feed_id)
 
-    parse unless cached[:checksum] == @response.checksum
+    if retrying?
+      Sidekiq.logger.warn "Skipping #{feed_url}. Will retry later."
+    else
+      download
+    end
+  end
+
+  def download
+    @response = request
+    @retry.clear!
+    parse unless @cached.checksum == @response.checksum
   rescue Feedkit::NotModified
+    Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
   rescue Feedkit::Error => exception
-    puts "Feedkit::Error: count: #{increment_error_count} url: #{feed_url} message: #{exception.message}"
+    @retry.retry!
+    Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count} url: #{@feed_url} message: #{exception.message}"
+    raise
   rescue => exception
-    puts <<-EOD
-      Error: #{exception.message.inspect}
+    Sidekiq.logger.warn <<-EOD
+      Exception: #{exception.message.inspect}
       Backtrace: #{exception.backtrace.inspect}
     EOD
   end
 
-  def download
+  def request
+    etag          = @critical ? nil : @cached.etag
+    last_modified = @critical ? nil : @cached.last_modified
     Feedkit::Request.download(@feed_url,
-      on_redirect: on_redirect,
-      etag: cached[:etag],
-      last_modified: cached[:last_modified],
-      user_agent: "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
+      last_modified: last_modified,
+      etag:          etag,
+      user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
   end
 
@@ -37,42 +62,11 @@ class FeedDownloader
     @response.persist!
     parser = @critical ? FeedParserCritical : FeedParser
     parser.perform_async(@feed_id, @feed_url, @response.path)
-    Cache.write(cache_key, options: {expires_in: 8 * 60 * 60}, values: {
-      etag: @response.etag,
-      last_modified: @response.last_modified,
-      checksum: @response.checksum
-    })
+    @cached.save(@response)
   end
 
-  def on_redirect
-    proc do |result, location|
-    end
-  end
-
-  def cached
-    @cached ||= begin
-      @critical ? {} : Cache.read(cache_key)
-    end
-  end
-
-  def cache_key
-    "feed:#{@feed_id}:http"
-  end
-
-  def error_key
-    "feed:#{@feed_id}:error_count"
-  end
-
-  def clear_error_count
-    $redis.with do |redis|
-      redis.del(error_key)
-    end
-  end
-
-  def increment_error_count
-    $redis.with do |redis|
-      redis.incr(error_key)
-    end
+  def retrying?
+    retry_count.nil? && @retry.retrying?
   end
 end
 

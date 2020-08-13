@@ -20,8 +20,12 @@ require "connection_pool"
 require "redis"
 require "feedkit"
 
+require "app/retry_middleware"
+require "app/sidekiq"
 require "app/redis"
+require "app/retry"
 require "app/cache"
+require "app/http_cache"
 require "app/entry_filter"
 
 require "app/jobs/feed_parser"
