@@ -36,7 +36,7 @@ class FeedDownloader
     raise
   rescue => exception
     Sidekiq.logger.warn <<-EOD
-      Exception: #{exception.inspect}
+      Exception: #{exception.inspect}: #{@feed_url}
       Message: #{exception.message.inspect}
       Backtrace: #{exception.backtrace.inspect}
     EOD
