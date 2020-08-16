@@ -37,6 +37,7 @@ class FeedDownloader
     parse unless @cached.checksum == @response.checksum
   rescue Feedkit::NotModified
     Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
+    @retry.clear!
   rescue Feedkit::Error => exception
     @retry.retry!
     Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count} url: #{@feed_url} message: #{exception.message}"
