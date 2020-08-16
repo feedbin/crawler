@@ -16,28 +16,20 @@ class FeedDownloader
   end
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    @feed_id       = feed_id
-    @feed_url      = feed_url
-    @subscribers   = subscribers
-    @critical      = critical
+    @feed_id     = feed_id
+    @feed_url    = feed_url
+    @subscribers = subscribers
+    @critical    = critical
+    @retry       = Retry.new(feed_id)
+    @cached      = HTTPCache.new(feed_id)
 
-    @retry  = Retry.new(feed_id)
-    @cached = HTTPCache.new(feed_id)
-
-    if retrying?
-      Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{feed_url}"
-    else
-      download
-    end
+    download unless retrying?
   end
 
   def download
     @response = request
     @retry.clear!
-    parse unless @cached.checksum == @response.checksum
-  rescue Feedkit::NotModified
-    Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
-    @retry.clear!
+    parse unless @response.not_modified?(@cached.checksum)
   rescue Feedkit::Error => exception
     @retry.retry!
     Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count} url: #{@feed_url} message: #{exception.message}"
@@ -67,7 +59,9 @@ class FeedDownloader
   end
 
   def retrying?
-    retry_count.nil? && @retry.retrying?
+    result = retry_count.nil? && @retry.retrying?
+    Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{@feed_url}" if result
+    result
   end
 end
 

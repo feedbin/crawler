@@ -24,13 +24,11 @@ class Retry
   end
 
   def retrying?
-    Sidekiq.redis do |redis|
-      redis.hexists(KEY, @feed_id)
-    end
+    count > 0
   end
 
   def count
-    Sidekiq.redis do |redis|
+    @count ||= Sidekiq.redis do |redis|
       redis.hget(KEY, @feed_id).to_i
     end
   end
