@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/feedbin/feedkit.git
-  revision: c685c6adc4a84dc9be18e7df3463ddbffe876a7b
+  revision: a9c5c285343025dda9034f150ac099583bb4e455
   branch: master
   specs:
     feedkit (0.1.0)
@@ -82,13 +82,13 @@ GEM
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
     json (2.3.1)
-    loofah (2.6.0)
+    loofah (2.7.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mini_portile2 (2.4.0)
-    minitest (5.14.1)
+    minitest (5.14.2)
     multipart-post (2.1.1)
     naught (1.1.0)
     net-scp (3.0.0)
@@ -96,7 +96,7 @@ GEM
     net-ssh (6.1.0)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    public_suffix (4.0.5)
+    public_suffix (4.0.6)
     rack (2.2.3)
     rake (13.0.1)
     redis (4.2.1)

@@ -34,7 +34,7 @@ namespace :deploy do
       sleep(10)
 
       begin
-        execute :sudo, :stop, :workers
+        execute :sudo, :systemctl, :stop, "refresher.target"
       rescue SSHKit::Command::Failed
       end
     end
