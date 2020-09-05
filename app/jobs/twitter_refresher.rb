@@ -2,7 +2,7 @@
 
 class TwitterRefresher
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_downloader, retry: false
+  sidekiq_options queue: :twitter_refresher, retry: false
 
   def perform(feed_id, feed_url, keys)
     feed = nil
@@ -12,14 +12,6 @@ class TwitterRefresher
     if recognized_url.valid?
       keys.find do |key|
         feed = Feedkit::Tweets.new(recognized_url, key["twitter_access_token"], key["twitter_access_secret"]).feed
-      rescue Twitter::Error::TooManyRequests => error
-        puts <<-EOD
-        key: #{key["twitter_access_token"]}
-        limit: #{error.rate_limit.limit}
-        remaining: #{error.rate_limit.remaining}
-        reset_at: #{error.rate_limit.reset_at}
-        reset_in: #{error.rate_limit.reset_in}
-        EOD
       rescue Twitter::Error::Unauthorized
       end
     end
@@ -45,7 +37,7 @@ end
 
 class TwitterRefresherCritical
   include Sidekiq::Worker
-  sidekiq_options queue: :feed_downloader_critical, retry: false
+  sidekiq_options queue: :twitter_refresher_critical, retry: false
   def perform(*args)
     TwitterRefresher.new.perform(*args)
   end
