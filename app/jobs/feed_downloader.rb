@@ -34,7 +34,12 @@ class FeedDownloader
   def download
     @response = request
     @retry.clear!
-    parse unless @cached.checksum == @response.checksum
+    if @cached.checksum == @response.checksum
+      Sidekiq.logger.warn "Download success checksum match: url: #{@feed_url}"
+    else
+      Sidekiq.logger.warn "Download success parsing: url: #{@feed_url}"
+      parse
+    end
   rescue Feedkit::NotModified
     Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
     @retry.clear!
