@@ -67,8 +67,8 @@ class FeedDownloader
   end
 
   def on_redirect
-    proc do |result, location|
-      Sidekiq.logger.warn "Redirect: status: #{result.status.code} url: #{@feed_url} location: #{location}"
+    proc do |from, to|
+      Sidekiq.logger.warn "Redirect: status: #{from.status.code} url: #{@feed_url} location: #{to.uri}"
     end
   end
 

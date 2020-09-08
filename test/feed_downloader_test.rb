@@ -124,7 +124,7 @@ class FeedDownloaderTest < Minitest::Test
     response = {
       status: 301,
       headers: {
-        "Location" => last_url
+        "Location" => "/final"
       }
     }
     stub_request(:get, first_url).to_return(response)
