@@ -116,5 +116,23 @@ class FeedDownloaderTest < Minitest::Test
     assert result2 > result1
   end
 
+  def test_should_follow_redirects
+    first_url = "http://www.example.com"
+    last_url = "#{first_url}/final"
+    body = random_string
+
+    response = {
+      status: 301,
+      headers: {
+        "Location" => last_url
+      }
+    }
+    stub_request(:get, first_url).to_return(response)
+    stub_request(:get, last_url)
+
+    FeedDownloader.new.perform(1, first_url, 10)
+  end
+
+
 
 end
