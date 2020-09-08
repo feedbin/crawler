@@ -59,10 +59,17 @@ class FeedDownloader
     etag          = @critical ? nil : @cached.etag
     last_modified = @critical ? nil : @cached.last_modified
     Feedkit::Request.download(@feed_url,
+      on_redirect:   on_redirect,
       last_modified: last_modified,
       etag:          etag,
       user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
+  end
+
+  def on_redirect
+    proc do |result, location|
+      Sidekiq.logger.error "Redirect: url: #{@feed_url} location: #{location.inspect} result: #{result.inspect}"
+    end
   end
 
   def parse
