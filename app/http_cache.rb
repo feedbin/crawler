@@ -11,11 +11,20 @@ class HTTPCache
   end
 
   def save(response)
-    Cache.write(cache_key, options: {expires_in: 8 * 60 * 60}, values: {
+    values = {
       ETAG          => response.etag,
       LAST_MODIFIED => response.last_modified,
       CHECKSUM      => response.checksum
-    })
+    }
+    Cache.write(cache_key, options: {expires_in: 8 * 60 * 60}, values: values)
+  rescue Redis::CommandError
+    Sidekiq.logger.warn <<-EOD
+    -------------------
+    Redis::CommandError
+    #{values.inspect}
+    #{response.inspect}
+    -------------------
+    EOD
   end
 
   def etag
