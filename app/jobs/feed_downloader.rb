@@ -14,7 +14,7 @@ class FeedDownloader
     feed_id = message["args"][0]
     url = message["args"][1]
     Retry.clear!(feed_id)
-    Sidekiq.logger.warn "sidekiq_retries_exhausted: url: #{url}"
+    Sidekiq.logger.info "sidekiq_retries_exhausted: url: #{url}"
   end
 
   def perform(feed_id, feed_url, subscribers, critical = false)
@@ -33,15 +33,15 @@ class FeedDownloader
   def download
     @response = request
     @retry.clear!
-    Sidekiq.logger.warn "Download success url: #{@feed_url}"
+    Sidekiq.logger.info "Download success url: #{@feed_url}"
     parse unless @response.not_modified?(@cached.checksum)
     RedirectCache.save(@redirects, feed_url: @feed_url)
   rescue Feedkit::Error => exception
     @retry.retry!
-    Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count.inspect} url: #{@feed_url} message: #{exception.message}"
+    Sidekiq.logger.info "Feedkit::Error: count: #{retry_count.inspect} url: #{@feed_url} message: #{exception.message}"
     raise
   rescue => exception
-    Sidekiq.logger.warn <<-EOD
+    Sidekiq.logger.error <<-EOD
       Exception: #{exception.inspect}: #{@feed_url}
       Message: #{exception.message.inspect}
       Backtrace: #{exception.backtrace.inspect}
@@ -61,7 +61,7 @@ class FeedDownloader
 
   def on_redirect
     proc do |from, to|
-      @redirects.push RedirectCandidate.new(@feed_id, status: from.status.code, from: from.uri.to_s, to: to.uri.to_s)
+      @redirects.push Redirect.new(@feed_id, status: from.status.code, from: from.uri.to_s, to: to.uri.to_s)
     end
   end
 
@@ -69,13 +69,13 @@ class FeedDownloader
     @response.persist!
     parser = @critical ? FeedParserCritical : FeedParser
     job_id = parser.perform_async(@feed_id, @feed_url, @response.path)
-    Sidekiq.logger.warn "Parse enqueued job_id: #{job_id}"
+    Sidekiq.logger.info "Parse enqueued job_id: #{job_id}"
     @cached.save(@response)
   end
 
   def retrying?
     result = retry_count.nil? && @retry.retrying?
-    Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{@feed_url}" if result
+    Sidekiq.logger.info "Skip: count: #{@retry.count} url: #{@feed_url}" if result
     result
   end
 end
