@@ -11,8 +11,10 @@ class FeedDownloader
   end
 
   sidekiq_retries_exhausted do |message, exception|
-    feed_id = message["args"].first
+    feed_id = message["args"][0]
+    url = message["args"][1]
     Retry.clear!(feed_id)
+    Sidekiq.logger.warn "sidekiq_retries_exhausted: url: #{url}"
   end
 
   def perform(feed_id, feed_url, subscribers, critical = false)
@@ -25,29 +27,18 @@ class FeedDownloader
     @retry       = Retry.new(feed_id)
     @cached      = HTTPCache.new(feed_id)
 
-    if retrying?
-      Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{feed_url}"
-    else
-      download
-    end
+    download unless retrying?
   end
 
   def download
     @response = request
     @retry.clear!
-    if @cached.checksum == @response.checksum
-      Sidekiq.logger.warn "Download success checksum match: url: #{@feed_url}"
-    else
-      Sidekiq.logger.warn "Download success parsing: url: #{@feed_url}"
-      parse
-    end
+    Sidekiq.logger.warn "Download success url: #{@feed_url}"
+    parse unless @response.not_modified?(@cached.checksum)
     RedirectCache.save(@redirects, feed_url: @feed_url)
-  rescue Feedkit::NotModified
-    Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
-    @retry.clear!
   rescue Feedkit::Error => exception
     @retry.retry!
-    Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count} url: #{@feed_url} message: #{exception.message}"
+    Sidekiq.logger.warn "Feedkit::Error: count: #{retry_count.inspect} url: #{@feed_url} message: #{exception.message}"
     raise
   rescue => exception
     Sidekiq.logger.warn <<-EOD
@@ -77,12 +68,15 @@ class FeedDownloader
   def parse
     @response.persist!
     parser = @critical ? FeedParserCritical : FeedParser
-    parser.perform_async(@feed_id, @feed_url, @response.path)
+    job_id = parser.perform_async(@feed_id, @feed_url, @response.path)
+    Sidekiq.logger.warn "Parse enqueued job_id: #{job_id}"
     @cached.save(@response)
   end
 
   def retrying?
-    retry_count.nil? && @retry.retrying?
+    result = retry_count.nil? && @retry.retrying?
+    Sidekiq.logger.warn "Skip: count: #{@retry.count} url: #{@feed_url}" if result
+    result
   end
 end
 
