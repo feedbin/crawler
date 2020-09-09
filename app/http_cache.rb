@@ -1,33 +1,29 @@
 # frozen_string_literal: true
 
 class HTTPCache
-
-  ETAG = :etag
-  LAST_MODIFIED = :last_modified
-  CHECKSUM = :checksum
-
   def initialize(feed_id)
     @feed_id = feed_id
   end
 
   def save(response)
-    Cache.write(cache_key, options: {expires_in: 8 * 60 * 60}, values: {
-      ETAG          => response.etag,
-      LAST_MODIFIED => response.last_modified,
-      CHECKSUM      => response.checksum
-    })
+    data = {
+      etag:          response.etag,
+      last_modified: response.last_modified,
+      checksum:      response.checksum
+    }
+    Cache.write(cache_key, data, options: {expires_in: 8 * 60 * 60})
   end
 
   def etag
-    cached[ETAG]
+    cached[:etag]
   end
 
   def last_modified
-    cached[LAST_MODIFIED]
+    cached[:last_modified]
   end
 
   def checksum
-    cached[CHECKSUM]
+    cached[:checksum]
   end
 
   def cached
@@ -37,7 +33,6 @@ class HTTPCache
   end
 
   def cache_key
-    "feed:#{@feed_id}:http"
+    "refresher_http_#{@feed_id}"
   end
-
 end

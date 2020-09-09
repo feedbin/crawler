@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Retry
-  KEY = "refresher:retry_tracker"
-
   def initialize(feed_id)
     @feed_id = feed_id
   end
@@ -12,15 +10,11 @@ class Retry
   end
 
   def clear!
-    Sidekiq.redis do |redis|
-      redis.hdel(KEY, @feed_id)
-    end
+    Cache.delete(cache_key)
   end
 
   def retry!
-    Sidekiq.redis do |redis|
-      redis.hincrby(KEY, @feed_id, 1)
-    end
+    Cache.increment(cache_key, options: {expires_in: (5 * 24) * 60 * 60})
   end
 
   def retrying?
@@ -28,8 +22,10 @@ class Retry
   end
 
   def count
-    @count ||= Sidekiq.redis do |redis|
-      redis.hget(KEY, @feed_id).to_i
-    end
+    @count ||= Cache.count(cache_key)
+  end
+
+  def cache_key
+    "refresher_retry_#{@feed_id}"
   end
 end

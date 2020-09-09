@@ -20,6 +20,7 @@ class FeedDownloader
     @feed_url    = feed_url
     @subscribers = subscribers
     @critical    = critical
+    @redirects   = []
 
     @retry       = Retry.new(feed_id)
     @cached      = HTTPCache.new(feed_id)
@@ -40,6 +41,7 @@ class FeedDownloader
       Sidekiq.logger.warn "Download success parsing: url: #{@feed_url}"
       parse
     end
+    RedirectCache.save(@redirects, feed_url: @feed_url)
   rescue Feedkit::NotModified
     Sidekiq.logger.warn "Feedkit::NotModified: url: #{@feed_url}"
     @retry.clear!
@@ -68,7 +70,7 @@ class FeedDownloader
 
   def on_redirect
     proc do |from, to|
-      Sidekiq.logger.warn "Redirect: status: #{from.status.code} url: #{@feed_url} location: #{to.uri}"
+      @redirects.push RedirectCandidate.new(@feed_id, status: from.status.code, from: from.uri.to_s, to: to.uri.to_s)
     end
   end
 

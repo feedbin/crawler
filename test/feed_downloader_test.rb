@@ -45,7 +45,7 @@ class FeedDownloaderTest < Minitest::Test
     feed_id = 1
     etag = "etag"
     last_modified = "last_modified"
-    Cache.write("feed:#{feed_id}:http", values: {
+    Cache.write("refresher_http_#{feed_id}", {
       etag: etag,
       last_modified: last_modified,
       checksum: nil
@@ -74,7 +74,7 @@ class FeedDownloaderTest < Minitest::Test
     feed_id = 1
     etag = "etag"
     last_modified = "last_modified"
-    Cache.write("feed:#{feed_id}:http", values: {
+    Cache.write("refresher_http_#{feed_id}", {
       etag: etag,
       last_modified: last_modified,
       checksum: nil

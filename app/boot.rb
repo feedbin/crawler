@@ -25,6 +25,7 @@ require "app/sidekiq"
 require "app/redis"
 require "app/retry"
 require "app/cache"
+require "app/redirect_cache"
 require "app/http_cache"
 require "app/entry_filter"
 

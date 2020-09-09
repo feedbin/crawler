@@ -1,9 +1,32 @@
 require_relative "test_helper"
 
 class CacheTest < Minitest::Test
+  def setup
+    flush
+  end
+
+  def test_should_delete
+    cache_key = "cache_key"
+    Cache.increment(cache_key)
+    assert_equal(1, Cache.count(cache_key))
+    Cache.delete(cache_key)
+    assert_equal(0, Cache.count(cache_key))
+  end
+
+  def test_should_increment
+    assert_equal(1, Cache.increment("cache_key"))
+  end
+
+  def test_should_get_count
+    cache_key = "cache_key"
+    assert_equal(0, Cache.count(cache_key))
+    Cache.increment(cache_key)
+    assert_equal(1, Cache.count(cache_key))
+  end
+
   def test_should_cache_values
     cache_key = "cache_key"
-    Cache.write(cache_key, values: {
+    Cache.write(cache_key, {
       etag: nil,
       last_modified: "last_modified",
     })
@@ -17,11 +40,13 @@ class CacheTest < Minitest::Test
   def test_should_cache_values_with_exiration
     cache_key = "cache_key"
 
-    Cache.write(cache_key, options: {expires_in: 1}, values: {
-      key: "value",
-    })
+    Cache.write(cache_key, {
+        key: "value",
+      },
+      options: {expires_in: 1}
+    )
 
-    result = $redis.with do |redis|
+    result = Sidekiq.redis do |redis|
       redis.ttl(cache_key)
     end
 

@@ -5,32 +5,58 @@ class Cache
     new.read(*args)
   end
 
-  def self.write(key, **args)
-    new.write(key, **args)
+  def self.delete(*args)
+    new.delete(*args)
+  end
+
+  def self.increment(key, **args)
+    new.increment(key, **args)
+  end
+
+  def self.count(*args)
+    new.count(*args)
+  end
+
+  def self.write(key, value, **args)
+    new.write(key, value, **args)
   end
 
   def read(key)
     @read ||= begin
-      hash = $redis.with do |redis|
+      hash = Sidekiq.redis do |redis|
         redis.hgetall key
       end
       hash.transform_keys(&:to_sym)
     end
   end
 
-  def write(key, options: {}, values: {})
+  def write(key, values, options: {})
     values = values.compact
     unless values.empty?
-      $redis.with do |redis|
+      Sidekiq.redis do |redis|
         redis.mapped_hmset(key, values)
       end
     end
     write_key_expiry(key, options)
   end
 
+  def delete(key)
+    Sidekiq.redis {|redis| redis.del(key) }
+  end
+
+  def increment(key, options: {})
+    count = Sidekiq.redis {|redis| redis.incr(key) }
+    write_key_expiry(key, options)
+    count
+  end
+
+  def count(key)
+    Sidekiq.redis {|redis| redis.get(key) }.to_i
+  end
+
   def write_key_expiry(key, options)
     if options[:expires_in]
-      $redis.with do |redis|
+      Sidekiq.redis do |redis|
         redis.expire key, options[:expires_in]
       end
     end

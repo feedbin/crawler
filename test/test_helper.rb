@@ -21,7 +21,7 @@ require_relative "../app/boot"
 
 def flush
   Sidekiq::Worker.clear_all
-  $redis.with do |redis|
+  Sidekiq.redis do |redis|
     redis.flushdb
   end
 end
