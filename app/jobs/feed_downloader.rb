@@ -32,8 +32,12 @@ class FeedDownloader
   def download
     @response = request
     @retry.clear!
-    Sidekiq.logger.info "Download success url: #{@feed_url}"
-    parse unless @response.not_modified?(@cached.checksum)
+    if @response.not_modified?(@cached.checksum)
+      Sidekiq.logger.info "Download success, not modified url: #{@feed_url}"
+    else
+      Sidekiq.logger.info "Download success, parsing url: #{@feed_url}"
+      parse
+    end
     RedirectCache.save(@redirects, feed_url: @feed_url)
   rescue Feedkit::Error => exception
     @retry.retry!
