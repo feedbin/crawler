@@ -11,8 +11,7 @@ class FeedDownloader
   end
 
   sidekiq_retries_exhausted do |message, exception|
-    feed_id = message["args"][0]
-    url = message["args"][1]
+    feed_id, url = message["args"]
     Retry.clear!(feed_id)
     Sidekiq.logger.info "sidekiq_retries_exhausted: url: #{url}"
   end

@@ -100,7 +100,7 @@ class FeedDownloaderTest < Minitest::Test
     feed_id = 1
     args = [feed_id, "http://example.com", 10]
 
-    Retry.new(feed_id).retrying?
+    Retry.new(feed_id).retry!
     FeedDownloader.new().sidekiq_retries_exhausted_block.call({"args" => args}, Feedkit::Error)
 
     refute Retry.new(feed_id).retrying?, "Should not retry after sidekiq_retries_exhausted is called"
