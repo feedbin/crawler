@@ -47,7 +47,7 @@ class FeedDownloader
 
   rescue Feedkit::Error => exception
     @retry.retry!
-    Sidekiq.logger.info "Feedkit::Error: count: #{retry_count.inspect} url: #{@feed_url} message: #{exception.message}"
+    Sidekiq.logger.info "Feedkit::Error: count: #{retry_count.inspect} id: #{@feed_id} url: #{@feed_url} message: #{exception.message}"
     raise
   rescue => exception
     Sidekiq.logger.error <<-EOD
@@ -85,7 +85,7 @@ class FeedDownloader
 
   def retrying?
     result = retry_count.nil? && @retry.retrying?
-    Sidekiq.logger.info "Skip: count: #{@retry.count} url: #{@feed_url}" if result
+    Sidekiq.logger.info "Skip: count: #{@retry.count} id: #{@feed_id} url: #{@feed_url}" if result
     result
   end
 end
