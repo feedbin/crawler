@@ -30,15 +30,21 @@ class FeedDownloader
   end
 
   def download
-    @response = request
-    @retry.clear!
-    if @response.not_modified?(@cached.checksum)
-      Sidekiq.logger.info "Download success, not modified url: #{@feed_url}"
-    else
-      Sidekiq.logger.info "Download success, parsing url: #{@feed_url}"
-      parse
+    @response = begin
+      request
+    rescue Feedkit::ZlibError
+      Sidekiq.logger.info "Feedkit::ZlibError, retrying without compression: #{@feed_url}"
+      request(auto_inflate: false)
     end
+
+    Sidekiq.logger.info "Download success status: #{@response.status}: #{@feed_url}"
+
+    @retry.clear!
+
+    parse unless @response.not_modified?(@cached.checksum)
+
     RedirectCache.save(@redirects, feed_url: @feed_url)
+
   rescue Feedkit::Error => exception
     @retry.retry!
     Sidekiq.logger.info "Feedkit::Error: count: #{retry_count.inspect} url: #{@feed_url} message: #{exception.message}"
@@ -51,13 +57,14 @@ class FeedDownloader
     EOD
   end
 
-  def request
+  def request(auto_inflate: true)
     etag          = @critical ? nil : @cached.etag
     last_modified = @critical ? nil : @cached.last_modified
     Feedkit::Request.download(@feed_url,
       on_redirect:   on_redirect,
       last_modified: last_modified,
       etag:          etag,
+      auto_inflate:  auto_inflate,
       user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
   end
