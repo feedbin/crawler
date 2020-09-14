@@ -49,6 +49,12 @@ class FeedStatus
     cached[:failed_at].to_i
   end
 
+  def attempt_log
+    Sidekiq.redis do |redis|
+      redis.zrange(errors_cache_key, 0, -1, with_scores: true)
+    end.map {|(error, time)| [error, Time.at(time)]}
+  end
+
   def cached
     @cached ||= Cache.read(cache_key)
   end
