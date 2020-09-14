@@ -63,57 +63,9 @@ class FeedDownloaderTest < Minitest::Test
     url = "http://example.com/atom.xml"
     stub_request(:get, url).to_return(status: 429)
 
-    assert_raises Feedkit::Error do
-      FeedDownloader.new.perform(feed_id, url, 10)
-    end
-
-    assert Retry.new(feed_id).retrying?, "Should be marked as retrying"
-  end
-
-  def test_should_ignore_cache_when_critical
-    feed_id = 1
-    etag = "etag"
-    last_modified = "last_modified"
-    Cache.write("refresher_http_#{feed_id}", {
-      etag: etag,
-      last_modified: last_modified,
-      checksum: nil
-    })
-
-    url = "http://example.com/atom.xml"
-    stub_request(:get, url).to_return do |request|
-      if request.headers["If-None-Match"] || request.headers["If-Modified-Since"]
-        {status: 304}
-      else
-        {status: 200}
-      end
-    end
-
     FeedDownloader.new.perform(feed_id, url, 10)
-    assert_equal 0, FeedParser.jobs.size
 
-    FeedDownloaderCritical.new.perform(feed_id, url, 10)
-    assert_equal 1, FeedParserCritical.jobs.size
-  end
-
-  def test_should_clear_retry
-    feed_id = 1
-    args = [feed_id, "http://example.com", 10]
-
-    Retry.new(feed_id).retry!
-    FeedDownloader.new().sidekiq_retries_exhausted_block.call({"args" => args}, Feedkit::Error)
-
-    refute Retry.new(feed_id).retrying?, "Should not retry after sidekiq_retries_exhausted is called"
-  end
-
-
-  def test_should_get_a_number
-    result1 = FeedDownloader.new().sidekiq_retry_in_block.call(1, Feedkit::Error)
-    result2 = FeedDownloader.new().sidekiq_retry_in_block.call(10, Feedkit::Error)
-
-    assert result1.is_a?(Integer)
-    assert result1 > 60 * 60
-    assert result2 > result1
+    refute FeedStatus.new(feed_id).ok?, "Should not be retrying"
   end
 
   def test_should_follow_redirects

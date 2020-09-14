@@ -1,32 +1,25 @@
 # frozen_string_literal: true
 
 class FeedDownloader
-  attr_accessor :retry_count
   include Sidekiq::Worker
 
-  sidekiq_options queue: :feed_downloader, dead: false, backtrace: false
-
-  sidekiq_retry_in do |count, exception|
-    ([count, 8].max ** 4) + 15 + (rand(30) * (count + 1))
-  end
-
-  sidekiq_retries_exhausted do |message, exception|
-    feed_id, url = message["args"]
-    Retry.clear!(feed_id)
-    Sidekiq.logger.info "sidekiq_retries_exhausted: url: #{url}"
-  end
+  sidekiq_options queue: :feed_downloader, retry: false, backtrace: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
     @feed_id     = feed_id
     @feed_url    = feed_url
     @subscribers = subscribers
     @critical    = critical
-    @redirects   = []
 
-    @retry       = Retry.new(feed_id)
+    @redirects   = []
+    @feed_status = FeedStatus.new(feed_id)
     @cached      = HTTPCache.new(feed_id)
 
-    download unless retrying?
+    if @critical || @feed_status.ok?
+      download
+    else
+      Sidekiq.logger.info "Skipping, next attempt: #{Time.at(@feed_status.next_retry)} count: #{@feed_status.count} id: #{@feed_id} url: #{@feed_url}"
+    end
   end
 
   def download
@@ -38,32 +31,19 @@ class FeedDownloader
     end
 
     Sidekiq.logger.info "Download success status: #{@response.status}: #{@feed_url}"
-
-    @retry.clear!
-
+    @feed_status.clear!
     parse unless @response.not_modified?(@cached.checksum)
-
     RedirectCache.save(@redirects, feed_url: @feed_url)
-
   rescue Feedkit::Error => exception
-    @retry.retry!
-    Sidekiq.logger.info "Feedkit::Error: count: #{retry_count.inspect} id: #{@feed_id} url: #{@feed_url} message: #{exception.message}"
-    raise
-  rescue => exception
-    Sidekiq.logger.error <<-EOD
-      Exception: #{exception.inspect}: #{@feed_url}
-      Message: #{exception.message.inspect}
-      Backtrace: #{exception.backtrace.inspect}
-    EOD
+    @feed_status.error!
+    Sidekiq.logger.info "Feedkit::Error: count: #{@feed_status.count} id: #{@feed_id} url: #{@feed_url} exception: #{exception.inspect} #{exception.message}"
   end
 
   def request(auto_inflate: true)
-    etag          = @critical ? nil : @cached.etag
-    last_modified = @critical ? nil : @cached.last_modified
     Feedkit::Request.download(@feed_url,
       on_redirect:   on_redirect,
-      last_modified: last_modified,
-      etag:          etag,
+      last_modified: @cached.last_modified,
+      etag:          @cached.etag,
       auto_inflate:  auto_inflate,
       user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
@@ -83,11 +63,6 @@ class FeedDownloader
     @cached.save(@response)
   end
 
-  def retrying?
-    result = retry_count.nil? && @retry.retrying?
-    Sidekiq.logger.info "Skip: count: #{@retry.count} id: #{@feed_id} url: #{@feed_url}" if result
-    result
-  end
 end
 
 class FeedDownloaderCritical

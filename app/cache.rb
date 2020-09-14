@@ -41,7 +41,7 @@ class Cache
   end
 
   def delete(key)
-    Sidekiq.redis {|redis| redis.del(key) }
+    Sidekiq.redis {|redis| redis.unlink(key) }
   end
 
   def increment(key, options: {})

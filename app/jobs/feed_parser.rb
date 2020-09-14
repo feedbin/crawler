@@ -13,6 +13,7 @@ class FeedParser
     save(parsed_feed.to_feed, entries) unless entries.empty?
   rescue Feedkit::NotFeed
     Sidekiq.logger.info "Feedkit::NotFeed: url: #{@feed_url}"
+    FeedStatus.error!(@feed_id)
   ensure
     cleanup
   end

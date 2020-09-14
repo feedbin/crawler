@@ -27,6 +27,12 @@ class FeedParserTest < Minitest::Test
     assert_equal 1, Sidekiq::Queues['feed_refresher_receiver'].size
   end
 
+  def test_should_be_not_feed
+    feed_id = 1
+    FeedParser.new.perform(feed_id, "http://example.com", html_path)
+    refute FeedStatus.new(feed_id).ok?
+  end
+
   private
 
   def xml_path
@@ -35,6 +41,10 @@ class FeedParserTest < Minitest::Test
 
   def json_path
     tempfile_path(File.expand_path("test/support/www/feed.json"))
+  end
+
+  def html_path
+    tempfile_path(File.expand_path("test/support/www/html.html"))
   end
 
   def tempfile_path(original_path)
