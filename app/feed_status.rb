@@ -51,6 +51,6 @@ class FeedStatus
   end
 
   def cache_key
-    "refresher_retry_#{@feed_id}"
+    "refresher_status_#{@feed_id}"
   end
 end
