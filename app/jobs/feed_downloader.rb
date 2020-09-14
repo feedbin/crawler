@@ -18,7 +18,7 @@ class FeedDownloader
     if @critical || @feed_status.ok?
       download
     else
-      Sidekiq.logger.info "Skipping: attempts=#{@feed_status.count} next_attempt=#{Time.at(@feed_status.next_retry)} id=#{@feed_id} url=#{@feed_url}"
+      Sidekiq.logger.info "Skipping: attempts=#{@feed_status.count} next_attempt=#{Time.at(@feed_status.next_retry).utc.iso8601} id=#{@feed_id} url=#{@feed_url}"
     end
   end
 

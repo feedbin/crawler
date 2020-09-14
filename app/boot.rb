@@ -14,6 +14,7 @@ end
 require "digest/sha1"
 require "date"
 require "socket"
+require "time"
 
 require "sidekiq"
 require "connection_pool"
