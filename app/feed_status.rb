@@ -9,19 +9,22 @@ class FeedStatus
     new(*args).clear!
   end
 
-  def self.error!(feed_id)
-    new(feed_id).error!
-  end
-
   def clear!
     Cache.delete(cache_key)
   end
 
-  def error!
+  def error!(exception)
+    @count = count + 1
     Cache.write(cache_key, {
-      count: count + 1,
+      count: @count,
       failed_at: Time.now.to_i
     })
+    Sidekiq.redis do |redis|
+      redis.pipelined do
+        redis.zadd(errors_cache_key, Time.now.to_i, exception.inspect)
+        redis.zremrangebyrank(errors_cache_key, 0, -25)
+      end
+    end
   end
 
   def ok?
@@ -39,7 +42,7 @@ class FeedStatus
   end
 
   def count
-    cached[:count].to_i
+    @count ||= cached[:count].to_i
   end
 
   def failed_at
@@ -52,5 +55,9 @@ class FeedStatus
 
   def cache_key
     "refresher_status_#{@feed_id}"
+  end
+
+  def errors_cache_key
+    "refresher_errors_#{@feed_id}"
   end
 end

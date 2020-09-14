@@ -18,7 +18,7 @@ class FeedDownloader
     if @critical || @feed_status.ok?
       download
     else
-      Sidekiq.logger.info "Skipping, next attempt: #{Time.at(@feed_status.next_retry)} count: #{@feed_status.count} id: #{@feed_id} url: #{@feed_url}"
+      Sidekiq.logger.info "Skipping: attempts=#{@feed_status.count} next_attempt=#{Time.at(@feed_status.next_retry)} id=#{@feed_id} url=#{@feed_url}"
     end
   end
 
@@ -26,17 +26,16 @@ class FeedDownloader
     @response = begin
       request
     rescue Feedkit::ZlibError
-      Sidekiq.logger.info "Feedkit::ZlibError, retrying without compression: #{@feed_url}"
       request(auto_inflate: false)
     end
 
-    Sidekiq.logger.info "Download success status: #{@response.status}: #{@feed_url}"
-    @feed_status.clear!
+    Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
     parse unless @response.not_modified?(@cached.checksum)
+    @feed_status.clear!
     RedirectCache.save(@redirects, feed_url: @feed_url)
   rescue Feedkit::Error => exception
-    @feed_status.error!
-    Sidekiq.logger.info "Feedkit::Error: count: #{@feed_status.count} id: #{@feed_id} url: #{@feed_url} exception: #{exception.inspect} #{exception.message}"
+    @feed_status.error!(exception)
+    Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed_status.count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
   end
 
   def request(auto_inflate: true)

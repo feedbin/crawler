@@ -11,9 +11,9 @@ class FeedParser
 
     entries = EntryFilter.filter!(parsed_feed.entries)
     save(parsed_feed.to_feed, entries) unless entries.empty?
-  rescue Feedkit::NotFeed
-    Sidekiq.logger.info "Feedkit::NotFeed: url: #{@feed_url}"
-    FeedStatus.error!(@feed_id)
+  rescue Feedkit::NotFeed => exception
+    Sidekiq.logger.info "Feedkit::NotFeed: id=#{@feed_id} url=#{@feed_url}"
+    FeedStatus.new(@feed_id).error!(exception)
   ensure
     cleanup
   end
