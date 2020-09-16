@@ -34,7 +34,11 @@ class FeedDownloader
     @feed_status.clear!
     RedirectCache.save(@redirects, feed_url: @feed_url)
 
-    Sidekiq.logger.info "Redirect: real=#{@redirects.last&.to}: saved=#{@saved_redirect}" if @saved_redirect
+    if @saved_redirect
+      if @redirects.last&.to != @saved_redirect
+        Sidekiq.logger.info "Redirect mismatch: feed_url=#{@feed_url} real=#{@redirects.last&.to} saved=#{@saved_redirect}"
+      end
+    end
   rescue Feedkit::Error => exception
     @feed_status.error!(exception)
     Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed_status.count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
