@@ -6,14 +6,14 @@ class FeedDownloader
   sidekiq_options queue: :feed_downloader, retry: false, backtrace: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    @feed_id     = feed_id
-    @feed_url    = feed_url
-    @subscribers = subscribers
-    @critical    = critical
-
-    @redirects   = []
-    @feed_status = FeedStatus.new(feed_id)
-    @cached      = HTTPCache.new(feed_id)
+    @feed_id        = feed_id
+    @feed_url       = feed_url
+    @subscribers    = subscribers
+    @critical       = critical
+    @redirects      = []
+    @saved_redirect = RedirectCache.read(feed_url)
+    @feed_status    = FeedStatus.new(feed_id)
+    @cached         = HTTPCache.new(feed_id)
 
     if @critical || @feed_status.ok?
       download
@@ -33,6 +33,8 @@ class FeedDownloader
     parse unless @response.not_modified?(@cached.checksum)
     @feed_status.clear!
     RedirectCache.save(@redirects, feed_url: @feed_url)
+
+    Sidekiq.logger.info "Redirect: real=#{@redirects.last&.to}: saved=#{@saved_redirect}" if @saved_redirect
   rescue Feedkit::Error => exception
     @feed_status.error!(exception)
     Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed_status.count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
