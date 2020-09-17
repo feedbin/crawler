@@ -7,21 +7,21 @@ class RedirectCache
 
   attr_reader :redirects
 
-  def initialize(redirects: nil, feed_url: nil)
+  def initialize(redirects: nil, feed_id: nil)
     @redirects = redirects
-    @feed_url = feed_url
+    @feed_id = feed_id
   end
 
-  def self.save(redirects, feed_url:)
-    new(redirects: redirects, feed_url: feed_url).save
+  def self.save(redirects, feed_id:)
+    new(redirects: redirects, feed_id: feed_id).save
   end
 
-  def self.read(feed_url)
-    new(feed_url: feed_url).read
+  def self.read(feed_id)
+    new(feed_id: feed_id).read
   end
 
-  def self.delete(feed_url)
-    new(feed_url: feed_url).delete
+  def self.delete(feed_id)
+    new(feed_id: feed_id).delete
   end
 
   def save
@@ -50,7 +50,7 @@ class RedirectCache
 
   def stable_key
     @stable_key ||= begin
-      "refresher_redirect_stable_" + Digest::SHA1.hexdigest(@feed_url)
+      "refresher_redirect_stable_#{@feed_id}"
     end
   end
 end

@@ -26,6 +26,7 @@ require "app/cache"
 require "app/feed_status"
 require "app/redirect_cache"
 require "app/http_cache"
+require "app/feed_info"
 require "app/entry_filter"
 
 require "app/jobs/feed_parser"

@@ -11,7 +11,7 @@ class FeedDownloader
     @subscribers    = subscribers
     @critical       = critical
     @redirects      = []
-    @saved_redirect = RedirectCache.read(feed_url)
+    @saved_redirect = RedirectCache.read(feed_id)
     @feed_status    = FeedStatus.new(feed_id)
     @cached         = HTTPCache.new(feed_id)
 
@@ -32,7 +32,7 @@ class FeedDownloader
     Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
     parse unless @response.not_modified?(@cached.checksum)
     @feed_status.clear!
-    RedirectCache.save(@redirects, feed_url: @feed_url)
+    RedirectCache.save(@redirects, feed_id: @feed_id)
 
     if @saved_redirect
       if @redirects.last&.to != @saved_redirect
