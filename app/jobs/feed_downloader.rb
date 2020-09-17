@@ -6,20 +6,13 @@ class FeedDownloader
   sidekiq_options queue: :feed_downloader, retry: false, backtrace: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    @feed_id        = feed_id
-    @feed_url       = feed_url
-    @subscribers    = subscribers
-    @critical       = critical
-    @redirects      = []
-    @saved_redirect = RedirectCache.read(feed_id)
-    @feed_status    = FeedStatus.new(feed_id)
-    @cached         = HTTPCache.new(feed_id)
+    @feed_id     = feed_id
+    @feed_url    = feed_url
+    @subscribers = subscribers
+    @critical    = critical
+    @feed        = Feed.new(feed_id)
 
-    if @critical || @feed_status.ok?
-      download
-    else
-      Sidekiq.logger.info "Skipping: attempts=#{@feed_status.count} next_attempt=#{Time.at(@feed_status.next_retry).utc.iso8601} id=#{@feed_id} url=#{@feed_url}"
-    end
+    download if @critical || @feed.ok?
   end
 
   def download
@@ -30,25 +23,18 @@ class FeedDownloader
     end
 
     Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
-    parse unless @response.not_modified?(@cached.checksum)
-    @feed_status.clear!
-    RedirectCache.save(@redirects, feed_id: @feed_id)
-
-    if @saved_redirect
-      if @redirects.last&.to != @saved_redirect
-        Sidekiq.logger.info "Redirect mismatch: feed_url=#{@feed_url} real=#{@redirects.last&.to} saved=#{@saved_redirect}"
-      end
-    end
+    parse unless @response.not_modified?(@feed.checksum)
+    @feed.download_success
   rescue Feedkit::Error => exception
-    @feed_status.error!(exception)
-    Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed_status.count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
+    @feed.download_error(exception)
+    Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed.attempt_count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
   end
 
   def request(auto_inflate: true)
     Feedkit::Request.download(@feed_url,
       on_redirect:   on_redirect,
-      last_modified: @cached.last_modified,
-      etag:          @cached.etag,
+      last_modified: @feed.last_modified,
+      etag:          @feed.etag,
       auto_inflate:  auto_inflate,
       user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
     )
@@ -56,7 +42,7 @@ class FeedDownloader
 
   def on_redirect
     proc do |from, to|
-      @redirects.push Redirect.new(@feed_id, status: from.status.code, from: from.uri.to_s, to: to.uri.to_s)
+      @feed.redirects.push Redirect.new(@feed_id, status: from.status.code, from: from.uri.to_s, to: to.uri.to_s)
     end
   end
 
@@ -65,7 +51,7 @@ class FeedDownloader
     parser = @critical ? FeedParserCritical : FeedParser
     job_id = parser.perform_async(@feed_id, @feed_url, @response.path)
     Sidekiq.logger.info "Parse enqueued job_id: #{job_id}"
-    @cached.save(@response)
+    @feed.save(@response)
   end
 
 end

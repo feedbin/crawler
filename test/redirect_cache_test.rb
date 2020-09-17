@@ -13,23 +13,23 @@ class RedirectCacheTest < Minitest::Test
 
 
     (RedirectCache::PERSIST_AFTER).times do
-      RedirectCache.save([redirect1, redirect2], feed_id: feed_id)
+      RedirectCache.new(feed_id).save([redirect1, redirect2])
     end
 
-    assert_nil RedirectCache.read(feed_id)
+    assert_nil RedirectCache.new(feed_id).read
 
-    RedirectCache.save([redirect1, redirect2], feed_id: feed_id)
+    RedirectCache.new(feed_id).save([redirect1, redirect2])
 
-    assert_equal(final_url, RedirectCache.read(feed_id))
+    assert_equal(final_url, RedirectCache.new(feed_id).read)
   end
 
   def test_should_not_temporary_redirects
     redirect1 = Redirect.new(1, status: 302, from: "http://example.com", to: "http://example.com/second")
-    assert_nil RedirectCache.save([redirect1], feed_id: 1)
+    assert_nil RedirectCache.new(1).save([redirect1])
   end
 
   def test_should_not_save_empty_redirects
     feed_url = "http://example.com"
-    assert_nil RedirectCache.save([], feed_id: 1)
+    assert_nil RedirectCache.new(1).save([])
   end
 end

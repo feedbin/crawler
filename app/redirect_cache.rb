@@ -7,30 +7,18 @@ class RedirectCache
 
   attr_reader :redirects
 
-  def initialize(redirects: nil, feed_id: nil)
-    @redirects = redirects
+  def initialize(feed_id)
     @feed_id = feed_id
   end
 
-  def self.save(redirects, feed_id:)
-    new(redirects: redirects, feed_id: feed_id).save
-  end
-
-  def self.read(feed_id)
-    new(feed_id: feed_id).read
-  end
-
-  def self.delete(feed_id)
-    new(feed_id: feed_id).delete
-  end
-
-  def save
+  def save(redirects)
+    @redirects = redirects
     Cache.write(stable_key, {to: @redirects.last.to}) if redirect_stable?
   end
 
   def redirect_stable?
-    return false if redirects.empty?
-    return false unless redirects.all?(&:permanent?)
+    return false if @redirects.empty?
+    return false unless @redirects.all?(&:permanent?)
     Cache.increment(counter_key, options: {expires_in: 72 * 60 * 60}) > PERSIST_AFTER
   end
 
