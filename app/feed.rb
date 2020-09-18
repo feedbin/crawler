@@ -39,6 +39,6 @@ class Feed
   end
 
   def inspect
-    "#<#{self.class}:#{object_id.to_s(16)} @feed_id=#{@feed_id} @redirects=#{@redirects} http_cache=#{http_cache.cached} redirect=#{redirect_cache.read.inspect} errors=#{feed_status.attempt_log.inspect}>"
+    "#<#{self.class}:#{object_id.to_s(16)} @feed_id=#{@feed_id} next_attempt=#{next_attempt} redirect=#{redirect.inspect} http_cache=#{http_cache.cached} last_error=#{feed_status.attempt_log.first.inspect}>"
   end
 end
