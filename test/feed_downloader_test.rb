@@ -41,6 +41,32 @@ class FeedDownloaderTest < Minitest::Test
     FeedDownloader.new.perform(1, url, 10)
   end
 
+  def test_should_use_saved_redirect
+    feed_id = 1
+    url_one = "http://example.com/one"
+    url_two = "http://example.com/two"
+
+    redirect_cache = RedirectCache.new(feed_id)
+    Cache.write(redirect_cache.stable_key, {to: url_two})
+
+    stub_request(:get, url_two)
+    FeedDownloader.new.perform(feed_id, url_one, 10)
+  end
+
+  def test_should_use_saved_redirect_with_basic_auth
+    feed_id = 1
+    username = "username"
+    password = "password"
+    url_one = "http://#{username}:#{password}@example.com/one"
+    url_two = "http://example.com/two"
+
+    redirect_cache = RedirectCache.new(feed_id)
+    Cache.write(redirect_cache.stable_key, {to: url_two})
+
+    stub_request(:get, url_two).with(headers: {"Authorization" => "Basic #{Base64.strict_encode64("#{username}:#{password}")}"})
+    FeedDownloader.new.perform(feed_id, url_one, 10)
+  end
+
   def test_should_do_nothing_if_not_modified
     feed_id = 1
     etag = "etag"

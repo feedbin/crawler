@@ -7,10 +7,10 @@ class RedirectCacheTest < Minitest::Test
 
   def test_should_collapse_stable_redirects
     feed_id = 2
-    final_url = "http://example.com/final"
-    redirect1 = Redirect.new(feed_id, status: 301, from: "http://example.com", to: "http://example.com/second")
-    redirect2 = Redirect.new(feed_id, status: 301, from: "http://example.com/second", to: final_url)
 
+    redirect1 = Redirect.new(feed_id, status: 301, from: "http://example.com", to: "http://example.com/second")
+    redirect2 = Redirect.new(feed_id, status: 301, from: "http://example.com/second", to: "http://example.com/third")
+    redirect3 = Redirect.new(feed_id, status: 301, from: "http://example.com/third", to: "http://example.com/final")
 
     (RedirectCache::PERSIST_AFTER).times do
       RedirectCache.new(feed_id).save([redirect1, redirect2])
@@ -20,7 +20,13 @@ class RedirectCacheTest < Minitest::Test
 
     RedirectCache.new(feed_id).save([redirect1, redirect2])
 
-    assert_equal(final_url, RedirectCache.new(feed_id).read)
+    assert_equal(redirect2.to, RedirectCache.new(feed_id).read)
+
+    (RedirectCache::PERSIST_AFTER + 1).times do
+      RedirectCache.new(feed_id).save([redirect2, redirect3])
+    end
+
+    assert_equal(redirect3.to, RedirectCache.new(feed_id).read)
   end
 
   def test_should_not_temporary_redirects

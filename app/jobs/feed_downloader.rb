@@ -31,8 +31,13 @@ class FeedDownloader
   end
 
   def request(auto_inflate: true)
-    Feedkit::Request.download(@feed_url,
+    parsed_url = Feedkit::BasicAuth.parse(@feed_url)
+    url = @feed.redirect ? @feed.redirect : parsed_url.url
+    Sidekiq.logger.error "Redirect: from=#{@feed_url} to=#{@feed.redirect} id=#{@feed_id}" if @feed.redirect
+    Feedkit::Request.download(url,
       on_redirect:   on_redirect,
+      username:      parsed_url.username,
+      password:      parsed_url.password,
       last_modified: @feed.last_modified,
       etag:          @feed.etag,
       auto_inflate:  auto_inflate,
@@ -53,7 +58,6 @@ class FeedDownloader
     Sidekiq.logger.info "Parse enqueued job_id: #{job_id}"
     @feed.save(@response)
   end
-
 end
 
 class FeedDownloaderCritical

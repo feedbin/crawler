@@ -23,7 +23,7 @@ class RedirectCache
   end
 
   def read
-    Cache.read(stable_key)[:to]
+    @read ||= Cache.read(stable_key)[:to]
   end
 
   def delete
