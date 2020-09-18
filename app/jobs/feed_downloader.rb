@@ -33,7 +33,7 @@ class FeedDownloader
   def request(auto_inflate: true)
     parsed_url = Feedkit::BasicAuth.parse(@feed_url)
     url = @feed.redirect ? @feed.redirect : parsed_url.url
-    Sidekiq.logger.error "Redirect: from=#{@feed_url} to=#{@feed.redirect} id=#{@feed_id}" if @feed.redirect
+    Sidekiq.logger.info "Redirect: from=#{@feed_url} to=#{@feed.redirect} id=#{@feed_id}" if @feed.redirect
     Feedkit::Request.download(url,
       on_redirect:   on_redirect,
       username:      parsed_url.username,
