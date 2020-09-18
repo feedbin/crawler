@@ -8,28 +8,28 @@ class FeedStatusTest < Minitest::Test
 
   def test_should_not_be_ok
     feed_id = 1
-    FeedStatus.new(feed_id).error!(nil)
+    FeedStatus.new(feed_id).error!(Exception.new)
     refute FeedStatus.new(feed_id).ok?, "ok? should be false."
   end
 
   def test_should_be_ok
     feed_id = 1
-    FeedStatus.new(feed_id).error!(nil)
+    FeedStatus.new(feed_id).error!(Exception.new)
     FeedStatus.clear!(feed_id)
     assert FeedStatus.new(feed_id).ok?, "ok? should be true."
   end
 
   def test_should_get_count
     feed_id = 1
-    FeedStatus.new(feed_id).error!(nil)
-    FeedStatus.new(feed_id).error!(nil)
+    FeedStatus.new(feed_id).error!(Exception.new)
+    FeedStatus.new(feed_id).error!(Exception.new)
     assert_equal(2, FeedStatus.new(feed_id).count)
   end
 
   def test_should_be_ok_after_timeout
     feed_id = 1
 
-    FeedStatus.new(feed_id).error!(nil)
+    FeedStatus.new(feed_id).error!(Exception.new)
 
     one_hour = 60 * 60
     one_hour_from_now = Time.now.to_i + one_hour

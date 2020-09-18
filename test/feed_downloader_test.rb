@@ -57,7 +57,7 @@ class FeedDownloaderTest < Minitest::Test
     assert_equal 0, FeedParser.jobs.size
   end
 
-  def test_should_retry_if_rate_limited
+  def test_should_not_be_ok_after_error
     feed_id = 1
 
     url = "http://example.com/atom.xml"
@@ -65,7 +65,7 @@ class FeedDownloaderTest < Minitest::Test
 
     FeedDownloader.new.perform(feed_id, url, 10)
 
-    refute FeedStatus.new(feed_id).ok?, "Should not be retrying"
+    refute FeedStatus.new(feed_id).ok?, "Should not be ok?"
   end
 
   def test_should_follow_redirects
@@ -84,7 +84,4 @@ class FeedDownloaderTest < Minitest::Test
 
     FeedDownloader.new.perform(1, first_url, 10)
   end
-
-
-
 end

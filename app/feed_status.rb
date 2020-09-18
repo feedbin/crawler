@@ -21,8 +21,8 @@ class FeedStatus
     })
     Sidekiq.redis do |redis|
       redis.pipelined do
-        redis.zadd(errors_cache_key, Time.now.to_i, exception.inspect)
-        redis.zremrangebyrank(errors_cache_key, 0, -25)
+        redis.lpush(errors_cache_key, error_json(exception))
+        redis.ltrim(errors_cache_key, 0, 25)
       end
     end
   end
@@ -51,8 +51,17 @@ class FeedStatus
 
   def attempt_log
     Sidekiq.redis do |redis|
-      redis.zrange(errors_cache_key, 0, -1, with_scores: true)
-    end.map {|(error, time)| [error, Time.at(time)]}
+      redis.lrange(errors_cache_key, 0, -1)
+    end.map do |json|
+      data = JSON.load(json)
+      data["date"] = Time.at(data["date"])
+      data
+    end
+  end
+
+  def error_json(exception)
+    status = exception.respond_to?(:response) ? exception.response.status.code : nil
+    JSON.dump({date: Time.now.to_i, class: exception.class, message: exception.message, status: status})
   end
 
   def cached
