@@ -10,7 +10,7 @@ class FeedStatus
   end
 
   def clear!
-    Cache.delete(cache_key)
+    Cache.delete(cache_key, errors_cache_key)
   end
 
   def error!(exception)

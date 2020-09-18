@@ -40,8 +40,8 @@ class Cache
     write_key_expiry(key, options)
   end
 
-  def delete(key)
-    Sidekiq.redis {|redis| redis.unlink(key) }
+  def delete(*keys)
+    Sidekiq.redis {|redis| redis.unlink(*keys) }
   end
 
   def increment(key, options: {})
