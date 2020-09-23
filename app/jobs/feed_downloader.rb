@@ -23,6 +23,7 @@ class FeedDownloader
     end
 
     Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
+    Sidekiq.logger.info "encoding=#{@response.encoding.to_s.inspect} url=#{@feed_url}" if @response.status == 200
     parse unless @response.not_modified?(@feed.checksum)
     @feed.download_success
   rescue Feedkit::Error => exception
