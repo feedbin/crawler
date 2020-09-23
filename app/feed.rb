@@ -22,8 +22,12 @@ class Feed
   end
 
   def download_success
-    feed_status.clear!
+    feed_status.clear! unless last_error && last_error["class"] == "Feedkit::NotFeed"
     redirect_cache.save(redirects)
+  end
+
+  def last_error
+    feed_status.attempt_log.first
   end
 
   def redirect_cache
@@ -39,6 +43,6 @@ class Feed
   end
 
   def inspect
-    "#<#{self.class}:#{object_id.to_s(16)} @feed_id=#{@feed_id} next_attempt=#{next_attempt} redirect=#{redirect.inspect} http_cache=#{http_cache.cached} last_error=#{feed_status.attempt_log.first.inspect}>"
+    "#<#{self.class}:#{object_id.to_s(16)} @feed_id=#{@feed_id} next_attempt=#{next_attempt} redirect=#{redirect.inspect} http_cache=#{http_cache.cached} last_error=#{last_error.inspect}>"
   end
 end

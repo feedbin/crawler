@@ -50,12 +50,14 @@ class FeedStatus
   end
 
   def attempt_log
-    Sidekiq.redis do |redis|
-      redis.lrange(errors_cache_key, 0, -1)
-    end.map do |json|
-      data = JSON.load(json)
-      data["date"] = Time.at(data["date"])
-      data
+    @attempt_log ||= begin
+      Sidekiq.redis do |redis|
+        redis.lrange(errors_cache_key, 0, -1)
+      end.map do |json|
+        data = JSON.load(json)
+        data["date"] = Time.at(data["date"])
+        data
+      end
     end
   end
 
