@@ -6,7 +6,6 @@ class FeedDownloader
   sidekiq_options queue: :feed_downloader, retry: false, backtrace: false
 
   def perform(feed_id, feed_url, subscribers, critical = false)
-    return
     @feed_id     = feed_id
     @feed_url    = feed_url
     @subscribers = subscribers

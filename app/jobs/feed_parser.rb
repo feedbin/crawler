@@ -15,7 +15,7 @@ class FeedParser
     FeedStatus.clear!(@feed_id)
   rescue Feedkit::NotFeed => exception
     Sidekiq.logger.info "Feedkit::NotFeed: id=#{@feed_id} url=#{@feed_url}"
-    15.times { FeedStatus.new(@feed_id).error!(exception) }
+    FeedStatus.new(@feed_id).error!(exception)
   ensure
     cleanup
   end
