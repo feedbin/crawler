@@ -23,7 +23,6 @@ class FeedDownloader
     end
 
     Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
-    Sidekiq.logger.info "encoding=#{@response.encoding.to_s.inspect} url=#{@feed_url}" if @response.status == 200
     parse unless @response.not_modified?(@feed.checksum)
     @feed.download_success
   rescue Feedkit::Error => exception
@@ -55,7 +54,7 @@ class FeedDownloader
   def parse
     @response.persist!
     parser = @critical ? FeedParserCritical : FeedParser
-    job_id = parser.perform_async(@feed_id, @feed_url, @response.path)
+    job_id = parser.perform_async(@feed_id, @feed_url, @response.path, @response.encoding.to_s)
     Sidekiq.logger.info "Parse enqueued job_id: #{job_id}"
     @feed.save(@response)
   end
