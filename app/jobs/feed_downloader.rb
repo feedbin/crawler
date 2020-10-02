@@ -16,33 +16,27 @@ class FeedDownloader
   end
 
   def download
-    @response = begin
-      request
-    rescue Feedkit::ZlibError
-      request(auto_inflate: false)
-    end
-
-    Sidekiq.logger.info "Downloaded status=#{@response.status} url=#{@feed_url}"
-    parse unless @response.not_modified?(@feed.checksum)
-    @feed.download_success
-  rescue Feedkit::Error => exception
-    @feed.download_error(exception)
-    Sidekiq.logger.info "Feedkit::Error: attempts=#{@feed.attempt_count} exception=#{exception.inspect} id=#{@feed_id} url=#{@feed_url}"
+    request
   end
 
   def request(auto_inflate: true)
     parsed_url = Feedkit::BasicAuth.parse(@feed_url)
     url = @feed.redirect ? @feed.redirect : parsed_url.url
     Sidekiq.logger.info "Redirect: from=#{@feed_url} to=#{@feed.redirect} id=#{@feed_id}" if @feed.redirect
-    Feedkit::Request.download(url,
-      on_redirect:   on_redirect,
-      username:      parsed_url.username,
-      password:      parsed_url.password,
-      last_modified: @feed.last_modified,
-      etag:          @feed.etag,
-      auto_inflate:  auto_inflate,
-      user_agent:    "Feedbin feed-id:#{@feed_id} - #{@subscribers} subscribers"
-    )
+
+    t = Tempfile.new("url_", binmode: true)
+
+    headers = {}.tap do |hash|
+      hash["Accept-Encoding"] = "gzip"
+      hash["If-Modified-Since"] = @feed.last_modified if @feed.last_modified
+      hash["If-None-Match"] = @feed.etag if @feed.etag
+    end
+
+    Get.get(url, headers: headers) do |chunk|
+      t.write(chunk)
+    end
+    t.flush
+    t.rewind
   end
 
   def on_redirect
