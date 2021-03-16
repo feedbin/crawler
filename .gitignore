@@ -5,3 +5,4 @@ vendor/bundle
 tmp
 .env
 log/
+dump.rdb

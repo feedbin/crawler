@@ -2,49 +2,54 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(File.dirname(__FILE__)))
 
 $stdout.sync = true
 
-OPENCV_CLASSIFIER = File.absolute_path("lib/opencv/haarcascade_frontalface_alt.xml")
-
-require 'bundler/setup'
-require 'dotenv'
+require "bundler/setup"
+require "dotenv"
 Dotenv.load
+require "socket"
+require "etc"
+require "net/http"
+require "securerandom"
+require "time"
+require "uri"
+require "etc"
+require "digest"
 
-require 'socket'
-require 'etc'
-require 'net/http'
-require 'securerandom'
-require 'time'
-require 'uri'
+require "addressable"
+require "dotenv"
+require "down"
+require "fog/aws"
+require "http"
+require "image_processing/vips"
+require "json"
+require "librato-rack"
+require "mime-types"
+require "nokogumbo"
+require "open3"
+require "redis"
+require "shellwords"
+require "sidekiq"
 
-require 'addressable'
-require 'dotenv'
-require 'fog/aws'
-require 'httparty'
-require 'http'
-require 'librato-rack'
-require 'mime-types'
-require 'nokogumbo'
-require 'redis'
-require 'rmagick'
-require 'opencv'
-require 'sidekiq'
+require "lib/constants"
+require "lib/down"
+require "lib/redis"
+require "lib/librato"
+require "lib/worker_stat"
+require "lib/sidekiq"
+require "lib/storage"
+require "lib/helpers"
 
-require 'lib/redis'
-require 'lib/librato'
-require 'lib/worker_stat'
-require 'lib/sidekiq'
-require 'lib/s3_pool'
-require 'lib/helpers'
+require "app/cache"
+require "app/meta_images"
+require "app/meta_images_cache"
+require "app/download_cache"
+require "app/download"
+require "app/download/default"
+require "app/download/instagram"
+require "app/download/vimeo"
+require "app/download/youtube"
 
-require 'app/models/candidates'
-require 'app/models/download_image'
-require 'app/models/entry_candidates'
-require 'app/models/image_candidate'
-require 'app/models/page_candidates'
-require 'app/models/link_candidates'
-require 'app/models/processed_image'
-require 'app/models/processed_itunes_image'
-require 'app/models/upload'
-require 'app/workers/find_image'
-require 'app/workers/itunes_image'
-require 'app/workers/find_image_critical'
-require 'app/workers/twitter_link_image'
+require "app/image"
+
+require "app/jobs/find_image"
+require "app/jobs/process_image"
+require "app/jobs/upload_image"

@@ -3,8 +3,8 @@ image
 Processes images and finds thumbnails for Feedbin
 
 ### Requirements
-* OpenCV and calib3d module (`libopencv-dev` and `libopencv-calib3d-dev` on Debian)
-* Ruby 2.3
+* libvips 8.6+
+* Ruby 2.7
 * An AWS S3 bucket
 * Redis shared with the main Feedbin instance
 
