@@ -1,1 +1,2 @@
-server "138.68.27.144", user: "app", roles: %w[image]
+server "image1.feedbin", user: "app", roles: %w[image]
+server "image2.feedbin", user: "app", roles: %w[image]
