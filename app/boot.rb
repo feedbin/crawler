@@ -31,12 +31,12 @@ require "sidekiq"
 
 require "lib/constants"
 require "lib/down"
-require "lib/redis"
 require "lib/librato"
 require "lib/worker_stat"
 require "lib/sidekiq"
 require "lib/storage"
 require "lib/helpers"
+require "lib/timer"
 
 require "app/cache"
 require "app/meta_images"

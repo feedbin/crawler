@@ -15,7 +15,7 @@ class Download
   end
 
   def download_file(url)
-    @file = Down.download(url, max_size: 10 * 1024 * 1024)
+    @file = Down.download(url, max_size: 10 * 1024 * 1024, timeout_options: {read_timeout: 20, write_timeout: 5, connect_timeout: 5})
     @path = @file.path
   end
 

@@ -8,8 +8,13 @@ class FindImage
     @preset_name = preset_name
     @entry_url = entry_url
     @candidate_urls = combine_urls(candidate_urls)
+    timer = Timer.new(45)
 
     while original_url = @candidate_urls.shift
+      if timer.expired?
+        Sidekiq.logger.info "Exceeded total time limit: public_id=#{@public_id} elapsed_time=#{timer.elapsed}"
+        break
+      end
       Sidekiq.logger.info "Candidate: public_id=#{@public_id} original_url=#{original_url}"
       download_cache = DownloadCache.copy(original_url, public_id: @public_id, preset_name: @preset_name)
       if download_cache.copied?
