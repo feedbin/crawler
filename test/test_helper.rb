@@ -23,10 +23,6 @@ Sidekiq.logger.level = Logger::WARN
 
 require_relative "../app/boot"
 
-ENV["AWS_ACCESS_KEY_ID"] = "AWS_ACCESS_KEY_ID"
-ENV["AWS_SECRET_ACCESS_KEY"] = "AWS_SECRET_ACCESS_KEY"
-ENV["AWS_S3_BUCKET"] = "images"
-
 def flush
   Sidekiq::Worker.clear_all
   Sidekiq.redis do |redis|

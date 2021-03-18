@@ -4,7 +4,7 @@ $stdout.sync = true
 
 require "bundler/setup"
 require "dotenv"
-Dotenv.load
+Dotenv.load(".env", ".env.test")
 require "socket"
 require "etc"
 require "net/http"
