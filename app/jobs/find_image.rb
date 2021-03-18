@@ -19,7 +19,7 @@ class FindImage
       elsif download_cache.download?
         break if download_image(original_url, download_cache)
       else
-        Sidekiq.logger.info "Skipping download: public_id=#{@public_id} original_url=#{@original_url}"
+        Sidekiq.logger.info "Skipping download: public_id=#{@public_id} original_url=#{original_url}"
       end
     end
   end
@@ -33,12 +33,12 @@ class FindImage
     else
       download.delete!
       download_cache.save(false)
-      Sidekiq.logger.info "Download invalid: public_id=#{@public_id} original_url=#{@original_url}"
+      Sidekiq.logger.info "Download invalid: public_id=#{@public_id} original_url=#{original_url}"
     end
     found
   rescue => exception
     download.delete!
-    Sidekiq.logger.info "Download failed: exception=#{exception.inspect} original_url=#{@original_url}"
+    Sidekiq.logger.info "Download failed: exception=#{exception.inspect} original_url=#{original_url}"
     false
   end
 
@@ -50,7 +50,7 @@ class FindImage
       Sidekiq.logger.info "Recognized URL: public_id=#{@public_id} entry_url=#{@entry_url}"
     else
       page_urls = MetaImages.find_urls(@entry_url)
-      Sidekiq.logger.info "MetaImages: public_id=#{@public_id} count=#{page_urls&.length} entry_url=#{@entry_url}"
+      Sidekiq.logger.info "MetaImages: public_id=#{@public_id} count=#{page_urls&.length || 0} entry_url=#{@entry_url}"
     end
     page_urls ||= []
     page_urls.concat(candidate_urls)
