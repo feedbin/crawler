@@ -1,11 +1,10 @@
-name: Ruby CI
+name: CI
 
 on: [push, pull_request]
 
 jobs:
   test:
     strategy:
-      fail-fast: false
       matrix:
         os: [ubuntu-20.04]
         ruby: [2.7]
@@ -33,7 +32,6 @@ jobs:
 
     - name: Install system dependencies
       run: sudo apt-get --yes install libvips
-      if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
 
     - uses: actions/cache@v1
       with:
