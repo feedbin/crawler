@@ -34,7 +34,7 @@ class CacheTest < Minitest::Test
     values = Cache.read(cache_key)
 
     assert_equal("last_modified", values[:last_modified])
-    assert_equal(nil, values[:etag])
+    assert_nil(values[:etag])
   end
 
   def test_should_cache_values_with_exiration

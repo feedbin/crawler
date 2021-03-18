@@ -35,7 +35,6 @@ class RedirectCacheTest < Minitest::Test
   end
 
   def test_should_not_save_empty_redirects
-    feed_url = "http://example.com"
     assert_nil RedirectCache.new(1).save([])
   end
 end

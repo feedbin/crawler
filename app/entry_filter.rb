@@ -2,8 +2,8 @@
 
 class EntryFilter
 
-  def self.filter!(*args)
-    new(*args).filter
+  def self.filter!(*args, **kwargs)
+    new(*args, **kwargs).filter
   end
 
   def initialize(entries, check_for_updates: true)

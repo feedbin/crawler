@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/feedbin/feedjira.git
+  remote: https://github.com/feedbin/feedjira.git
   revision: e45ed4a8c2170fd054988988e9734d64cb75be1a
   branch: f2
   specs:
@@ -10,7 +10,7 @@ GIT
       sax-machine (>= 1.0)
 
 GIT
-  remote: git://github.com/feedbin/feedkit.git
+  remote: https://github.com/feedbin/feedkit.git
   revision: 3bfb58277849c83c459ef1878100e179d5f0902d
   branch: master
   specs:
@@ -22,7 +22,7 @@ GIT
       twitter-text (~> 3.1.0)
 
 GIT
-  remote: git://github.com/feedbin/http.git
+  remote: https://github.com/feedbin/http.git
   revision: 334b230d2033177ebf535e8277e21408cd8fdfcf
   branch: feedbin
   specs:
@@ -63,12 +63,14 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
     equalizer (0.0.11)
-    faraday (1.1.0)
+    faraday (1.3.0)
+      faraday-net_http (~> 1.0)
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
+    faraday-net_http (1.0.1)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
-    ffi (1.13.1)
+    ffi (1.15.0)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -77,14 +79,14 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    http-parser (1.2.1)
+    http-parser (1.2.3)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
     json (2.3.1)
-    loofah (2.7.0)
+    loofah (2.9.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
@@ -103,7 +105,7 @@ GEM
     rake (13.0.1)
     rchardet (1.8.0)
     redis (4.2.2)
-    ruby2_keywords (0.0.2)
+    ruby2_keywords (0.0.4)
     safe_yaml (1.0.5)
     sax-machine (1.3.2)
     sidekiq (6.1.2)
@@ -171,4 +173,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.2
+   2.2.11

@@ -97,7 +97,6 @@ class FeedDownloaderTest < Minitest::Test
   def test_should_follow_redirects
     first_url = "http://www.example.com"
     last_url = "#{first_url}/final"
-    body = random_string
 
     response = {
       status: 301,
