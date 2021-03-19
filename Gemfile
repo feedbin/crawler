@@ -24,4 +24,3 @@ gem "sidekiq"
 gem "dotenv"
 gem "connection_pool"
 gem "redis"
-gem "coveralls", require: false
