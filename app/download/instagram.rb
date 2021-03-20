@@ -7,8 +7,12 @@ class Download::Instagram < Download
   end
 
   def download
-    download_file(data.dig("thumbnail_url"))
+    download_file(image_url)
   rescue Down::Error => exception
+  end
+
+  def image_url
+    data.dig("thumbnail_url")
   end
 
   private

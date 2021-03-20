@@ -8,9 +8,12 @@ class Download::Vimeo < Download
   end
 
   def download
-    thumbnail_url = data.dig("thumbnail_url").gsub(/_\d+.jpg/, ".jpg")
-    download_file(thumbnail_url)
+    download_file(image_url)
   rescue Down::Error => exception
+  end
+
+  def image_url
+    data.dig("thumbnail_url").gsub(/_\d+.jpg/, ".jpg")
   end
 
   private

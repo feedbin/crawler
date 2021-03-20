@@ -10,7 +10,7 @@ class DownloadCacheTest < Minitest::Test
     public_id = SecureRandom.hex
 
     cache = DownloadCache.new(image_url, public_id: public_id, preset_name: "primary")
-    cache.save(storage_url)
+    cache.save(storage_url: storage_url, image_url: image_url)
 
     cache = DownloadCache.new(image_url, public_id: public_id, preset_name: "primary")
     assert_equal(storage_url, cache.storage_url)
@@ -26,7 +26,7 @@ class DownloadCacheTest < Minitest::Test
     cache = DownloadCache.new(image_url, public_id: public_id, preset_name: "primary")
     refute cache.copied?
 
-    cache.save(storage_url)
+    cache.save(storage_url: storage_url, image_url: image_url)
     cache.copy
 
     assert cache.copied?
@@ -42,7 +42,7 @@ class DownloadCacheTest < Minitest::Test
     stub_request(:put, s3_host).to_return(status: 404)
 
     cache = DownloadCache.new(image_url, public_id: public_id, preset_name: "primary")
-    cache.save(storage_url)
+    cache.save(storage_url: storage_url, image_url: image_url)
     cache.copy
     refute cache.copied?
     assert_requested :put, s3_host

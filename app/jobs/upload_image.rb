@@ -3,17 +3,17 @@ class UploadImage
   include Helpers
   sidekiq_options queue: "image_parallel_#{Socket.gethostname}", retry: false
 
-  def perform(public_id, preset_name, image_path, original_url)
+  def perform(public_id, preset_name, image_path, original_url, image_url)
     @public_id = public_id
     @preset_name = preset_name
     @original_url = original_url
     @image_path = image_path
 
     storage_url = upload
-    send_to_feedbin(original_url: original_url, storage_url: storage_url)
+    send_to_feedbin(original_url: image_url, storage_url: storage_url)
     File.unlink(image_path) rescue Errno::ENOENT
 
-    DownloadCache.new(@original_url, public_id: @public_id, preset_name: @preset_name).save(storage_url)
+    DownloadCache.new(@original_url, public_id: @public_id, preset_name: @preset_name).save(storage_url: storage_url, image_url: image_url)
     Sidekiq.logger.info "UploadImage: public_id=#{@public_id} original_url=#{@original_url} storage_url=#{storage_url}"
   end
 

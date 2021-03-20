@@ -7,8 +7,6 @@ unless ENV["CI"]
   port = socket.local_address.ip_port
   socket.close
 
-  port = 7775
-
   ENV["REDIS_URL"] = "redis://localhost:%d" % port
   redis_test_instance = IO.popen("redis-server --port %d --save '' --appendonly no" % port)
 

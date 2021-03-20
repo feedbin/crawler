@@ -4,7 +4,7 @@ class Download::Default < Download
   end
 
   def download
-    download_file(@url)
+    download_file(image_url)
   rescue Down::Error => exception
   end
 end

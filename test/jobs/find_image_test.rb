@@ -4,6 +4,21 @@ class FindImageTest < Minitest::Test
     flush
   end
 
+  def test_should_copy_image
+    image_url = "https://i.ytimg.com/vi/id/maxresdefault.jpg"
+    original_url = "https://www.youtube.com/watch?v=id"
+
+    stub_request_file("image.jpeg", image_url, headers: {content_type: "image/jpeg"})
+    stub_request(:put, /.*\.s3\.amazonaws\.com/).to_return(status: 200, body: aws_copy_body)
+
+    Sidekiq::Testing.inline! do
+      FindImage.perform_async(SecureRandom.hex, "primary", [original_url])
+    end
+
+    FindImage.new.perform(SecureRandom.hex, "primary", [original_url])
+    assert_equal(image_url, EntryImage.jobs.first["args"][1]["original_url"])
+  end
+
   def test_should_process_an_image
     image_url = "http://example.com/image.jpg"
     page_url = "http://example.com/article"
@@ -38,6 +53,10 @@ class FindImageTest < Minitest::Test
     assert_equal 0, ProcessImage.jobs.size
     FindImage.new.perform(SecureRandom.hex, "primary", [image_url], "https://www.youtube.com/watch?v=id")
     assert_equal 1, ProcessImage.jobs.size
+
+    effective_image_url = ProcessImage.jobs.first["args"][4]
+
+    assert_equal(url, effective_image_url)
 
     assert_requested :get, url
     refute_requested :get, image_url

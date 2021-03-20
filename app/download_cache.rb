@@ -28,6 +28,10 @@ class DownloadCache
     @storage_url ||= cache[:storage_url]
   end
 
+  def image_url
+    @image_url ||= cache[:image_url]
+  end
+
   def download?
     !previously_attempted? && storage_url != false
   end
@@ -36,8 +40,8 @@ class DownloadCache
     !cache.empty?
   end
 
-  def save(url)
-    @cache = {storage_url: url}
+  def save(storage_url:, image_url:)
+    @cache = {storage_url: storage_url, image_url: image_url}
     Cache.write(cache_key, @cache, options: {expires_in: 7 * 24 * 60 * 60})
   end
 
@@ -48,7 +52,7 @@ class DownloadCache
   end
 
   def cache_key
-    "image_processed_#{@preset_name}_#{Digest::SHA1.hexdigest(@url)}"
+    "image_download_#{@preset_name}_#{Digest::SHA1.hexdigest(@url)}"
   end
 
   def copy_image

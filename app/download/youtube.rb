@@ -14,9 +14,14 @@ class Download::Youtube < Download
 
   def download
     ["maxresdefault", "hqdefault"].each do |option|
-      download_file("https://i.ytimg.com/vi/#{provider_identifier}/#{option}.jpg")
+      @image_url = "https://i.ytimg.com/vi/#{provider_identifier}/#{option}.jpg"
+      download_file(@image_url)
       break
     rescue Down::Error => exception
     end
+  end
+
+  def image_url
+    @image_url
   end
 end

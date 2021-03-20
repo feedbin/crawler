@@ -18,8 +18,8 @@ class FindImage
       Sidekiq.logger.info "Candidate: public_id=#{@public_id} original_url=#{original_url}"
       download_cache = DownloadCache.copy(original_url, public_id: @public_id, preset_name: @preset_name)
       if download_cache.copied?
-        send_to_feedbin(original_url: original_url, storage_url: download_cache.storage_url)
-        Sidekiq.logger.info "Copied image: public_id=#{@public_id} original_url=#{original_url} storage_url=#{download_cache.storage_url}"
+        send_to_feedbin(original_url: download_cache.image_url, storage_url: download_cache.storage_url)
+        Sidekiq.logger.info "Copied image: public_id=#{@public_id} image_url=#{download_cache.image_url} storage_url=#{download_cache.storage_url}"
         break
       elsif download_cache.download?
         break if download_image(original_url, download_cache)
@@ -33,11 +33,12 @@ class FindImage
     found = false
     download = Download.download!(original_url, minimum_size: preset.minimum_size)
     if download.valid?
-      ProcessImage.perform_async(@public_id, @preset_name, download.persist!, original_url, @candidate_urls)
       found = true
+      ProcessImage.perform_async(@public_id, @preset_name, download.persist!, original_url, download.image_url, @candidate_urls)
+      Sidekiq.logger.info "Download valid: public_id=#{@public_id} image_url=#{download.image_url}"
     else
       download.delete!
-      download_cache.save(false)
+      download_cache.save(storage_url: false, image_url: false)
       Sidekiq.logger.info "Download invalid: public_id=#{@public_id} original_url=#{original_url}"
     end
     found
