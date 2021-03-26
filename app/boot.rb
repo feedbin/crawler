@@ -28,6 +28,7 @@ require "open3"
 require "redis"
 require "shellwords"
 require "sidekiq"
+require "rbtrace"
 
 require "lib/constants"
 require "lib/down"
