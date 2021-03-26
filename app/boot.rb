@@ -5,6 +5,10 @@ $stdout.sync = true
 require "bundler/setup"
 require "dotenv"
 Dotenv.load(".env", ".env.test")
+
+require "objspace"
+ObjectSpace.trace_object_allocations_start
+
 require "socket"
 require "etc"
 require "net/http"
