@@ -29,22 +29,11 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ matrix.ruby }}
+        ruby-version: ${{ matrix.ruby }};
+        bundler-cache: true
 
     - name: Install system dependencies
       run: sudo apt-get --yes install libidn11-dev
-
-    - uses: actions/cache@v1
-      with:
-        path: vendor/bundle
-        key: bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-
-
-    - name: bundle install
-      run: |
-        bundle config path vendor/bundle
-        bundle install --jobs 4
 
     - name: Run tests
       run: bundle exec rake
