@@ -24,13 +24,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: sudo apt-get --yes install libidn11-dev
+
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-
-    - name: Install system dependencies
-      run: sudo apt-get --yes install libidn11-dev
 
     - name: Run tests
       run: bundle exec rake
