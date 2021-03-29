@@ -80,7 +80,6 @@ GEM
     mini_magick (4.11.0)
     mini_portile2 (2.5.0)
     minitest (5.14.4)
-    msgpack (1.4.2)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     net-scp (3.0.0)
@@ -91,7 +90,6 @@ GEM
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
-    optimist (3.0.1)
     parallel (1.20.1)
     parser (3.0.0.0)
       ast (~> 2.4.1)
@@ -100,10 +98,6 @@ GEM
     rack (2.2.3)
     rainbow (3.0.0)
     rake (13.0.3)
-    rbtrace (0.4.14)
-      ffi (>= 1.0.6)
-      msgpack (>= 0.4.3)
-      optimist (>= 3.0.0)
     redis (4.2.5)
     regexp_parser (2.1.1)
     rexml (3.2.4)
@@ -163,7 +157,6 @@ DEPENDENCIES
   minitest
   nokogumbo
   rake
-  rbtrace
   redis
   ruby-vips (= 2.0.17)
   sidekiq

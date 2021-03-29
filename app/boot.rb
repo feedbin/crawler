@@ -6,9 +6,6 @@ require "bundler/setup"
 require "dotenv"
 Dotenv.load(".env", ".env.test")
 
-require "objspace"
-ObjectSpace.trace_object_allocations_start
-
 require "socket"
 require "etc"
 require "net/http"
@@ -32,7 +29,6 @@ require "open3"
 require "redis"
 require "shellwords"
 require "sidekiq"
-require "rbtrace"
 
 require "lib/constants"
 require "lib/down"
