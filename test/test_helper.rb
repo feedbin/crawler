@@ -2,8 +2,13 @@ require "minitest/autorun"
 require "webmock/minitest"
 
 unless ENV["CI"]
-  ENV["REDIS_URL"] = "redis://localhost:7775"
-  redis_test_instance = IO.popen("redis-server --port 7775")
+  socket = Socket.new(:INET, :STREAM, 0)
+  socket.bind(Addrinfo.tcp("127.0.0.1", 0))
+  port = socket.local_address.ip_port
+  socket.close
+
+  ENV["REDIS_URL"] = "redis://localhost:%d" % port
+  redis_test_instance = IO.popen("redis-server --port %d --save '' --appendonly no" % port)
 
   Minitest.after_run do
     Process.kill("INT", redis_test_instance.pid)
