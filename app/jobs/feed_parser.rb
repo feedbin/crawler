@@ -13,6 +13,7 @@ class FeedParser
     entries = EntryFilter.filter!(parsed_feed.entries)
     save(parsed_feed.to_feed, entries) unless entries.empty?
     FeedStatus.clear!(@feed_id)
+    counts(parsed_feed.entries, entries)
   rescue Feedkit::NotFeed => exception
     Sidekiq.logger.info "Feedkit::NotFeed: id=#{@feed_id} url=#{@feed_url}"
     FeedStatus.new(@feed_id).error!(exception)
@@ -35,6 +36,19 @@ class FeedParser
     @parsed_feed ||= begin
       body = File.read(@path, binmode: true)
       Feedkit::Parser.parse!(body, url: @feed_url, encoding: @encoding)
+    end
+  end
+
+  def counts(all_entries, new_entries)
+    all_entries_count = all_entries.count
+    new_entries_count = new_entries.count
+
+    return if all_entries_count == 0 || new_entries_count == 0
+
+    new_entries_count = new_entries.reject {|entry| entry[:update] == true }.count
+
+    if new_entries_count == all_entries_count
+      Sidekiq.logger.info("All new: id=#{@feed_id} url=#{@feed_url} all=#{all_entries_count} new=#{new_entries_count}")
     end
   end
 
