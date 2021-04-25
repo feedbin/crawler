@@ -42,13 +42,10 @@ class FeedParser
   def counts(all_entries, new_entries)
     all_entries_count = all_entries.count
     new_entries_count = new_entries.count
+    unique_dates_count = new_entries.map {|e| e[:published] }.uniq.count
 
-    return if all_entries_count == 0 || new_entries_count == 0
-
-    new_entries_count = new_entries.reject {|entry| entry[:update] == true }.count
-
-    if new_entries_count == all_entries_count
-      Sidekiq.logger.info("All new: id=#{@feed_id} url=#{@feed_url} all=#{all_entries_count} new=#{new_entries_count}")
+    if new_entries_count > 1 && unique_dates_count == 1
+      Sidekiq.logger.info("Same date: id=#{@feed_id} url=#{@feed_url} new=#{new_entries_count} unique=#{unique_dates_count}")
     end
   end
 
