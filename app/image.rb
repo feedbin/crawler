@@ -21,6 +21,20 @@ class Image
     source.width
   end
 
+  def color
+    hex = nil
+    file = ImageProcessing::Vips
+      .source(source)
+      .resize_to_fill(1, 1, sharpen: false)
+      .custom { |image|
+        image.tap do |data|
+          hex = data.getpoint(0, 0).map {|value| "%02x" % value }.join
+        end
+      }.call
+    file.unlink
+    hex
+  end
+
   def source
     @source ||= Vips::Image.new_from_file(@file)
   end
