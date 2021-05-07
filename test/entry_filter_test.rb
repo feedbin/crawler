@@ -49,6 +49,16 @@ class EntryFilterTest < Minitest::Test
     assert_equal 0, results.length
   end
 
+  def test_should_ignore_old_entries
+    entries = [
+      sample_entries,
+      sample_entries(published: (Date.today - 3).to_time),
+      sample_entries(published: nil),
+    ].flatten
+    results = EntryFilter.filter!(entries, date_filter: (Date.today - 2).to_time, check_for_updates: false)
+    assert_equal 2, results.length
+  end
+
   def test_should_ignore_content_length_one
     entries = sample_entries
     $redis.with do |connection|
@@ -63,10 +73,11 @@ class EntryFilterTest < Minitest::Test
 
   private
 
-  def sample_entries
+  def sample_entries(published: Time.now)
     entry = OpenStruct.new(
       public_id: random_string,
       content: random_string,
+      published: published,
       to_entry: {data: random_string}
     )
     [entry]

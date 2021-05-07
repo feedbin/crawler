@@ -6,15 +6,16 @@ class EntryFilter
     new(*args, **kwargs).filter
   end
 
-  def initialize(entries, check_for_updates: true)
+  def initialize(entries, check_for_updates: true, date_filter: nil)
     @entries = entries
     @check_for_updates = check_for_updates
+    @date_filter = date_filter
   end
 
   def filter
     @filter ||= begin
       @entries.first(300).each_with_object([]) do |entry, array|
-        if new?(entry.public_id)
+        if new?(entry)
           array.push(entry.to_entry)
         elsif @check_for_updates && updated?(entry.public_id, entry.content)
           result = entry.to_entry
@@ -27,8 +28,8 @@ class EntryFilter
 
   private
 
-  def new?(public_id)
-    saved_entries[public_id] == 0
+  def new?(entry)
+    saved_entries[entry.public_id] == 0 && fresh?(entry)
   end
 
   def updated?(public_id, content)
@@ -44,5 +45,11 @@ class EntryFilter
       keys = @entries.map(&:public_id)
       redis.mapped_mget(*keys).transform_values(&:to_i)
     end
+  end
+
+  def fresh?(entry)
+    return true if @date_filter.nil?
+    return true if entry.published.nil?
+    entry.published > @date_filter
   end
 end

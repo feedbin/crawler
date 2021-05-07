@@ -19,7 +19,7 @@ class TwitterRefresher
     end
 
     if feed
-      entries = EntryFilter.filter!(feed.entries, check_for_updates: false)
+      entries = EntryFilter.filter!(feed.entries, check_for_updates: false, date_filter: (Date.today - 2).to_time)
       unless entries.empty?
         Sidekiq::Client.push(
           "class" => "FeedRefresherReceiver",
