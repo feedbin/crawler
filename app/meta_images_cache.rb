@@ -26,15 +26,11 @@ class MetaImagesCache
   end
 
   def url_cache
-    @url_cache ||= begin
-      Cache.read(url_cache_key)
-    end
+    @url_cache ||= Cache.read(url_cache_key)
   end
 
   def host_cache
-    @host_cache ||= begin
-      Cache.read(host_cache_key)
-    end
+    @host_cache ||= Cache.read(host_cache_key)
   end
 
   def host_cache_key

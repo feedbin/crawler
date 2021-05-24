@@ -39,9 +39,7 @@ class Download
   end
 
   def persisted_path
-    @persisted_path ||= begin
-      File.join(Dir.tmpdir, ["image_original_", SecureRandom.hex].join)
-    end
+    @persisted_path ||= File.join(Dir.tmpdir, ["image_original_", SecureRandom.hex].join)
   end
 
   def valid?

@@ -66,7 +66,7 @@ class FindImageTest < Minitest::Test
     urls = [
       "http://example.com/image_1.jpg",
       "http://example.com/image_2.jpg",
-      "http://example.com/image_3.jpg",
+      "http://example.com/image_3.jpg"
     ]
 
     urls.each do |url|

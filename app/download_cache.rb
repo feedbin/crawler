@@ -46,9 +46,7 @@ class DownloadCache
   end
 
   def cache
-    @cache ||= begin
-      Cache.read(cache_key)
-    end
+    @cache ||= Cache.read(cache_key)
   end
 
   def cache_key

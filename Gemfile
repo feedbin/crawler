@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 group :development do
   gem "capistrano"
@@ -13,19 +14,19 @@ end
 
 gem "standard", group: [:development, :test]
 
+gem "down", github: "feedbin/down", branch: "feedbin"
+
 gem "bundler"
 gem "rake"
-
-gem "librato-metrics", "= 1.6.1"
 gem "addressable"
 gem "dotenv"
+gem "fog-aws"
+gem "http"
+gem "image_processing"
+gem "librato-metrics", "= 1.6.1"
 gem "librato-rack"
+gem "mime-types"
 gem "nokogumbo"
 gem "redis"
+gem "ruby-vips"
 gem "sidekiq"
-gem "http"
-gem "ruby-vips", "= 2.0.17"
-gem "image_processing"
-gem "down"
-gem "fog-aws"
-gem "mime-types"

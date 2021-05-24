@@ -11,7 +11,10 @@ class UploadImage
 
     storage_url = upload
     send_to_feedbin(original_url: image_url, storage_url: storage_url)
-    File.unlink(image_path) rescue Errno::ENOENT
+    begin
+      File.unlink(image_path)
+    rescue Errno::ENOENT
+    end
 
     DownloadCache.new(@original_url, public_id: @public_id, preset_name: @preset_name).save(storage_url: storage_url, image_url: image_url)
     Sidekiq.logger.info "UploadImage: public_id=#{@public_id} original_url=#{@original_url} storage_url=#{storage_url}"
@@ -26,5 +29,4 @@ class UploadImage
       ).to_s
     end
   end
-
 end

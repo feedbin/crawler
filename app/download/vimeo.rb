@@ -3,7 +3,7 @@ class Download::Vimeo < Download
     [
       %r{.*?//vimeo\.com/video/(.*?)(#|\?|$)},
       %r{.*?//vimeo\.com/(.*?)(#|\?|$)},
-      %r{.*?//player\.vimeo\.com/video/(.*?)(#|\?|$)},
+      %r{.*?//player\.vimeo\.com/video/(.*?)(#|\?|$)}
     ]
   end
 
@@ -31,4 +31,3 @@ class Download::Vimeo < Download
     end
   end
 end
-

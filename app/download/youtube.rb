@@ -1,4 +1,6 @@
 class Download::Youtube < Download
+  attr_reader :image_url
+
   def self.supported_urls
     [
       %r{.*?//www\.youtube-nocookie\.com/embed/(.*?)(\?|$)},
@@ -19,9 +21,5 @@ class Download::Youtube < Download
       break
     rescue Down::Error => exception
     end
-  end
-
-  def image_url
-    @image_url
   end
 end

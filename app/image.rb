@@ -28,7 +28,7 @@ class Image
       .resize_to_fill(1, 1, sharpen: false)
       .custom { |image|
         image.tap do |data|
-          hex = data.getpoint(0, 0).map {|value| "%02x" % value }.join
+          hex = data.getpoint(0, 0).map { |value| "%02x" % value }.join
         end
       }.call
     file.unlink
@@ -111,7 +111,11 @@ class Image
     }
     command = "%<pigo>s -in %<image>s -out empty -cf %<cascade>s -scale 1.2 -json -"
     out, _, status = Open3.capture3(command % params)
-    File.unlink(file) rescue Errno::ENOENT
+    begin
+      File.unlink(file)
+    rescue
+      Errno::ENOENT
+    end
 
     faces = if status.success?
       JSON.load(out)
@@ -127,9 +131,7 @@ class Image
   end
 
   def persisted_path
-    @persisted_path ||= begin
-      File.join(Dir.tmpdir, ["image_processed_", SecureRandom.hex, ".jpg"].join)
-    end
+    @persisted_path ||= File.join(Dir.tmpdir, ["image_processed_", SecureRandom.hex, ".jpg"].join)
   end
 
   def resize_too_small?

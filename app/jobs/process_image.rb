@@ -13,7 +13,10 @@ class ProcessImage
     else
       FindImageCritical.perform_async(public_id, @preset_name, candidate_urls) unless candidate_urls.empty?
     end
-    File.unlink(original_path) rescue Errno::ENOENT
+    begin
+      File.unlink(original_path)
+    rescue Errno::ENOENT
+    end
   end
 end
 
