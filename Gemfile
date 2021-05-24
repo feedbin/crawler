@@ -2,17 +2,14 @@ source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 group :development do
-  gem "capistrano"
-  gem "capistrano-bundler"
   gem "foreman"
+  gem "standard"
 end
 
 group :test do
   gem "minitest"
   gem "webmock"
 end
-
-gem "standard", group: [:development, :test]
 
 gem "down", github: "feedbin/down", branch: "feedbin"
 

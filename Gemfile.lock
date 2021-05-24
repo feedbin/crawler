@@ -12,18 +12,8 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     aggregate (0.2.3)
-    airbrussh (1.4.0)
-      sshkit (>= 1.6.1, != 1.7.0)
     ast (2.4.2)
     builder (3.2.4)
-    capistrano (3.16.0)
-      airbrussh (>= 1.0.0)
-      i18n
-      rake (>= 10.0.0)
-      sshkit (>= 1.9.0)
-    capistrano-bundler (2.0.1)
-      capistrano (~> 3.1)
-    concurrent-ruby (1.1.8)
     connection_pool (2.2.5)
     crack (0.4.5)
       rexml
@@ -65,8 +55,6 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    i18n (1.8.10)
-      concurrent-ruby (~> 1.0)
     image_processing (1.12.1)
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
@@ -89,9 +77,6 @@ GEM
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.1.1)
-    net-scp (3.0.0)
-      net-ssh (>= 2.6.5, < 7.0.0)
-    net-ssh (6.1.0)
     nokogiri (1.11.5)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
@@ -129,9 +114,6 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
-    sshkit (1.21.2)
-      net-scp (>= 1.1.2)
-      net-ssh (>= 2.8.0)
     standard (1.1.1)
       rubocop (= 1.14.0)
       rubocop-performance (= 1.11.2)
@@ -150,8 +132,6 @@ PLATFORMS
 DEPENDENCIES
   addressable
   bundler
-  capistrano
-  capistrano-bundler
   dotenv
   down!
   fog-aws
