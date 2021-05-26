@@ -22,6 +22,7 @@ require "connection_pool"
 require "redis"
 require "feedkit"
 
+require "app/sidekiq"
 require "app/redis"
 require "app/cache"
 require "app/feed_status"
