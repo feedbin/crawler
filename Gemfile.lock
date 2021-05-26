@@ -33,6 +33,13 @@ GIT
       http-parser (~> 1.2.0)
 
 GIT
+  remote: https://github.com/feedbin/resolv.git
+  revision: c80893765dcd50e9d34b3e9dbd427cc651dc55cf
+  branch: feedbin
+  specs:
+    resolv (0.2.0)
+
+GIT
   remote: https://github.com/feedbin/sax-machine.git
   revision: 80c6e3b9eb4ab0ac16a0eeaac13d10a713d10423
   branch: feedbin
@@ -140,6 +147,7 @@ DEPENDENCIES
   nokogiri
   rake
   redis
+  resolv!
   sax-machine!
   sidekiq
   unf_ext
