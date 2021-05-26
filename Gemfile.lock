@@ -6,6 +6,13 @@ GIT
     down (5.2.1)
       addressable (~> 2.5)
 
+GIT
+  remote: https://github.com/feedbin/resolv.git
+  revision: c80893765dcd50e9d34b3e9dbd427cc651dc55cf
+  branch: feedbin
+  specs:
+    resolv (0.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -145,6 +152,7 @@ DEPENDENCIES
   nokogumbo
   rake
   redis
+  resolv!
   ruby-vips
   sidekiq
   standard

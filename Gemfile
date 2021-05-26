@@ -11,7 +11,8 @@ group :test do
   gem "webmock"
 end
 
-gem "down", github: "feedbin/down", branch: "feedbin"
+gem "down",   github: "feedbin/down",   branch: "feedbin"
+gem "resolv", github: "feedbin/resolv", branch: "feedbin"
 
 gem "bundler"
 gem "rake"
