@@ -33,6 +33,7 @@ require "app/redirect_cache"
 require "app/http_cache"
 require "app/feed"
 require "app/entry_filter"
+require "app/throttle"
 
 require "app/jobs/feed_parser"
 require "app/jobs/feed_downloader"

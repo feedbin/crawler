@@ -12,7 +12,12 @@ class FeedDownloader
     @critical    = critical
     @feed        = Feed.new(feed_id)
 
-    download if @critical || @feed.ok?
+    throttled = Throttle.throttled?(@feed_url, @feed.downloaded_at)
+    if throttled
+      Sidekiq.logger.info "Throttled url=#{@feed_url} downloaded_at=#{Time.at(@feed.downloaded_at)} time_remaining=#{throttled.time_remaining}"
+    elsif @critical || @feed.ok?
+      download
+    end
   end
 
   def download
@@ -58,6 +63,10 @@ class FeedDownloader
     job_id = parser.perform_async(@feed_id, @feed_url, @response.path, @response.encoding.to_s)
     Sidekiq.logger.info "Parse enqueued job_id: #{job_id}"
     @feed.save(@response)
+  end
+
+  def throttled?
+
   end
 end
 
