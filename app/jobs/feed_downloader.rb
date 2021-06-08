@@ -16,6 +16,7 @@ class FeedDownloader
   end
 
   def download
+    @feed.log_download!
     @response = begin
       request
     rescue Feedkit::ZlibError

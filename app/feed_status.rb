@@ -27,6 +27,18 @@ class FeedStatus
     end
   end
 
+  def log_download!
+    @downloaded_at = Time.now.to_i
+    Cache.write(log_cache_key, {
+      downloaded_at: @downloaded_at
+    })
+    @downloaded_at
+  end
+
+  def downloaded_at
+    @downloaded_at ||= log_cache[:downloaded_at] && log_cache[:downloaded_at].to_i
+  end
+
   def ok?
     Time.now.to_i > next_retry
   end
@@ -66,6 +78,10 @@ class FeedStatus
     JSON.dump({date: Time.now.to_i, class: exception.class, message: exception.message, status: status})
   end
 
+  def log_cache
+    @log_cache ||= Cache.read(log_cache_key)
+  end
+
   def cached
     @cached ||= Cache.read(cache_key)
   end
@@ -76,5 +92,9 @@ class FeedStatus
 
   def errors_cache_key
     "refresher_errors_#{@feed_id}"
+  end
+
+  def log_cache_key
+    "refresher_log_#{@feed_id}"
   end
 end

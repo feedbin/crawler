@@ -43,4 +43,12 @@ class FeedStatusTest < Minitest::Test
 
     assert FeedStatus.new(feed_id).ok?, "Status should be ok after rewinding failed_at"
   end
+
+  def test_should_save_last_download
+    feed_id = 1
+    now = Time.now.to_i
+    FeedStatus.new(1).log_download!
+    difference = FeedStatus.new(1).downloaded_at - now
+    assert difference <= 1
+  end
 end

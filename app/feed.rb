@@ -4,7 +4,7 @@ class Feed
   extend Forwardable
 
   def_delegators :http_cache, :etag, :last_modified, :checksum, :save
-  def_delegators :feed_status, :ok?
+  def_delegators :feed_status, :ok?, :log_download!, :downloaded_at
 
   def_delegator :feed_status, :count, :attempt_count
   def_delegator :feed_status, :error!, :download_error
