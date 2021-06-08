@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Sidekiq.configure_server do |config|
+  config.server_middleware do |chain|
+    chain.add WorkerStat
+  end
   config.redis = {id: "refresher-server-#{::Process.pid}"}
 end
 
