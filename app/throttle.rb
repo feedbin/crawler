@@ -16,7 +16,7 @@ class Throttle
   end
 
   def downloaded_recently?
-    return nil if @last_download.nil?
+    return false if @last_download.nil?
     (Time.now.to_i - @last_download) < TIMEOUT
   end
 
