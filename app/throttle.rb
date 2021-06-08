@@ -12,12 +12,12 @@ class Throttle
   end
 
   def throttled?
-    throttled_hosts.include?(host) && false == downloaded_recently?
+    throttled_hosts.include?(host) && downloaded_recently?
   end
 
   def downloaded_recently?
-    return nil if @last_download.nil?
-    !((Time.now.to_i - @last_download) < TIMEOUT)
+    return false if @last_download.nil?
+    (Time.now.to_i - @last_download) < TIMEOUT
   end
 
   def time_remaining
