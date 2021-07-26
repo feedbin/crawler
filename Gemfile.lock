@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: d045afad01ee5c225d33d566ad19a4372d8bdae4
+  revision: 775d560f4d85451c1fb6fffab46a65826cb5417b
   branch: master
   specs:
     feedkit (0.1.0)
@@ -104,7 +104,7 @@ GEM
     rack (2.2.3)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.2.5)
+    redis (4.3.1)
     rexml (3.2.5)
     sidekiq (6.2.1)
       connection_pool (>= 2.2.2)
