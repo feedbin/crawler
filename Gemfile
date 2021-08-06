@@ -11,7 +11,6 @@ end
 
 gem "unf_ext"
 
-gem "resolv",      github: "feedbin/resolv",      branch: "feedbin"
 gem "sax-machine", github: "feedbin/sax-machine", branch: "feedbin"
 gem "feedjira",    github: "feedbin/feedjira",    branch: "f2"
 gem "http",        github: "feedbin/http",        branch: "feedbin"
@@ -25,4 +24,5 @@ gem "librato-rack"
 gem "nokogiri"
 gem "rake"
 gem "redis"
+gem "resolv"
 gem "sidekiq"

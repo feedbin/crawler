@@ -33,13 +33,6 @@ GIT
       http-parser (~> 1.2.0)
 
 GIT
-  remote: https://github.com/feedbin/resolv.git
-  revision: c80893765dcd50e9d34b3e9dbd427cc651dc55cf
-  branch: feedbin
-  specs:
-    resolv (0.2.0)
-
-GIT
   remote: https://github.com/feedbin/sax-machine.git
   revision: 80c6e3b9eb4ab0ac16a0eeaac13d10a713d10423
   branch: feedbin
@@ -86,25 +79,26 @@ GEM
     librato-rack (1.1.1)
       hetchy (~> 1.0)
       librato-metrics (~> 1.6)
-    loofah (2.10.0)
+    loofah (2.11.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
-    mini_portile2 (2.5.3)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     naught (1.1.0)
-    nokogiri (1.11.7)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.2)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     public_suffix (4.0.6)
     racc (1.5.2)
     rack (2.2.3)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.3.1)
+    redis (4.4.0)
+    resolv (0.2.1)
     rexml (3.2.5)
     sidekiq (6.2.1)
       connection_pool (>= 2.2.2)
@@ -129,8 +123,8 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    webmock (3.13.0)
-      addressable (>= 2.3.6)
+    webmock (3.14.0)
+      addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
 
@@ -151,7 +145,7 @@ DEPENDENCIES
   nokogiri
   rake
   redis
-  resolv!
+  resolv
   sax-machine!
   sidekiq
   unf_ext

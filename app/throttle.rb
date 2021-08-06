@@ -17,11 +17,11 @@ class Throttle
 
   def downloaded_recently?
     return false if @last_download.nil?
-    (Time.now.to_i - @last_download) < TIMEOUT
+    (Time.now.to_i - @last_download) < random_timeout
   end
 
-  def time_remaining
-    "#{TIMEOUT - (Time.now.to_i - @last_download)}s"
+  def random_timeout
+    rand(TIMEOUT..(TIMEOUT * 2))
   end
 
   def throttled_hosts
