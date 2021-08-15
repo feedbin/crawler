@@ -9,13 +9,23 @@ class FindImage
     @entry_url = entry_url
     @candidate_urls = combine_urls(candidate_urls)
     timer = Timer.new(45)
+    count = 0
 
     while original_url = @candidate_urls.shift
+      count += 1
+
+      if count > 10
+        Sidekiq.logger.info "Exceeded count limit: public_id=#{@public_id} count=#{count}"
+        break
+      end
+
       if timer.expired?
         Sidekiq.logger.info "Exceeded total time limit: public_id=#{@public_id} elapsed_time=#{timer.elapsed}"
         break
       end
-      Sidekiq.logger.info "Candidate: public_id=#{@public_id} original_url=#{original_url}"
+
+      Sidekiq.logger.info "Candidate: public_id=#{@public_id} original_url=#{original_url} count=#{count}"
+
       download_cache = DownloadCache.copy(original_url, public_id: @public_id, preset_name: @preset_name)
       if download_cache.copied?
         send_to_feedbin(original_url: download_cache.image_url, storage_url: download_cache.storage_url)
@@ -26,6 +36,7 @@ class FindImage
       else
         Sidekiq.logger.info "Skipping download: public_id=#{@public_id} original_url=#{original_url}"
       end
+
     end
   end
 
