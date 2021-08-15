@@ -1,22 +1,7 @@
-GIT
-  remote: https://github.com/feedbin/down.git
-  revision: 909e06ce32a40e582027c3c2fd22bac57682c99b
-  branch: feedbin
-  specs:
-    down (5.2.1)
-      addressable (~> 2.5)
-
-GIT
-  remote: https://github.com/feedbin/resolv.git
-  revision: c80893765dcd50e9d34b3e9dbd427cc651dc55cf
-  branch: feedbin
-  specs:
-    resolv (0.2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.7.0)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     aggregate (0.2.3)
     ast (2.4.2)
@@ -27,14 +12,16 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
-    excon (0.81.0)
+    down (5.2.3)
+      addressable (~> 2.8)
+    excon (0.85.0)
     faraday (0.17.4)
       multipart-post (>= 1.2, < 3)
-    ffi (1.15.1)
+    ffi (1.15.3)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    fog-aws (3.10.0)
+    fog-aws (3.11.0)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
@@ -51,15 +38,15 @@ GEM
       fog-core
       nokogiri (>= 1.5.11, < 2.0.0)
     foreman (0.87.2)
-    formatador (0.2.5)
+    formatador (0.3.0)
     hashdiff (1.0.1)
     hetchy (1.0.0)
-    http (5.0.0)
+    http (5.0.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
-      llhttp-ffi (~> 0.0.1)
-    http-cookie (1.0.3)
+      llhttp-ffi (~> 0.3.0)
+    http-cookie (1.0.4)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     image_processing (1.12.1)
@@ -73,45 +60,46 @@ GEM
     librato-rack (1.1.1)
       hetchy (~> 1.0)
       librato-metrics (~> 1.6)
-    llhttp-ffi (0.0.1)
+    llhttp-ffi (0.3.1)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2021.0225)
+    mime-types-data (3.2021.0704)
     mini_magick (4.11.0)
-    mini_portile2 (2.5.1)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.1.1)
-    nokogiri (1.11.5)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.3)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     nokogumbo (2.0.5)
       nokogiri (~> 1.8, >= 1.8.4)
     parallel (1.20.1)
-    parser (3.0.1.1)
+    parser (3.0.2.0)
       ast (~> 2.4.1)
     public_suffix (4.0.6)
     racc (1.5.2)
     rack (2.2.3)
     rainbow (3.0.0)
-    rake (13.0.3)
-    redis (4.2.5)
+    rake (13.0.6)
+    redis (4.4.0)
     regexp_parser (2.1.1)
+    resolv (0.2.1)
     rexml (3.2.5)
-    rubocop (1.14.0)
+    rubocop (1.18.4)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 1.5.0, < 2.0)
+      rubocop-ast (>= 1.8.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.5.0)
+    rubocop-ast (1.10.0)
       parser (>= 3.0.1.1)
-    rubocop-performance (1.11.2)
+    rubocop-performance (1.11.4)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
@@ -121,15 +109,15 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
-    standard (1.1.1)
-      rubocop (= 1.14.0)
-      rubocop-performance (= 1.11.2)
+    standard (1.1.7)
+      rubocop (= 1.18.4)
+      rubocop-performance (= 1.11.4)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (2.0.0)
-    webmock (3.13.0)
-      addressable (>= 2.3.6)
+    webmock (3.14.0)
+      addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
 
@@ -140,7 +128,7 @@ DEPENDENCIES
   addressable
   bundler
   dotenv
-  down!
+  down
   fog-aws
   foreman
   http
@@ -152,7 +140,7 @@ DEPENDENCIES
   nokogumbo
   rake
   redis
-  resolv!
+  resolv
   ruby-vips
   sidekiq
   standard
