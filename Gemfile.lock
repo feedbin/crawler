@@ -11,10 +11,11 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 775d560f4d85451c1fb6fffab46a65826cb5417b
+  revision: 3bac4eebdd31e1a5ecc2600b58f12064dea2b7ad
   branch: master
   specs:
     feedkit (0.1.0)
+      addressable (~> 2.8.0)
       feedjira (~> 2.0)
       http (~> 4.4)
       rchardet (~> 1.8.0)
@@ -58,7 +59,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
-    ffi (1.15.3)
+    ffi (1.15.4)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -79,7 +80,7 @@ GEM
     librato-rack (1.1.1)
       hetchy (~> 1.0)
       librato-metrics (~> 1.6)
-    loofah (2.11.0)
+    loofah (2.12.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
@@ -89,7 +90,7 @@ GEM
     multi_json (1.15.0)
     multipart-post (2.1.1)
     naught (1.1.0)
-    nokogiri (1.12.2)
+    nokogiri (1.12.4)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     public_suffix (4.0.6)
@@ -122,7 +123,7 @@ GEM
       unf (~> 0.1.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8)
     webmock (3.14.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
