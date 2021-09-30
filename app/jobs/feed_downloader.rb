@@ -13,9 +13,11 @@ class FeedDownloader
     @feed        = Feed.new(feed_id)
 
     throttle = Throttle.new(@feed_url, @feed.downloaded_at)
-    if throttle.throttled?
+    if @critical
+      download
+    elsif throttle.throttled?
       Sidekiq.logger.info "Throttled downloaded_at=#{Time.at(@feed.downloaded_at)} url=#{@feed_url}"
-    elsif @critical || @feed.ok?
+    elsif @feed.ok?
       download
     end
   end

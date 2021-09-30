@@ -1,6 +1,6 @@
 class Throttle
 
-  TIMEOUT = 60 * 60
+  TIMEOUT = 60 * 30
 
   def initialize(feed_url, last_download)
     @feed_url = feed_url
