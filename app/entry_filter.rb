@@ -50,7 +50,6 @@ class EntryFilter
     length = saved_entries[public_id]
     return false if !length
     return false if !content
-    return false if length == 1
     content.length != length
   end
 
