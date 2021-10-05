@@ -43,20 +43,21 @@ class EntryFilter
   private
 
   def new?(entry)
-    saved_entries[entry.public_id] == 0 && fresh?(entry)
+    saved_entries[entry.public_id].nil? && fresh?(entry)
   end
 
   def updated?(public_id, content)
     length = saved_entries[public_id]
     return false if !length
     return false if !content
+    return false if length == 1
     content.length != length
   end
 
   def saved_entries
     @saved_entries ||= $redis.with do |redis|
       keys = @entries.map(&:public_id)
-      redis.mapped_mget(*keys).transform_values(&:to_i)
+      redis.mapped_mget(*keys).transform_values { |value| value&.to_i }
     end
   end
 
