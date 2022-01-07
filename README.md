@@ -13,7 +13,7 @@ Processes images and finds thumbnails for Feedbin
 
 * `AWS_ACCESS_KEY_ID` - Your AWS access key ID
 * `AWS_SECRET_ACCESS_KEY` - You AWS secret access key
-* `AWS_S3_BUCKET` - The bucket to upload the thumbnails to
+* `AWS_S3_BUCKET_IMAGES` (or `AWS_S3_BUCKET` if not set) - The bucket to upload the thumbnails to
 * `REDIS_URL` - The URL to the Redis instance used by the main Feedbin instance
 * `FACEBOOK_ACCESS_TOKEN` - Needed to access Instagram images
 

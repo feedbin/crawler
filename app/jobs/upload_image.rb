@@ -22,7 +22,7 @@ class UploadImage
 
   def upload
     File.open(@image_path) do |file|
-      response = Fog::Storage.new(STORAGE_OPTIONS).put_object(ENV["AWS_S3_BUCKET"], image_name, file, storage_options)
+      response = Fog::Storage.new(STORAGE_OPTIONS).put_object(AWS_S3_BUCKET_IMAGES, image_name, file, storage_options)
       URI::HTTPS.build(
         host: response.data[:host],
         path: response.data[:path]
