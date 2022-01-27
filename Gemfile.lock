@@ -101,7 +101,7 @@ GEM
     redis (4.4.0)
     resolv (0.2.1)
     rexml (3.2.5)
-    sidekiq (6.2.2)
+    sidekiq (6.4.0)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
