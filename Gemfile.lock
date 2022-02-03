@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/feedbin/feedjira.git
-  revision: 518d15689df28ca66c6fcccd9aed6104ba2c8166
+  revision: 7afc7f011a04c8376bbfb84c5ce22b639459dab2
   branch: f2
   specs:
     feedjira (2.1.2)
@@ -11,7 +11,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: f3412bb35d9f59415597896296070943178319ba
+  revision: 1b27c1347d3a9bb6c37cc4038c63fa787ebcebb8
   branch: master
   specs:
     feedkit (0.1.0)
@@ -59,7 +59,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
-    ffi (1.15.4)
+    ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -72,7 +72,7 @@ GEM
     http-parser (1.2.3)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
-    idn-ruby (0.1.2)
+    idn-ruby (0.1.4)
     librato-metrics (1.6.1)
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
@@ -80,28 +80,28 @@ GEM
     librato-rack (1.1.1)
       hetchy (~> 1.0)
       librato-metrics (~> 1.6)
-    loofah (2.12.0)
+    loofah (2.13.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
-    mini_portile2 (2.6.1)
-    minitest (5.14.4)
+    mini_portile2 (2.7.1)
+    minitest (5.15.0)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     naught (1.1.0)
-    nokogiri (1.12.5)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.13.1)
+      mini_portile2 (~> 2.7.0)
       racc (~> 1.4)
     public_suffix (4.0.6)
-    racc (1.5.2)
+    racc (1.6.0)
     rack (2.2.3)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.4.0)
+    redis (4.6.0)
     resolv (0.2.1)
     rexml (3.2.5)
-    sidekiq (6.2.2)
+    sidekiq (6.4.0)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -153,4 +153,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.15
+   2.2.26

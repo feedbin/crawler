@@ -10,3 +10,5 @@ end
 Sidekiq.configure_client do |config|
   config.redis = {id: "refresher-client-#{::Process.pid}"}
 end
+
+Sidekiq.strict_args!(false)

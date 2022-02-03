@@ -20,9 +20,9 @@ class FeedStatus
       failed_at: Time.now.to_i
     })
     Sidekiq.redis do |redis|
-      redis.pipelined do
-        redis.lpush(errors_cache_key, error_json(exception))
-        redis.ltrim(errors_cache_key, 0, 25)
+      redis.pipelined do |pipeline|
+        pipeline.lpush(errors_cache_key, error_json(exception))
+        pipeline.ltrim(errors_cache_key, 0, 25)
       end
     end
   end
