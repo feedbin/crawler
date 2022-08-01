@@ -1,17 +1,15 @@
 GIT
   remote: https://github.com/feedbin/feedjira.git
-  revision: 7afc7f011a04c8376bbfb84c5ce22b639459dab2
+  revision: 2c60a4cc2052827e7722883c68c7fe04bbaa46d5
   branch: f2
   specs:
     feedjira (2.1.2)
-      faraday (>= 0.9)
-      faraday_middleware (>= 0.9)
       loofah (>= 2.0)
       sax-machine (>= 1.0)
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 1b27c1347d3a9bb6c37cc4038c63fa787ebcebb8
+  revision: 6c5b3592c1bdb4f383bb82f1fefe50e23d028e86
   branch: master
   specs:
     feedkit (0.1.0)
@@ -45,7 +43,6 @@ GEM
   specs:
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    aggregate (0.2.3)
     buftok (0.2.0)
     connection_pool (2.2.5)
     crack (0.4.5)
@@ -53,55 +50,42 @@ GEM
     crass (1.0.6)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.7.6)
+    dotenv (2.8.1)
     equalizer (0.0.11)
-    faraday (0.17.4)
-      multipart-post (>= 1.2, < 3)
-    faraday_middleware (0.14.0)
-      faraday (>= 0.7.4, < 1.0)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
     foreman (0.87.2)
     hashdiff (1.0.1)
-    hetchy (1.0.0)
-    http-cookie (1.0.4)
+    http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http-parser (1.2.3)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     idn-ruby (0.1.4)
-    librato-metrics (1.6.1)
-      aggregate (~> 0.2.2)
-      faraday (~> 0.7)
-      multi_json
-    librato-rack (1.1.1)
-      hetchy (~> 1.0)
-      librato-metrics (~> 1.6)
-    loofah (2.13.0)
+    loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
-    mini_portile2 (2.7.1)
-    minitest (5.15.0)
-    multi_json (1.15.0)
-    multipart-post (2.1.1)
+    mini_portile2 (2.8.0)
+    minitest (5.16.2)
+    multipart-post (2.2.3)
     naught (1.1.0)
-    nokogiri (1.13.1)
-      mini_portile2 (~> 2.7.0)
+    nokogiri (1.13.8)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    public_suffix (4.0.6)
+    public_suffix (4.0.7)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.4)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.6.0)
+    redis (4.7.1)
     resolv (0.2.1)
     rexml (3.2.5)
-    sidekiq (6.4.0)
+    sidekiq (6.5.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
@@ -123,7 +107,7 @@ GEM
       unf (~> 0.1.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8)
+    unf_ext (0.0.8.2)
     webmock (3.14.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -140,8 +124,6 @@ DEPENDENCIES
   feedkit!
   foreman
   http!
-  librato-metrics (= 1.6.1)
-  librato-rack
   minitest
   nokogiri
   rake
