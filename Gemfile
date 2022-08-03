@@ -1,19 +1,10 @@
 source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-group :development do
-  gem "foreman"
-  gem "standard"
-end
-
-group :test do
-  gem "minitest"
-  gem "webmock"
-end
+gem "down", github: "feedbin/down", branch: "normalize"
 
 gem "bundler"
 gem "resolv"
-gem "down"
 gem "rake"
 gem "addressable"
 gem "dotenv"
@@ -27,3 +18,13 @@ gem "nokogumbo"
 gem "redis"
 gem "ruby-vips"
 gem "sidekiq"
+
+group :development do
+  gem "foreman"
+  gem "standard"
+end
+
+group :test do
+  gem "minitest"
+  gem "webmock"
+end

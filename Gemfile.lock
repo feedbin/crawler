@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/feedbin/down.git
+  revision: df69f03b65453bbbabc99678c3f6a3a1c4d1a0b2
+  branch: normalize
+  specs:
+    down (5.3.1)
+      addressable (~> 2.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -12,8 +20,6 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.8.1)
-    down (5.3.1)
-      addressable (~> 2.8)
     excon (0.92.4)
     faraday (0.17.5)
       multipart-post (>= 1.2, < 3)
@@ -116,7 +122,7 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.2.0)
-    webmock (3.14.0)
+    webmock (3.16.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -128,7 +134,7 @@ DEPENDENCIES
   addressable
   bundler
   dotenv
-  down
+  down!
   fog-aws
   foreman
   http
