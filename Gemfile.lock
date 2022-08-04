@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/feedbin/feedjira.git
-  revision: 2c60a4cc2052827e7722883c68c7fe04bbaa46d5
+  revision: da48b21c09604c797854e095504626ac25d0892a
   branch: f2
   specs:
     feedjira (2.1.2)
@@ -108,7 +108,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    webmock (3.14.0)
+    webmock (3.16.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
