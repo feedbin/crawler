@@ -85,10 +85,10 @@ GEM
     redis (4.7.1)
     resolv (0.2.1)
     rexml (3.2.5)
-    sidekiq (6.5.3)
+    sidekiq (6.5.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      redis (>= 4.5.0)
+      redis (>= 4.2.0)
     simple_oauth (0.3.1)
     thread_safe (0.3.6)
     twitter (7.0.0)
@@ -130,7 +130,7 @@ DEPENDENCIES
   redis
   resolv
   sax-machine!
-  sidekiq
+  sidekiq (= 6.5.1)
   unf_ext
   webmock
 
