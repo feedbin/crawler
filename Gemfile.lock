@@ -41,8 +41,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     buftok (0.2.0)
     connection_pool (2.2.5)
     crack (0.4.5)
@@ -71,24 +71,24 @@ GEM
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mini_portile2 (2.8.0)
-    minitest (5.16.2)
+    minitest (5.16.3)
     multipart-post (2.2.3)
     naught (1.1.0)
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
-    public_suffix (4.0.7)
+    public_suffix (5.0.0)
     racc (1.6.0)
     rack (2.2.4)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.7.1)
+    redis (4.8.0)
     resolv (0.2.1)
     rexml (3.2.5)
-    sidekiq (6.5.1)
+    sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      redis (>= 4.2.0)
+      redis (>= 4.5.0)
     simple_oauth (0.3.1)
     thread_safe (0.3.6)
     twitter (7.0.0)
@@ -108,7 +108,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    webmock (3.17.0)
+    webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -130,7 +130,7 @@ DEPENDENCIES
   redis
   resolv
   sax-machine!
-  sidekiq (= 6.5.1)
+  sidekiq
   unf_ext
   webmock
 
