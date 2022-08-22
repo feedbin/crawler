@@ -1,40 +1,45 @@
 require_relative "test_helper"
-class RedirectCacheTest < Minitest::Test
 
-  def setup
-    flush
-  end
+module Crawler
+  module Refresher
+    class RedirectCacheTest < Minitest::Test
 
-  def test_should_collapse_stable_redirects
-    feed_id = 2
+      def setup
+        flush
+      end
 
-    redirect1 = Redirect.new(feed_id, status: 301, from: "http://example.com", to: "http://example.com/second")
-    redirect2 = Redirect.new(feed_id, status: 301, from: "http://example.com/second", to: "http://example.com/third")
-    redirect3 = Redirect.new(feed_id, status: 301, from: "http://example.com/third", to: "http://example.com/final")
+      def test_should_collapse_stable_redirects
+        feed_id = 2
 
-    (RedirectCache::PERSIST_AFTER).times do
-      RedirectCache.new(feed_id).save([redirect1, redirect2])
+        redirect1 = Redirect.new(feed_id, status: 301, from: "http://example.com", to: "http://example.com/second")
+        redirect2 = Redirect.new(feed_id, status: 301, from: "http://example.com/second", to: "http://example.com/third")
+        redirect3 = Redirect.new(feed_id, status: 301, from: "http://example.com/third", to: "http://example.com/final")
+
+        (RedirectCache::PERSIST_AFTER).times do
+          RedirectCache.new(feed_id).save([redirect1, redirect2])
+        end
+
+        assert_nil RedirectCache.new(feed_id).read
+
+        RedirectCache.new(feed_id).save([redirect1, redirect2])
+
+        assert_equal(redirect2.to, RedirectCache.new(feed_id).read)
+
+        (RedirectCache::PERSIST_AFTER + 1).times do
+          RedirectCache.new(feed_id).save([redirect2, redirect3])
+        end
+
+        assert_equal(redirect3.to, RedirectCache.new(feed_id).read)
+      end
+
+      def test_should_not_temporary_redirects
+        redirect1 = Redirect.new(1, status: 302, from: "http://example.com", to: "http://example.com/second")
+        assert_nil RedirectCache.new(1).save([redirect1])
+      end
+
+      def test_should_not_save_empty_redirects
+        assert_nil RedirectCache.new(1).save([])
+      end
     end
-
-    assert_nil RedirectCache.new(feed_id).read
-
-    RedirectCache.new(feed_id).save([redirect1, redirect2])
-
-    assert_equal(redirect2.to, RedirectCache.new(feed_id).read)
-
-    (RedirectCache::PERSIST_AFTER + 1).times do
-      RedirectCache.new(feed_id).save([redirect2, redirect3])
-    end
-
-    assert_equal(redirect3.to, RedirectCache.new(feed_id).read)
-  end
-
-  def test_should_not_temporary_redirects
-    redirect1 = Redirect.new(1, status: 302, from: "http://example.com", to: "http://example.com/second")
-    assert_nil RedirectCache.new(1).save([redirect1])
-  end
-
-  def test_should_not_save_empty_redirects
-    assert_nil RedirectCache.new(1).save([])
   end
 end
