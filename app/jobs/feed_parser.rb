@@ -10,10 +10,13 @@ class FeedParser
     @path = path
     @encoding = encoding
 
-    entries = EntryFilter.filter!(parsed_feed.entries)
+    filter = EntryFilter.new(parsed_feed.entries)
+    entries = filter.filter
+
     save(parsed_feed.to_feed, entries) unless entries.empty?
     FeedStatus.clear!(@feed_id)
     counts(parsed_feed.entries, entries)
+    filter.fingerprint_entries
   rescue Feedkit::NotFeed => exception
     Sidekiq.logger.info "Feedkit::NotFeed: id=#{@feed_id} url=#{@feed_url}"
     FeedStatus.new(@feed_id).error!(exception)

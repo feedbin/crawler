@@ -40,6 +40,20 @@ class EntryFilter
     end
   end
 
+  def fingerprint_entries
+    fingerprints = @entries.first(300).each_with_object([]) do |entry, array|
+      data = JSON.dump(entry.to_entry)
+      fingerprint = Digest::MD5.hexdigest(data)
+      array.push("f:#{entry.public_id}", fingerprint)
+    end
+
+    return if fingerprints.empty?
+
+    $redis.with do |redis|
+      redis.mset(*fingerprints)
+    end
+  end
+
   private
 
   def new?(entry)

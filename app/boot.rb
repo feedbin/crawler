@@ -16,6 +16,7 @@ require "date"
 require "socket"
 require "time"
 require "forwardable"
+require "json"
 
 require "sidekiq"
 require "connection_pool"
