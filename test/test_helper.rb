@@ -19,7 +19,7 @@ require "sidekiq/testing"
 Sidekiq::Testing.fake!
 Sidekiq.logger.level = Logger::WARN
 
-require_relative "../app/boot"
+require_relative "../lib/boot"
 
 def flush
   Sidekiq::Worker.clear_all
