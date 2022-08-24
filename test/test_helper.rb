@@ -19,7 +19,7 @@ require "sidekiq/testing"
 Sidekiq::Testing.fake!
 Sidekiq.logger.level = Logger::WARN
 
-require_relative "../lib/crawler"
+require_relative "../lib/image"
 
 def flush
   Sidekiq::Worker.clear_all
