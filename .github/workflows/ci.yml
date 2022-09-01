@@ -27,7 +27,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install dependencies
-      run: sudo apt-get --yes install libidn11-dev
+      run: sudo apt-get --yes install libidn11-dev libvips
 
     - uses: ruby/setup-ruby@v1
       with:

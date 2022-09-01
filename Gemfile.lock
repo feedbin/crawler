@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/feedbin/down.git
+  revision: df69f03b65453bbbabc99678c3f6a3a1c4d1a0b2
+  branch: normalize
+  specs:
+    down (5.3.1)
+      addressable (~> 2.8)
+
+GIT
   remote: https://github.com/feedbin/feedjira.git
   revision: da48b21c09604c797854e095504626ac25d0892a
   branch: f2
@@ -43,7 +51,10 @@ GEM
   specs:
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    aggregate (0.2.3)
+    ast (2.4.2)
     buftok (0.2.0)
+    builder (3.2.4)
     connection_pool (2.2.5)
     crack (0.4.5)
       rexml
@@ -52,12 +63,32 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.8.1)
     equalizer (0.0.11)
+    excon (0.92.4)
+    faraday (0.17.5)
+      multipart-post (>= 1.2, < 3)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
+    fog-aws (3.14.0)
+      fog-core (~> 2.1)
+      fog-json (~> 1.1)
+      fog-xml (~> 0.1)
+    fog-core (2.3.0)
+      builder
+      excon (~> 0.71)
+      formatador (>= 0.2, < 2.0)
+      mime-types
+    fog-json (1.2.0)
+      fog-core
+      multi_json (~> 1.10)
+    fog-xml (0.1.4)
+      fog-core
+      nokogiri (>= 1.5.11, < 2.0.0)
     foreman (0.87.2)
+    formatador (1.1.0)
     hashdiff (1.0.1)
+    hetchy (1.0.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
@@ -65,31 +96,76 @@ GEM
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     idn-ruby (0.1.4)
+    image_processing (1.12.2)
+      mini_magick (>= 4.9.5, < 5)
+      ruby-vips (>= 2.0.17, < 3)
+    json (2.6.2)
+    librato-metrics (1.6.1)
+      aggregate (~> 0.2.2)
+      faraday (~> 0.7)
+      multi_json
+    librato-rack (1.1.1)
+      hetchy (~> 1.0)
+      librato-metrics (~> 1.6)
     loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
+    mime-types (3.4.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2022.0105)
+    mini_magick (4.11.0)
     mini_portile2 (2.8.0)
     minitest (5.16.3)
+    multi_json (1.15.0)
     multipart-post (2.2.3)
     naught (1.1.0)
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    parallel (1.22.1)
+    parser (3.1.2.1)
+      ast (~> 2.4.1)
     public_suffix (5.0.0)
     racc (1.6.0)
     rack (2.2.4)
+    rainbow (3.1.1)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (4.8.0)
+    redis (5.0.2)
+      redis-client (~> 0.7)
+    redis-client (0.7.1)
+      connection_pool
+    regexp_parser (2.5.0)
     resolv (0.2.1)
     rexml (3.2.5)
+    rubocop (1.35.1)
+      json (~> 2.3)
+      parallel (~> 1.10)
+      parser (>= 3.1.2.1)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.20.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.21.0)
+      parser (>= 3.1.1.0)
+    rubocop-performance (1.14.3)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
+    ruby-progressbar (1.11.0)
+    ruby-vips (2.1.4)
+      ffi (~> 1.12)
     sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.5.0)
     simple_oauth (0.3.1)
+    standard (1.16.1)
+      rubocop (= 1.35.1)
+      rubocop-performance (= 1.14.3)
     thread_safe (0.3.6)
     twitter (7.0.0)
       addressable (~> 2.3)
@@ -108,6 +184,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
+    unicode-display_width (2.2.0)
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -117,20 +194,29 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   bundler
   connection_pool
   dotenv
+  down!
   feedjira!
   feedkit!
+  fog-aws
   foreman
   http!
+  image_processing
+  librato-metrics (= 1.6.1)
+  librato-rack
+  mime-types
   minitest
   nokogiri
   rake
   redis
   resolv
+  ruby-vips
   sax-machine!
   sidekiq
+  standard
   unf_ext
   webmock
 

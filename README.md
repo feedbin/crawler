@@ -1,41 +1,45 @@
-Refresher
+Crawler
 =========
 
-Refresher is a service meant to be run in combination with [Feedbin](https://github.com/feedbin/feedbin).
+Crawler is a service meant to be run in combination with [Feedbin](https://github.com/feedbin/feedbin).
 
-Refresher consists of a single Sidekiq job that
+Refresh feeds a process image thumbnails.
 
-- Fetches and parses RSS feeds
-- Checks for the existence of duplicates against a redis database
-- Add new feed entries to redis to be imported back into Feedbin
+### Requirements
 
-Dependencies
-------------
+* libvips 8.6+
+* Ruby 3.1
+* An AWS S3 bucket
+* Redis shared with the main Feedbin instance
 
-- Ruby 2.5
-- Redis shared with main Feedbin instance
-- You may need to install the development headers for libidn (`libidn11-dev` on Debian)
+### Environment variables
 
-Installation
-------------
+* `AWS_ACCESS_KEY_ID` - Your AWS access key ID
+* `AWS_SECRET_ACCESS_KEY` - You AWS secret access key
+* `AWS_S3_BUCKET_IMAGES` (or `AWS_S3_BUCKET` if not set) - The bucket to upload the thumbnails to
+* `REDIS_URL` - The URL to the Redis instance used by the main Feedbin instance
+* `FACEBOOK_ACCESS_TOKEN` - Needed to access Instagram images
 
-**Install Redis**
+Optional variables, you might need these for non-AWS providers:
 
-    brew install redis
+* `AWS_S3_REGION` - The AWS region of your bucket
+* `AWS_S3_HOST` - domain of your endpoint
+* `AWS_S3_ENDPOINT` - Same but with the scheme and port
+* `AWS_S3_PATH_STYLE` - Need to be set to `true` for Minio
 
-**Clone the repository**
 
-    git clone https://github.com/feedbin/refresher.git && cd refresher
+You can technically also use Minio or another S3 alternative by editing the parameters in [lib/storage.rb](lib/storage.rb). The Minio cookbook has [an example](https://github.com/minio/cookbook/blob/master/docs/fog-aws-for-ruby-with-minio.md) with the necessary parameters.
 
-**Configure**
+### Setup
+Clone the repo and install dependencies:
+```
+git clone https://github.com/feedbin/crawler.git
+cd crawler
+bundle
+```
 
-Refresher needs access to the same Redis instance as the main Feedbin instance (`REDIS_URL` environment variable). If using Feedbin to subscribe to twitter feeds, the `TWITTER_KEY` and `TWITTER_SECRET` environment variables also need to be available.
+Start the process with `bundle exec foreman start`
 
-**Bundle**
+You may need to adjust the `ENTRY_IMAGE_HOST` environment variable of the main Feedbin instance if you want to use a reverse proxy to S3 or if you're using an alternative file server. The variable can be used to replace the hostname clients use to get the images, but the path can't be changed.
 
-     bundle
-
-**Run**
-
-     bundle exec foreman start     
-     
+Crawler needs access to the same Redis instance as the main Feedbin instance (`REDIS_URL` environment variable). If using Feedbin to subscribe to twitter feeds, the `TWITTER_KEY` and `TWITTER_SECRET` environment variables also need to be available.

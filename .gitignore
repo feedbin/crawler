@@ -5,4 +5,4 @@ vendor/bundle
 tmp
 .env
 coverage/
-log/
+log/dump.rdb

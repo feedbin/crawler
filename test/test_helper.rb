@@ -19,6 +19,7 @@ require "sidekiq/testing"
 Sidekiq::Testing.fake!
 Sidekiq.logger.level = Logger::WARN
 
+require_relative "../lib/image"
 require_relative "../lib/refresher"
 
 def flush
@@ -28,9 +29,14 @@ def flush
   end
 end
 
+def support_file(file_name)
+  path = File.join Dir.tmpdir, SecureRandom.hex
+  FileUtils.cp File.join("test/support/www", file_name), path
+  path
+end
+
 def stub_request_file(file, url, options = {})
-  file = File.join("test/support/www", file)
-  defaults = {body: File.new(file), status: 200}
+  defaults = {body: File.new(support_file(file)), status: 200}
   stub_request(:get, url)
     .to_return(defaults.merge(options))
 end
@@ -41,4 +47,20 @@ end
 
 def random_string
   (0...50).map { ("a".."z").to_a[rand(26)] }.join
+end
+
+def aws_copy_body
+  <<~EOT
+    <?xml version="1.0" encoding="UTF-8"?>
+    <CopyObjectResult>
+       <ETag>string</ETag>
+       <LastModified>Tue, 02 Mar 2021 12:58:45 GMT</LastModified>
+    </CopyObjectResult>
+  EOT
+end
+
+class EntryImage
+  include Sidekiq::Worker
+  def perform(*args)
+  end
 end
