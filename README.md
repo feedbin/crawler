@@ -1,9 +1,7 @@
 Crawler
 =========
 
-Crawler is a service meant to be run in combination with [Feedbin](https://github.com/feedbin/feedbin).
-
-Refresh feeds a process image thumbnails.
+Crawler is a service meant to be run in combination with [Feedbin](https://github.com/feedbin/feedbin). Crawler refreshes feeds a process image thumbnails. It is a separate service so it can be as lightweight and parallel as possible.
 
 ### Requirements
 
@@ -26,7 +24,6 @@ Optional variables, you might need these for non-AWS providers:
 * `AWS_S3_HOST` - domain of your endpoint
 * `AWS_S3_ENDPOINT` - Same but with the scheme and port
 * `AWS_S3_PATH_STYLE` - Need to be set to `true` for Minio
-
 
 You can technically also use Minio or another S3 alternative by editing the parameters in [lib/storage.rb](lib/storage.rb). The Minio cookbook has [an example](https://github.com/minio/cookbook/blob/master/docs/fog-aws-for-ruby-with-minio.md) with the necessary parameters.
 
