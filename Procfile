@@ -1,5 +1,5 @@
-parallel: bundle exec sidekiq -c 4 -q image_parallel_critical,2 -q image_parallel -q image_parallel_$HOSTNAME -r ./lib/image.rb
-serial: bundle exec sidekiq -c 1 -q image_serial_critical_$HOSTNAME,2 -q image_serial_$HOSTNAME -r ./lib/image.rb
-downloader: bundle exec sidekiq -c 40 -q feed_downloader_critical,2 -q feed_downloader -r ./lib/refresher.rb
-twitter: bundle exec sidekiq -c 15 -q twitter_refresher_critical,2 -q twitter_refresher -r ./lib/refresher.rb
-parser: bundle exec sidekiq -c 1 -q feed_parser_critical_$HOSTNAME,2 -q feed_parser_$HOSTNAME -r ./lib/refresher.rb
+crawler_images_parallel: bundle exec sidekiq --concurrency 4  --queue image_parallel_critical,2         --queue image_parallel         -q image_parallel_$HOSTNAME --require ./lib/image.rb
+crawler_images_serial:   bundle exec sidekiq --concurrency 1  --queue image_serial_critical_$HOSTNAME,2 --queue image_serial_$HOSTNAME                             --require ./lib/image.rb
+crawler_feeds_parallel:  bundle exec sidekiq --concurrency 40 --queue feed_downloader_critical,2        --queue feed_downloader                                    --require ./lib/refresher.rb
+crawler_feeds_serial:    bundle exec sidekiq --concurrency 1  --queue feed_parser_critical_$HOSTNAME,2  --queue feed_parser_$HOSTNAME                              --require ./lib/refresher.rb
+crawler_feeds_twitter:   bundle exec sidekiq --concurrency 15 --queue twitter_refresher_critical,2      --queue twitter_refresher                                  --require ./lib/refresher.rb

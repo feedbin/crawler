@@ -64,8 +64,29 @@ GEM
     dotenv (2.8.1)
     equalizer (0.0.11)
     excon (0.92.4)
-    faraday (0.17.5)
-      multipart-post (>= 1.2, < 3)
+    faraday (1.10.2)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
@@ -100,9 +121,9 @@ GEM
       mini_magick (>= 4.9.5, < 5)
       ruby-vips (>= 2.0.17, < 3)
     json (2.6.2)
-    librato-metrics (1.6.1)
+    librato-metrics (1.6.2)
       aggregate (~> 0.2.2)
-      faraday (~> 0.7)
+      faraday (>= 0.7, < 2.0)
       multi_json
     librato-rack (1.1.1)
       hetchy (~> 1.0)
@@ -135,7 +156,7 @@ GEM
     rchardet (1.8.0)
     redis (5.0.2)
       redis-client (~> 0.7)
-    redis-client (0.7.1)
+    redis-client (0.7.3)
       connection_pool
     regexp_parser (2.5.0)
     resolv (0.2.1)
@@ -158,6 +179,7 @@ GEM
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
+    ruby2_keywords (0.0.5)
     sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
@@ -205,7 +227,7 @@ DEPENDENCIES
   foreman
   http!
   image_processing
-  librato-metrics (= 1.6.1)
+  librato-metrics (~> 1.6.2)
   librato-rack
   mime-types
   minitest
@@ -221,4 +243,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.26
+   2.3.21
