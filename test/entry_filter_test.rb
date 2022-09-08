@@ -20,8 +20,11 @@ module Crawler
           end
         end
 
-        results = EntryFilter.filter!(entries)
+        filter = EntryFilter.new(entries)
+        filter.fingerprint_entries
+        results = filter.filter
         assert_equal entries.length, results.length
+
         results.each do |entry|
           assert entry[:update]
         end
@@ -47,7 +50,9 @@ module Crawler
           end
         end
 
-        results = EntryFilter.filter!(entries)
+        filter = EntryFilter.new(entries)
+        filter.fingerprint_entries
+        results = filter.filter
         assert_equal 0, results.length
       end
 
@@ -77,10 +82,11 @@ module Crawler
 
       def sample_entries(published: Time.now)
         entry = OpenStruct.new(
-        public_id: random_string,
-        content: random_string,
-        published: published,
-        to_entry: {data: random_string}
+          public_id: random_string,
+          content: random_string,
+          published: published,
+          fingerprint: SecureRandom.hex,
+          to_entry: {data: random_string}
         )
         [entry]
       end
