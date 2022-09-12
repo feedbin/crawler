@@ -11,21 +11,21 @@ module Crawler
         url = "http://example.com/atom.xml"
         stub_request_file("atom.xml", url)
 
-        assert_equal 0, FeedParser.jobs.size
+        assert_equal 0, Sidekiq::Queues["feed_parser_#{Socket.gethostname}"].size
         FeedDownloader.new.perform(1, url, 10)
-        assert_equal 1, FeedParser.jobs.size
+        assert_equal 1, Sidekiq::Queues["feed_parser_#{Socket.gethostname}"].size
 
         FeedDownloader.new.perform(1, url, 10)
-        assert_equal 1, FeedParser.jobs.size, "Should not parse again because checksum matches"
+        assert_equal 1, Sidekiq::Queues["feed_parser_#{Socket.gethostname}"].size
       end
 
       def test_should_schedule_critical_feed_parser
         url = "http://example.com/atom.xml"
         stub_request_file("atom.xml", url)
 
-        assert_equal 0, FeedParserCritical.jobs.size
+        assert_equal 0, Sidekiq::Queues["feed_parser_critical_#{Socket.gethostname}"].size
         FeedDownloaderCritical.new.perform(1, url, 10)
-        assert_equal 1, FeedParserCritical.jobs.size
+        assert_equal 1, Sidekiq::Queues["feed_parser_critical_#{Socket.gethostname}"].size
       end
 
       def test_should_send_user_agent
@@ -82,7 +82,7 @@ module Crawler
         url = "http://example.com/atom.xml"
         stub_request(:get, url).with(headers: {"If-None-Match" => etag, "If-Modified-Since" => last_modified}).to_return(status: 304)
         FeedDownloader.new.perform(feed_id, url, 10)
-        assert_equal 0, FeedParser.jobs.size
+        assert_equal 0, Sidekiq::Queues["feed_parser_critical_#{Socket.gethostname}"].size
       end
 
       def test_should_not_be_ok_after_error
