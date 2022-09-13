@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 59133a9bcdaca9148139eff072485fe37ab01738
+  revision: 68aa2b996f98c9d61cc4bc69388c10a2431efe47
   branch: master
   specs:
     feedkit (0.1.0)
@@ -91,7 +91,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    fog-aws (3.14.0)
+    fog-aws (3.15.0)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
@@ -154,7 +154,7 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     rchardet (1.8.0)
-    redis (5.0.3)
+    redis (5.0.4)
       redis-client (>= 0.7.4)
     redis-client (0.8.0)
       connection_pool
