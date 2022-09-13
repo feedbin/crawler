@@ -39,4 +39,4 @@ Start the process with `bundle exec foreman start`
 
 You may need to adjust the `ENTRY_IMAGE_HOST` environment variable of the main Feedbin instance if you want to use a reverse proxy to S3 or if you're using an alternative file server. The variable can be used to replace the hostname clients use to get the images, but the path can't be changed.
 
-Crawler needs access to the same Redis instance as the main Feedbin instance (`REDIS_URL` environment variable). If using Feedbin to subscribe to twitter feeds, the `TWITTER_KEY` and `TWITTER_SECRET` environment variables also need to be available.
+Crawler needs access to the same Redis instance as the main Feedbin instance (`REDIS_URL` environment variable).
