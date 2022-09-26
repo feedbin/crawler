@@ -1,3 +1,7 @@
+```
+‼️ Crawler functionality has been merged into the main Feedbin app.
+```
+
 Crawler
 =========
 
